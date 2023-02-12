@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(Boost_FIND_QUIETLY ON) #FINALLY!!!
 
+set(Boost_USE_MULTITHREADED TRUE) # fix warnings from newer boost versions
+
+find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log system)
+
 if (EXISTS "/boot/LICENCE.broadcom") # I expect this file to be only found on an Raspian distribution
     set(BUILD_RASPBERRYPI true)
     message("Build on Raspberry Pi is enabled")
