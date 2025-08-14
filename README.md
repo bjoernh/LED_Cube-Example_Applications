@@ -12,7 +12,7 @@ This is a fork of the original [squarewavedot/exampleApplications](https://githu
 
 ## Documentation
 
-📖 **[Complete Documentation](https://placeholder-link-to-github-pages-docs)**
+📖 **[Complete Documentation](https://bjoernh.github.io/exampleApplications/)**
 
 The full project documentation is hosted on GitHub Pages and includes API references, tutorials, and examples.
 
