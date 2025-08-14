@@ -1,8 +1,19 @@
 #include "CubeTest.h"
+#include <iostream>
+
+#define OVERSAMPLING 1
+
+
+
 
 CubeTest::CubeTest() : CubeApplication(30){
 
 }
+/*CubeTest::CubeTest(int fps, std::string ip, std::string port) : CubeApplication(fps, ip, port) {
+    std::cout << "CubeTest constructor ip: " << ip << std::endl;
+};*/
+
+
 
 bool CubeTest::loop() {
     static int loopcount = 0;

@@ -8,8 +8,8 @@
 #include <iostream>
 #include <fstream>
 
-Snake::Snake() {
-    float startSpeed = 0.1;
+Snake::Snake() : CubeApplication(40, "192.168.188.106"){
+    float startSpeed = 0.2;
     players.push_back(new Player(this, 0, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green(), 10));
     players.push_back(new Player(this, 1, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green() + Color::red(), 10));
     players.push_back(new Player(this, 2, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::blue() + Color::red(), 10));
@@ -28,7 +28,7 @@ Snake::Snake() {
         food.push_back(new Food(this, getRandomPointOnScreen(top), Color::randomBlue() * 2));
         food.push_back(new Food(this, getRandomPointOnScreen(bottom), Color::randomBlue() * 2));
     }
-    currentHighScore = 0;
+    currentHighScore = 1000;
     updateHighScoreFromToFile();
 }
 

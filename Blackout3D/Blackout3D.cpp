@@ -1,6 +1,6 @@
 #include "Blackout3D.h"
 
-Blackout3D::Blackout3D() : CubeApplication(20){
+Blackout3D::Blackout3D() : CubeApplication(20, "cube10.local"){
 
 }
 

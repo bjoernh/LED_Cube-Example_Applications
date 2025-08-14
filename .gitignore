@@ -1,0 +1,53 @@
+# Build directories
+build/
+build2/
+cmake-build-debug/
+cmake-build-release/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# C++ compiled files
+*.o
+*.a
+*.so
+*.exe
+*.out
+*.app
+*.dylib
+
+# Debian packages
+*.deb
+_CPack_Packages/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
