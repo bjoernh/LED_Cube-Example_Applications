@@ -2,13 +2,11 @@ cmake_minimum_required(VERSION 3.07)
 project(exampleApplications)
 
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(Boost_FIND_QUIETLY ON) #FINALLY!!!
 
-set(Boost_USE_MULTITHREADED TRUE) # fix warnings from newer boost versions
-
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log system)
+set(Boost_USE_MULTITHREADED TRUE)
 
 if (EXISTS "/boot/LICENCE.broadcom") # I expect this file to be only found on an Raspian distribution
     set(BUILD_RASPBERRYPI true)
@@ -28,17 +26,28 @@ endif ()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-add_subdirectory(Genetic)
+IF(APPLE)
+	# Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+	LINK_DIRECTORIES(/usr/local/lib)
+ENDIF()
+
+
+#add_subdirectory(Genetic)
 add_subdirectory(CubeTestApp)
-add_subdirectory(ImuTest)
-add_subdirectory(Breakout3D)
-add_subdirectory(Blackout3D)
-add_subdirectory(PixelFlow)
-add_subdirectory(PixelFlow2)
+#add_subdirectory(Breakout3D)
+#add_subdirectory(Blackout3D)
 add_subdirectory(PixelFlow3)
-add_subdirectory(Picture)
-add_subdirectory(Snake)
-add_subdirectory(Rainbow)
+#add_subdirectory(MatrixRain)
+#add_subdirectory(Snake)
+
+IF(BUILD_RASPBERRYPI)
+    add_subdirectory(ImuTest)
+    add_subdirectory(PixelFlow)
+    add_subdirectory(PixelFlow2)
+    add_subdirectory(Rainbow)
+ENDIF()
+#add_subdirectory(Picture)
+
 
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "LEDCube matrixserver example Applications")

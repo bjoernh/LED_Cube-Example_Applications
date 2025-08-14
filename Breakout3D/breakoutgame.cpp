@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-BreakoutGame::BreakoutGame() : CubeApplication(40){
+BreakoutGame::BreakoutGame() : CubeApplication(40, "192.168.188.106"){
   reset();
   updateHighScoreFromToFile();
 }

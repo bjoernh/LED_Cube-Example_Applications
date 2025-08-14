@@ -14,7 +14,8 @@ public:
 
 private:
     bool loadImage(std::string filepath);
-
+    bool error;
+    std::string error_msg;
     Image autoload;
     std::vector<Joystick *> joysticks;
 };

@@ -5,15 +5,15 @@
 #include <algorithm>
 #include <cctype>
 #include <memory>
-#include <experimental/filesystem>
+#include <filesystem>
 
-namespace fs = std::experimental::filesystem;
-std::string filepath = "/media/usb0/autoload.png";
+namespace fs = std::__fs::filesystem;
+std::string filepath =  std::getenv("HOME") + std::string("/pictures/autoload.png");
 fs::file_time_type lastModificationTime;
-int animationPrescale = 0;
+int animationPrescale = 2;
 
 
-Picture::Picture(int argc, char *argv[]) {
+Picture::Picture(int argc, char *argv[]) : CubeApplication(40, "192.168.188.106") {
     joysticks.push_back(new Joystick(0));
     joysticks.push_back(new Joystick(1));
     joysticks.push_back(new Joystick(2));
@@ -37,7 +37,8 @@ Picture::Picture(int argc, char *argv[]) {
 
     std::cout << animationPrescale << std::endl;
 
-    loadImage(filepath);
+    if(!loadImage(filepath))
+        error = true;
 }
 
 bool Picture::loadImage(std::string path) {
@@ -47,17 +48,35 @@ bool Picture::loadImage(std::string path) {
             std::cout << "imageload " << path << " successful, size: " << autoload.getWidth() << "x" << autoload.getHeight() << std::endl;
             return true;
         } else {
+
             std::cout << "image has not the right format, " << autoload.getWidth() << "x" << autoload.getHeight() << std::endl;
+            error_msg = "wrong format";
         }
     } else {
         std::cout << "image does not exist" << std::endl;
+        std::string msg = "no image";
+        drawText(ScreenNumber::front, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
+        drawText(ScreenNumber::right, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
+        drawText(ScreenNumber::back, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
+        drawText(ScreenNumber::left, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
+        drawText(ScreenNumber::top, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
+        drawText(ScreenNumber::bottom, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
+        render();
     }
     return false;
 }
 
-bool Picture::loop() {
+    bool Picture::loop() {
     static int loopcount = 0;
     static int verticalPos = 0;
+
+    /* If file has wrong format or does not exist, then only display a error msg on all screens */
+    if(error){
+        drawText(ScreenNumber::anyScreen, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), error_msg);
+        loopcount++;
+        render();
+        return true;
+    }
 
     if (fs::last_write_time(fs::path(filepath)) > lastModificationTime) {
         std::cout << "file change detected, reloading..." << std::endl;
