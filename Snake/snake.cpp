@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-Snake::Snake() : CubeApplication(40, "192.168.188.106"){
+Snake::Snake(const char* host) : CubeApplication(40, host){
     float startSpeed = 0.2;
     players.push_back(new Player(this, 0, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green(), 10));
     players.push_back(new Player(this, 1, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green() + Color::red(), 10));

@@ -11,7 +11,13 @@ void signal_handler(int signal_num)
 
 int main(int argc, char *argv[]) {
     std::signal(SIGUSR2, signal_handler);
-    PixelFlow App1;
+    
+    const char* host = "127.0.0.1";
+    if (argc > 1) {
+        host = argv[1];
+    }
+    
+    PixelFlow App1(host);
     App1.start();
 
     while(1) sleep(2);

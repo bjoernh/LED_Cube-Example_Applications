@@ -1,40 +1,26 @@
 #include "matrixrain.h"
-#include <boost/program_options.hpp>
+#include <string>
+#include <iostream>
 
-using namespace boost::program_options;
+int main(int argc, char *argv[]) {
+    std::string host = "127.0.0.1";
+    float fade = 0.9f;
 
-void on_age(int age)
-{
-    std::cout << "On age: " << age << '\n';
-}
-
-int main(int argc, const char *argv[]) {
-    try
-    {
-        options_description desc{"Options"};
-        desc.add_options()
-                ("help,h", "Help screen")
-                ("host", value<std::string>()->default_value("127.0.0.1"),
-                        "Set hostname for a matrixserver")
-                ("fade", value<float>()->default_value(0.9),
-                 "Set custom fade factor");
-
-        variables_map vm;
-        store(parse_command_line(argc, argv, desc), vm);
-        notify(vm);
-
-        if (vm.count("help"))
-            std::cout << desc << '\n';
-        else if (vm.count("age"))
-            std::cout << "host: " << vm["host"].as<std::string>() << '\n';
-
-        PixelFlow App1(vm["host"].as<std::string>(), vm["fade"].as<float>());
-        App1.start();
-        while(1) sleep(2);
+    if (argc > 1) {
+        host = argv[1];
     }
-    catch (const error &ex)
-    {
-        std::cerr << ex.what() << '\n';
+    if (argc > 2) {
+        try {
+            fade = std::stof(argv[2]);
+        } catch (const std::exception& e) {
+            std::cerr << "Invalid fade argument '" << argv[2] << "', using default 0.9.\n";
+        }
     }
+
+    PixelFlow App1(host, fade);
+    App1.start();
+    
+    while(1) sleep(2);
+    
     return 0;
 }

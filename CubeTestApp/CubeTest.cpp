@@ -6,7 +6,7 @@
 
 
 
-CubeTest::CubeTest() : CubeApplication(30){
+CubeTest::CubeTest(const char* host) : CubeApplication(30, host){
 
 }
 /*CubeTest::CubeTest(int fps, std::string ip, std::string port) : CubeApplication(fps, ip, port) {

@@ -5,7 +5,7 @@
 
 class CubeTest : public CubeApplication{
 public:
-    CubeTest();
+    CubeTest(const char* host = "127.0.0.1");
     bool loop();
 };
 

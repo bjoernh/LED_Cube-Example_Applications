@@ -21,7 +21,7 @@ protected:
         pregame, ingame, postgame
     };
 public:
-    BreakoutGame();
+    BreakoutGame(const char* host = "127.0.0.1");
 
     void playerLoop();
 

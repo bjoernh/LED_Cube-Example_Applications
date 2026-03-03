@@ -32,13 +32,13 @@ IF(APPLE)
 ENDIF()
 
 
-#add_subdirectory(Genetic)
+add_subdirectory(Genetic)
 add_subdirectory(CubeTestApp)
-#add_subdirectory(Breakout3D)
-#add_subdirectory(Blackout3D)
+add_subdirectory(Breakout3D)
+add_subdirectory(Blackout3D)
 add_subdirectory(PixelFlow3)
-#add_subdirectory(MatrixRain)
-#add_subdirectory(Snake)
+add_subdirectory(MatrixRain)
+add_subdirectory(Snake)
 
 IF(BUILD_RASPBERRYPI)
     add_subdirectory(ImuTest)

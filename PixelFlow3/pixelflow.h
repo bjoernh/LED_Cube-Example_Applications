@@ -7,7 +7,7 @@
 
 class PixelFlow : public CubeApplication{
 public:
-    PixelFlow();
+    PixelFlow(const char* host = "127.0.0.1");
     bool loop();
 private:
     class Particle;
