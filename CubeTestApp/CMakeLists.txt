@@ -17,4 +17,4 @@ find_package(matrixapplication REQUIRED)
 
 
 add_executable(cubetestapp main.cpp CubeTest.cpp)
-target_link_libraries(cubetestapp matrixapplication::matrixapplication absl::log_internal_message)
+target_link_libraries(cubetestapp matrixapplication::matrixapplication)
