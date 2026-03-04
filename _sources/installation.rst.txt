@@ -12,7 +12,7 @@ Framework Dependency
 
 The example applications require the matrixserver framework to be installed first. The matrixserver provides the core libraries and runtime components needed by all applications.
 
-**Required**: matrixserver framework with ``matrixapplication`` library
+**Required**: matrixserver framework with ``matrixapplication`` library (version >= 0.3)
 
 System Dependencies
 ------------------
@@ -171,7 +171,7 @@ The build system uses CMake's ``find_package`` mechanism to locate dependencies:
 
    find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log system)
    find_package(absl REQUIRED)
-   find_package(matrixapplication REQUIRED)
+   find_package(matrixapplication 0.3 REQUIRED)
 
 Library Linking Configuration
 ----------------------------
@@ -197,7 +197,17 @@ Common Problems and Solutions
 
    Error: Could not find package configuration file provided by "matrixapplication"
 
-*Solution*: Install the matrixserver framework first. Ensure it's properly installed and CMake can find it.
+*Solution*: Install the matrixserver framework (version >= 0.3) first. The build system
+will automatically search ``./matrixserver/install/`` before falling back to system paths.
+To use a local build of matrixserver, install it into that directory:
+
+.. code-block:: bash
+
+   # Inside the matrixserver repository
+   cmake .. -DCMAKE_INSTALL_PREFIX=../install
+   make && make install
+
+Alternatively, for a custom location pass ``-DCMAKE_PREFIX_PATH=/your/path`` to CMake.
 
 **Imlib2 Not Found**
 

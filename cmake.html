@@ -127,6 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dependency-management">Dependency Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#matrixapplication-discovery">matrixapplication Discovery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#boost-configuration">Boost Configuration</a></li>
 </ul>
 </li>
@@ -400,6 +401,23 @@
 </section>
 <section id="dependency-management">
 <h2>Dependency Management<a class="headerlink" href="#dependency-management" title="Link to this heading"></a></h2>
+<section id="matrixapplication-discovery">
+<h3>matrixapplication Discovery<a class="headerlink" href="#matrixapplication-discovery" title="Link to this heading"></a></h3>
+<p>The build system searches for the <code class="docutils literal notranslate"><span class="pre">matrixapplication</span></code> package (version &gt;= 0.3) using a
+prioritised path list. <code class="docutils literal notranslate"><span class="pre">./matrixserver/install/</span></code> is checked first, allowing a locally
+built matrixserver to be picked up without any extra configuration:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="s2">&quot;${CMAKE_SOURCE_DIR}/matrixserver/install&quot;</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_PREFIX_PATH</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To use this, build and install matrixserver into that directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inside the matrixserver repository</span>
+cmake<span class="w"> </span>..<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>../install
+make<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make<span class="w"> </span>install
+</pre></div>
+</div>
+<p>If the package is not found locally, CMake falls back to the normal system search paths.
+For a completely custom location, pass <code class="docutils literal notranslate"><span class="pre">-DCMAKE_PREFIX_PATH=/your/path</span></code> at configure time.</p>
+</section>
 <section id="boost-configuration">
 <h3>Boost Configuration<a class="headerlink" href="#boost-configuration" title="Link to this heading"></a></h3>
 <p>Boost libraries are configured globally with specific requirements:</p>
@@ -433,7 +451,7 @@
 
 <span class="c"># Additional required packages</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">absl</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">matrixapplication</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">matrixapplication</span><span class="w"> </span><span class="s">0.3</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 
 <span class="c"># Define executable and link libraries</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="s">applicationName</span><span class="w"> </span><span class="s">source_files...</span><span class="p">)</span>
@@ -458,7 +476,7 @@
 </pre></div>
 </div>
 <p><strong>Framework Integration</strong>: All applications link against the matrixapplication library:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">matrixapplication</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">matrixapplication</span><span class="w"> </span><span class="s">0.3</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">applicationName</span><span class="w"> </span><span class="s">matrixapplication::matrixapplication</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -470,14 +488,13 @@
 <h3>Conditional Compilation<a class="headerlink" href="#conditional-compilation" title="Link to this heading"></a></h3>
 <p>The main CMakeLists.txt conditionally includes applications based on platform and configuration:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Always enabled applications</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">Genetic</span><span class="p">)</span>
 <span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">CubeTestApp</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">Breakout3D</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">Blackout3D</span><span class="p">)</span>
 <span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">PixelFlow3</span><span class="p">)</span>
-
-<span class="c"># Conditionally enabled applications</span>
-<span class="c">#add_subdirectory(Genetic)        # Currently commented out</span>
-<span class="c">#add_subdirectory(Breakout3D)     # Currently commented out</span>
-<span class="c">#add_subdirectory(Blackout3D)     # Currently commented out</span>
-<span class="c">#add_subdirectory(Snake)          # Currently commented out</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">MatrixRain</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">Snake</span><span class="p">)</span>
 
 <span class="c"># Raspberry Pi specific applications</span>
 <span class="nb">IF</span><span class="p">(</span><span class="s">BUILD_RASPBERRYPI</span><span class="p">)</span>
@@ -486,6 +503,9 @@
 <span class="w">    </span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">PixelFlow2</span><span class="p">)</span>
 <span class="w">    </span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">Rainbow</span><span class="p">)</span>
 <span class="nb">ENDIF</span><span class="p">()</span>
+
+<span class="c"># Picture application (currently disabled)</span>
+<span class="c">#add_subdirectory(Picture)</span>
 </pre></div>
 </div>
 <p>This configuration allows for:</p>
@@ -563,7 +583,10 @@ make<span class="w"> </span>clean
 <section id="custom-library-paths">
 <h3>Custom Library Paths<a class="headerlink" href="#custom-library-paths" title="Link to this heading"></a></h3>
 <p>For non-standard library installations, use CMake variables:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom Boost installation</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use a locally installed matrixserver (alternative to ./matrixserver/install/)</span>
+cmake<span class="w"> </span>-DCMAKE_PREFIX_PATH<span class="o">=</span>/path/to/matrixserver/install<span class="w"> </span>..
+
+<span class="c1"># Custom Boost installation</span>
 cmake<span class="w"> </span>-DBOOST_ROOT<span class="o">=</span>/custom/boost/path<span class="w"> </span>..
 
 <span class="c1"># Custom Imlib2 installation</span>
@@ -626,7 +649,7 @@ make<span class="w"> </span><span class="nv">VERBOSE</span><span class="o">=</sp
 
   <div role="contentinfo">
     <p>&#169; Copyright 2025, Matrix Server Framework.
-      <span class="lastupdated">Last updated on Mar 03, 2026.
+      <span class="lastupdated">Last updated on Mar 04, 2026.
       </span></p>
   </div>
 

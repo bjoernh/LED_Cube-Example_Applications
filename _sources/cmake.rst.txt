@@ -102,6 +102,28 @@ This addresses linking issues on newer macOS versions by explicitly including th
 Dependency Management
 ====================
 
+matrixapplication Discovery
+---------------------------
+
+The build system searches for the ``matrixapplication`` package (version >= 0.3) using a
+prioritised path list. ``./matrixserver/install/`` is checked first, allowing a locally
+built matrixserver to be picked up without any extra configuration:
+
+.. code-block:: cmake
+
+   set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/matrixserver/install" ${CMAKE_PREFIX_PATH})
+
+To use this, build and install matrixserver into that directory:
+
+.. code-block:: bash
+
+   # Inside the matrixserver repository
+   cmake .. -DCMAKE_INSTALL_PREFIX=../install
+   make && make install
+
+If the package is not found locally, CMake falls back to the normal system search paths.
+For a completely custom location, pass ``-DCMAKE_PREFIX_PATH=/your/path`` at configure time.
+
 Boost Configuration
 ------------------
 
@@ -142,7 +164,7 @@ Typical Application CMake Structure
    
    # Additional required packages
    find_package(absl REQUIRED)
-   find_package(matrixapplication REQUIRED)
+   find_package(matrixapplication 0.3 REQUIRED)
    
    # Define executable and link libraries
    add_executable(applicationName source_files...)
@@ -171,7 +193,7 @@ Library Detection Patterns
 
 .. code-block:: cmake
 
-   find_package(matrixapplication REQUIRED)
+   find_package(matrixapplication 0.3 REQUIRED)
    target_link_libraries(applicationName matrixapplication::matrixapplication)
 
 Application Selection
@@ -185,14 +207,13 @@ The main CMakeLists.txt conditionally includes applications based on platform an
 .. code-block:: cmake
 
    # Always enabled applications
+   add_subdirectory(Genetic)
    add_subdirectory(CubeTestApp)
+   add_subdirectory(Breakout3D)
+   add_subdirectory(Blackout3D)
    add_subdirectory(PixelFlow3)
-   
-   # Conditionally enabled applications
-   #add_subdirectory(Genetic)        # Currently commented out
-   #add_subdirectory(Breakout3D)     # Currently commented out
-   #add_subdirectory(Blackout3D)     # Currently commented out
-   #add_subdirectory(Snake)          # Currently commented out
+   add_subdirectory(MatrixRain)
+   add_subdirectory(Snake)
    
    # Raspberry Pi specific applications
    IF(BUILD_RASPBERRYPI)
@@ -201,6 +222,9 @@ The main CMakeLists.txt conditionally includes applications based on platform an
        add_subdirectory(PixelFlow2)
        add_subdirectory(Rainbow)
    ENDIF()
+   
+   # Picture application (currently disabled)
+   #add_subdirectory(Picture)
 
 This configuration allows for:
 
@@ -286,6 +310,9 @@ For non-standard library installations, use CMake variables:
 
 .. code-block:: bash
 
+   # Use a locally installed matrixserver (alternative to ./matrixserver/install/)
+   cmake -DCMAKE_PREFIX_PATH=/path/to/matrixserver/install ..
+   
    # Custom Boost installation
    cmake -DBOOST_ROOT=/custom/boost/path ..
    
