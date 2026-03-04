@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.07)
-project(exampleApplications)
+project(exampleApplications VERSION 0.3.0)
 
 
 set(CMAKE_CXX_STANDARD 17)
@@ -25,6 +25,8 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif ()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/matrixserver/install" ${CMAKE_PREFIX_PATH})
 
 IF(APPLE)
 	# Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035

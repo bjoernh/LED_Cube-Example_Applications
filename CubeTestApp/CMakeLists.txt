@@ -13,7 +13,7 @@ find_library(IMLIB2_FOUND "Imlib2" PATHS "/opt/homebrew/Cellar/imlib2/1.12.2/")
 
 
 find_package( absl REQUIRED )
-find_package(matrixapplication REQUIRED)
+find_package(matrixapplication 0.3 REQUIRED)
 
 
 add_executable(cubetestapp main.cpp CubeTest.cpp)

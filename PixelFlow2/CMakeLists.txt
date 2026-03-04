@@ -1,6 +1,6 @@
 project(PixelFlow2)
 
-find_package(matrixapplication REQUIRED)
+find_package(matrixapplication 0.3 REQUIRED)
 
 set(MAINSRC
     main.cpp pixelflow2.cpp pixelflow2.h)

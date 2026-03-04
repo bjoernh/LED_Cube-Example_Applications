@@ -24,8 +24,10 @@ The build system automatically detects Raspberry Pi platforms via `/boot/LICENCE
 
 ### Dependencies
 
-Applications require the matrixserver framework to be installed. Core dependencies:
-- matrixapplication library (from matrixserver framework)
+Applications require the matrixserver framework (version >= 0.3) to be installed. The build
+system automatically checks `./matrixserver/install/` first, then falls back to system paths.
+Core dependencies:
+- matrixapplication library >= 0.3 (from matrixserver framework)
 - Boost (thread, log, system components)
 - Imlib2 (image processing)
 - absl (Google's Abseil library)

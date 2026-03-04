@@ -63,41 +63,44 @@ The matrixserver framework must be compiled and installed before building these 
    cd matrixserver
    ```
 
-2. **Build the framework:**
+2. **Build and install the framework locally (recommended):**
+   ```bash
+   mkdir -p build && cd build
+   cmake .. -DCMAKE_INSTALL_PREFIX=../install
+   make
+   make install
+   ```
+
+   This installs the framework into `matrixserver/install/`, which the example applications
+   pick up automatically without any extra configuration.
+
+   **Alternative - System-wide installation:**
    ```bash
    mkdir -p build && cd build
    cmake ..
    make
-   ```
-
-3. **Install system-wide (recommended):**
-   ```bash
    sudo make install
-   # This installs libraries to /usr/local/lib and headers to /usr/local/include
-   ```
-
-   **Alternative - Local installation:**
-   ```bash
-   make install DESTDIR=/path/to/local/install
-   # Then set CMAKE_PREFIX_PATH when building examples
-   ```
-
-4. **Verify installation:**
-   ```bash
-   # Check that libraries are installed
-   ls /usr/local/lib/libmatrixapplication*
-
-   # Update library cache (Linux)
+   # Installs libraries to /usr/local/lib and headers to /usr/local/include
    sudo ldconfig
    ```
 
+3. **Verify installation:**
+   ```bash
+   # Local install (recommended)
+   ls matrixserver/install/
+
+   # System-wide install
+   ls /usr/local/lib/libmatrixapplication*
+   ```
+
 **Required matrixserver components:**
-- `libmatrixapplication` - Core application framework
+- `libmatrixapplication` - Core application framework (version >= 0.3)
 - Header files for `CubeApplication` and `MatrixApplication` base classes
 - Server executables (server_simulator, server_FPGA, etc.)
 
 **Troubleshooting:**
-- If CMake cannot find matrixserver, set `CMAKE_PREFIX_PATH` to your installation directory
+- The build system checks `./matrixserver/install/` first, then falls back to system paths
+- If using a custom install location, pass `-DCMAKE_PREFIX_PATH=/your/path` to CMake
 - On macOS, you may need to set `DYLD_LIBRARY_PATH` to include the library location
 - Ensure all matrixserver dependencies are installed (Boost, OpenGL, etc.)
 
