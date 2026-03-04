@@ -30,7 +30,7 @@ Core dependencies:
 - matrixapplication library >= 0.3 (from matrixserver framework)
 - Boost (thread, log, system components)
 - Imlib2 (image processing)
-- absl (Google's Abseil library)
+- Imlib2 (image processing)
 
 ### Package Creation
 

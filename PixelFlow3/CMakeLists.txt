@@ -13,7 +13,7 @@ find_library(IMLIB2_FOUND "Imlib2" PATHS "/opt/homebrew/Cellar/imlib2/1.12.2/")
  ENDIF(IMLIB2_FOUND)
 
 
-find_package( absl REQUIRED )
+
 
 set(MAINSRC
     main.cpp pixelflow.cpp pixelflow.h)
