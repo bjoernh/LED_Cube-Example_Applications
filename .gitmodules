@@ -1,4 +1,4 @@
 [submodule "matrixserver"]
 	path = matrixserver
-	url = git@github.com:bjoernh/matrixserver.git
+	url = https://github.com/bjoernh/matrixserver.git
 	branch = master
