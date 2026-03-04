@@ -8,7 +8,7 @@ This is a fork of the original [squarewavedot/exampleApplications](https://githu
 
 - **Claude-generated documentation**: Comprehensive documentation generated with Claude AI assistance
 - **macOS compatibility**: CMake build system tweaks to compile on macOS
-- **Enhanced project structure**: Improved organization and build configuration
+- **Enhanced project structure**: Improved organization and build configuration, matrixserver as a git submodule
 
 ## Documentation
 
