@@ -163,14 +163,13 @@ Typical Application CMake Structure
    ENDIF(IMLIB2_FOUND)
    
    # Additional required packages
-   find_package(absl REQUIRED)
+
    find_package(matrixapplication 0.3 REQUIRED)
    
    # Define executable and link libraries
    add_executable(applicationName source_files...)
    target_link_libraries(applicationName 
        matrixapplication::matrixapplication 
-       absl::log_internal_message
    )
 
 Library Detection Patterns

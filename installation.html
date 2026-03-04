@@ -338,21 +338,20 @@
 </ul>
 </li>
 <li><p><strong>Imlib2</strong> - Image processing library for picture display functionality</p></li>
-<li><p><strong>absl</strong> - Google’s Abseil C++ library for utility functions</p></li>
 </ul>
 <p><strong>Platform-Specific Dependencies</strong></p>
 <p>On <strong>macOS</strong> with Homebrew:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>boost<span class="w"> </span>imlib2<span class="w"> </span>abseil
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>boost<span class="w"> </span>imlib2
 </pre></div>
 </div>
 <p>On <strong>Ubuntu/Debian</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libboost-all-dev<span class="w"> </span>libimlib2-dev<span class="w"> </span>libabsl-dev
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libboost-all-dev<span class="w"> </span>libimlib2-dev
 </pre></div>
 </div>
 <p>On <strong>Raspberry Pi</strong>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libboost-all-dev<span class="w"> </span>libimlib2-dev<span class="w"> </span>libabsl-dev
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libboost-all-dev<span class="w"> </span>libimlib2-dev
 <span class="c1"># Additional Raspberry Pi specific packages may be needed</span>
 </pre></div>
 </div>
@@ -459,7 +458,7 @@ cmake<span class="w"> </span>-DIMLIB2_ROOT<span class="o">=</span>/opt/homebrew/
 <h3>CMake Package Discovery<a class="headerlink" href="#cmake-package-discovery" title="Link to this heading"></a></h3>
 <p>The build system uses CMake’s <code class="docutils literal notranslate"><span class="pre">find_package</span></code> mechanism to locate dependencies:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">Boost</span><span class="w"> </span><span class="s">1.58.0</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">COMPONENTS</span><span class="w"> </span><span class="s">thread</span><span class="w"> </span><span class="s">log</span><span class="w"> </span><span class="s">system</span><span class="p">)</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">absl</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+
 <span class="nb">find_package</span><span class="p">(</span><span class="s">matrixapplication</span><span class="w"> </span><span class="s">0.3</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -469,7 +468,6 @@ cmake<span class="w"> </span>-DIMLIB2_ROOT<span class="o">=</span>/opt/homebrew/
 <p>Each application links against the required libraries:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">cubetestapp</span>
 <span class="w">    </span><span class="s">matrixapplication::matrixapplication</span>
-<span class="w">    </span><span class="s">absl::log_internal_message</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -540,7 +538,7 @@ make<span class="w"> </span>package
 <ol class="arabic simple">
 <li><p><strong>Copy executables</strong> to target system</p></li>
 <li><p><strong>Ensure matrixserver framework</strong> is installed</p></li>
-<li><p><strong>Install runtime dependencies</strong> (Boost, Imlib2, absl)</p></li>
+<li><p><strong>Install runtime dependencies</strong> (Boost, Imlib2)</p></li>
 <li><p><strong>Set executable permissions</strong> if needed</p></li>
 </ol>
 </section>

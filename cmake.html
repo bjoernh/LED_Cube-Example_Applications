@@ -450,14 +450,13 @@ For a completely custom location, pass <code class="docutils literal notranslate
 <span class="nb">ENDIF</span><span class="p">(</span><span class="s">IMLIB2_FOUND</span><span class="p">)</span>
 
 <span class="c"># Additional required packages</span>
-<span class="nb">find_package</span><span class="p">(</span><span class="s">absl</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+
 <span class="nb">find_package</span><span class="p">(</span><span class="s">matrixapplication</span><span class="w"> </span><span class="s">0.3</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 
 <span class="c"># Define executable and link libraries</span>
 <span class="nb">add_executable</span><span class="p">(</span><span class="s">applicationName</span><span class="w"> </span><span class="s">source_files...</span><span class="p">)</span>
 <span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">applicationName</span>
 <span class="w">    </span><span class="s">matrixapplication::matrixapplication</span>
-<span class="w">    </span><span class="s">absl::log_internal_message</span>
 <span class="p">)</span>
 </pre></div>
 </div>

@@ -29,7 +29,7 @@ The following system libraries are required for compilation:
 
 * **Imlib2** - Image processing library for picture display functionality
 
-* **absl** - Google's Abseil C++ library for utility functions
+
 
 **Platform-Specific Dependencies**
 
@@ -37,21 +37,21 @@ On **macOS** with Homebrew:
 
 .. code-block:: bash
 
-   brew install boost imlib2 abseil
+   brew install boost imlib2
 
 On **Ubuntu/Debian**:
 
 .. code-block:: bash
 
    sudo apt-get update
-   sudo apt-get install libboost-all-dev libimlib2-dev libabsl-dev
+   sudo apt-get install libboost-all-dev libimlib2-dev
 
 On **Raspberry Pi**:
 
 .. code-block:: bash
 
    sudo apt-get update
-   sudo apt-get install libboost-all-dev libimlib2-dev libabsl-dev
+   sudo apt-get install libboost-all-dev libimlib2-dev
    # Additional Raspberry Pi specific packages may be needed
 
 Build System Requirements
@@ -170,7 +170,7 @@ The build system uses CMake's ``find_package`` mechanism to locate dependencies:
 .. code-block:: cmake
 
    find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log system)
-   find_package(absl REQUIRED)
+
    find_package(matrixapplication 0.3 REQUIRED)
 
 Library Linking Configuration
@@ -182,7 +182,6 @@ Each application links against the required libraries:
 
    target_link_libraries(cubetestapp 
        matrixapplication::matrixapplication 
-       absl::log_internal_message
    )
 
 Troubleshooting Build Issues
@@ -271,7 +270,7 @@ For manual deployment:
 
 1. **Copy executables** to target system
 2. **Ensure matrixserver framework** is installed
-3. **Install runtime dependencies** (Boost, Imlib2, absl)
+3. **Install runtime dependencies** (Boost, Imlib2)
 4. **Set executable permissions** if needed
 
 Running Applications
