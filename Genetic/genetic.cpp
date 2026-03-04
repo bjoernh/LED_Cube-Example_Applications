@@ -6,7 +6,7 @@
 #include <cmath>
 #include <random>
 
-Genetic::Genetic(const char* host) : MatrixApplication(40, host){
+Genetic::Genetic(std::string serverUri) : MatrixApplication(40, serverUri){
     width_ = 64;
     height_ = 64;
     popSize_ = width_ * height_;

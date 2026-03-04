@@ -10,12 +10,12 @@ void signal_handler(int signal_num)
 } 
 
 int main(int argc, char *argv[]) {
-    const char* host = "127.0.0.1";
+    std::string serverUri = DEFAULTSERVERURI;
     if (argc > 1) {
-        host = argv[1];
+        serverUri = argv[1];
     }
     
-    CubeTest App1(host);
+    CubeTest App1(serverUri);
     App1.start();
     
     std::signal(SIGUSR1, signal_handler);

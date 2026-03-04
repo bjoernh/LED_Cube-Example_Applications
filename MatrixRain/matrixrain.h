@@ -7,7 +7,7 @@
 
 class PixelFlow : public CubeApplication{
 public:
-    PixelFlow(std::string host, float fade);
+    PixelFlow(std::string serverUri, float fade);
     bool loop();
 private:
     class Particle;

@@ -13,7 +13,7 @@ fs::file_time_type lastModificationTime;
 int animationPrescale = 2;
 
 
-Picture::Picture(int argc, char *argv[]) : CubeApplication(40, "192.168.188.106") {
+Picture::Picture(int argc, char *argv[]) : CubeApplication(40) {
     joysticks.push_back(new Joystick(0));
     joysticks.push_back(new Joystick(1));
     joysticks.push_back(new Joystick(2));

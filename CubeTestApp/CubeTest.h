@@ -5,7 +5,7 @@
 
 class CubeTest : public CubeApplication{
 public:
-    CubeTest(const char* host = "127.0.0.1");
+    CubeTest(std::string serverUri = DEFAULTSERVERURI);
     bool loop();
 };
 

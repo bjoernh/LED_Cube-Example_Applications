@@ -5,7 +5,7 @@
 
 class Genetic : public MatrixApplication{
 public:
-  Genetic(const char* host = "127.0.0.1");
+  Genetic(std::string serverUri = DEFAULTSERVERURI);
   bool loop();
   ~Genetic();
   static int rnd (int i) { return rand() % i; }

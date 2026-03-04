@@ -3,11 +3,11 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-    std::string host = "127.0.0.1";
+    std::string serverUri = DEFAULTSERVERURI;
     float fade = 0.9f;
 
     if (argc > 1) {
-        host = argv[1];
+        serverUri = argv[1];
     }
     if (argc > 2) {
         try {
@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    PixelFlow App1(host, fade);
+    PixelFlow App1(serverUri, fade);
     App1.start();
     
     while(1) sleep(2);

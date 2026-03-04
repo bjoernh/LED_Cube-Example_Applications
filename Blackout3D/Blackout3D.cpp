@@ -1,6 +1,6 @@
 #include "Blackout3D.h"
 
-Blackout3D::Blackout3D(const char* host) : CubeApplication(20, host){
+Blackout3D::Blackout3D(std::string serverUri) : CubeApplication(20, serverUri){
 
 }
 

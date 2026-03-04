@@ -8,7 +8,7 @@
 
 #define PI 3.14159265
 
-PixelFlow::PixelFlow(const char* host) : CubeApplication(40, host) {
+PixelFlow::PixelFlow(std::string serverUri) : CubeApplication(40, serverUri) {
     joysticks.push_back(new Joystick(0));
     joysticks.push_back(new Joystick(1));
     joysticks.push_back(new Joystick(2));

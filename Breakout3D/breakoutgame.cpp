@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-BreakoutGame::BreakoutGame(const char* host) : CubeApplication(40, host){
+BreakoutGame::BreakoutGame(std::string serverUri) : CubeApplication(40, serverUri){
   reset();
   updateHighScoreFromToFile();
 }

@@ -6,7 +6,7 @@
 
 class Blackout3D : public CubeApplication{
 public:
-    Blackout3D(const char* host = "127.0.0.1");
+    Blackout3D(std::string serverUri = DEFAULTSERVERURI);
     bool loop();
 };
 

@@ -8,7 +8,7 @@
 
 class Snake : public CubeApplication {
 public:
-    Snake(const char* host = "127.0.0.1");
+    Snake(std::string serverUri = DEFAULTSERVERURI);
 
     bool loop();
 
