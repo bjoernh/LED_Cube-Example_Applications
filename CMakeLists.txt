@@ -28,6 +28,15 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/matrixserver/install" ${CMAKE_PREFIX_PATH})
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(EIGEN3 REQUIRED eigen3)
+pkg_check_modules(IMLIB2 REQUIRED imlib2)
+include_directories(${EIGEN3_INCLUDE_DIRS} ${IMLIB2_INCLUDE_DIRS})
+link_directories(${EIGEN3_LIBRARY_DIRS} ${IMLIB2_LIBRARY_DIRS})
+
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+
 IF(APPLE)
 	# Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
 	LINK_DIRECTORIES(/usr/local/lib)
