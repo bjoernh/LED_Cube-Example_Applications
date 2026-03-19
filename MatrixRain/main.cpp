@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    PixelFlow App1(serverUri, fade);
+    MatrixRain App1(serverUri, fade);
     App1.start();
     
     while(1) sleep(2);

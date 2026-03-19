@@ -8,7 +8,7 @@
 
 #define PI 3.14159265
 
-PixelFlow::PixelFlow(std::string serverUri, float fade) : CubeApplication(40, serverUri) {
+MatrixRain::MatrixRain(std::string serverUri, float fade) : CubeApplication(40, serverUri) {
     joysticks.push_back(new Joystick(0));
     joysticks.push_back(new Joystick(1));
     joysticks.push_back(new Joystick(2));
@@ -16,7 +16,7 @@ PixelFlow::PixelFlow(std::string serverUri, float fade) : CubeApplication(40, se
     fade_factor = fade;
 }
 
-bool PixelFlow::loop(){
+bool MatrixRain::loop(){
     static std::vector<std::shared_ptr<Drop>> rdrops;
     static int counter = 0;
     static int counterColChange = 0;
@@ -110,7 +110,7 @@ bool PixelFlow::loop(){
 }
 
 
-PixelFlow::Drop::Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col)
+MatrixRain::Drop::Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col)
         : Particle(pos, vel, accel, col){
     maxPos_ = maxPos;
     vxOld_ = 0.0f;
@@ -118,7 +118,7 @@ PixelFlow::Drop::Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f acce
     rdyDelete_ = false;
 }
 
-void PixelFlow::Drop::step(){
+void MatrixRain::Drop::step(){
     Particle::step(); //Do the physics
 
     if(position_[0] < 0 || position_[1] < 0 || position_[0] > maxPos_[0] || position_[1] > maxPos_[1]) {
@@ -182,68 +182,68 @@ void PixelFlow::Drop::step(){
 
 }
 
-bool PixelFlow::Drop::getRdyDelete(){
+bool MatrixRain::Drop::getRdyDelete(){
     return rdyDelete_;
 }
 
 
-PixelFlow::Particle::Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col)
+MatrixRain::Particle::Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col)
         :position_(pos),
          velocity_(vel),
          acceleration_(accel),
          color_(col){}
 
-void PixelFlow::Particle::step(){
+void MatrixRain::Particle::step(){
     accelerate();
     move();
 }
 
-void PixelFlow::Particle::move(){
+void MatrixRain::Particle::move(){
     position_ += velocity_;
 }
 
-void PixelFlow::Particle::accelerate(){
+void MatrixRain::Particle::accelerate(){
     velocity_ += acceleration_;
 }
 
-Vector3f PixelFlow::Particle::position(){
+Vector3f MatrixRain::Particle::position(){
     return position_;
 }
 
-Vector3f PixelFlow::Particle::velocity(){
+Vector3f MatrixRain::Particle::velocity(){
     return velocity_;
 }
 
-Vector3f PixelFlow::Particle::acceleration(){
+Vector3f MatrixRain::Particle::acceleration(){
     return acceleration_;
 }
 
-Vector3i PixelFlow::Particle::iPosition(){
+Vector3i MatrixRain::Particle::iPosition(){
     return Vector3i(round(position()[0]),round(position()[1]),round(position()[2]));
 }
 
-Vector3i PixelFlow::Particle::iVelocity(){
+Vector3i MatrixRain::Particle::iVelocity(){
     return Vector3i(round(velocity()[0]),round(velocity()[1]),round(position()[2]));
 }
 
-Vector3i PixelFlow::Particle::iAcceleration(){
+Vector3i MatrixRain::Particle::iAcceleration(){
     return Vector3i(round(acceleration()[0]),round(acceleration()[1]),round(acceleration()[2]));
 }
 
-void PixelFlow::Particle::position(Vector3f pos){
+void MatrixRain::Particle::position(Vector3f pos){
     position_ = pos;
 }
-void PixelFlow::Particle::velocity(Vector3f vel){
+void MatrixRain::Particle::velocity(Vector3f vel){
     velocity_ = vel;
 }
-void PixelFlow::Particle::acceleration(Vector3f accel){
+void MatrixRain::Particle::acceleration(Vector3f accel){
     acceleration_ = accel;
 }
 
-Color PixelFlow::Particle::color(){
+Color MatrixRain::Particle::color(){
     return color_;
 }
-void PixelFlow::Particle::color(Color Col){
+void MatrixRain::Particle::color(Color Col){
     color_ = Col;
 }
 
