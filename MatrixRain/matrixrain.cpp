@@ -125,68 +125,102 @@ MatrixRain::Drop::Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f acc
     rdyDelete_ = false;
 }
 
-void MatrixRain::Drop::step(){
-    Particle::step(); //Do the physics
+void MatrixRain::Drop::step() {
+    // 1. Core Physics Update (updates position based on current velocity and acceleration)
+    Particle::step();
 
-    if(position_[0] < 0 || position_[1] < 0 || position_[0] > maxPos_[0] || position_[1] > maxPos_[1]) {
+    // 2. Lateral Boundary Collision Handling
+    // If the drop hits the sides (X or Y boundaries), we transition it to 
+    // vertical "return" mode.
+    if (position_[0] < 0 || position_[1] < 0 || position_[0] > maxPos_[0] ||
+        position_[1] > maxPos_[1]) {
+        
+        // Transition to rising (Z-velocity)
         velocity_[2] = 0.2;
-        acceleration_[2] = 0.001+((float)(rand()%10)/200.0f);
+        // Apply slight random acceleration variation to the rise speed
+        acceleration_[2] = 0.001 + ((float)(rand() % 10) / 200.0f);
+        
+        // Stop lateral acceleration
         acceleration_[1] = 0;
         acceleration_[0] = 0;
-        if (vxOld_ == 0 && vyOld_ == 0){
+
+        // Save original lateral velocities to allow return later
+        if (vxOld_ == 0 && vyOld_ == 0) {
             vxOld_ = velocity_[0];
             vyOld_ = velocity_[1];
         }
+        
+        // Kill current lateral movement while rising up the side
         velocity_[0] = 0;
         velocity_[1] = 0;
     }
 
-    if(position_[0] < 0) {
+    // Snap positions to boundaries if exceeded
+    if (position_[0] < 0) {
         position_[0] = 0;
         position_[2] = 0;
     }
 
-    if(position_[1] < 0){
+    if (position_[1] < 0) {
         position_[1] = 0;
         position_[2] = 0;
     }
 
-    if(position_[0] > maxPos_[0]){
+    if (position_[0] > maxPos_[0]) {
         position_[0] = maxPos_[0];
         position_[2] = 0;
     }
 
-    if(position_[1] > maxPos_[1]){
+    if (position_[1] > maxPos_[1]) {
         position_[1] = maxPos_[1];
         position_[2] = 0;
     }
 
-    if(position_[2] < 0){
+    // 3. Ground Collision (Bottom of Cube)
+    // If the drop hits Z < 0, bounce it back up
+    if (position_[2] < 0) {
         position_[2] = 0;
         velocity_[2] *= -1;
     }
 
-    if(position_[2] > maxPos_[2]){
+    // 4. Ceiling Collision / Return to Origin
+    // Once the drop reaches the top (Z = maxPos_[2]), it starts moving 
+    // back towards the center of the cube before disappearing.
+    if (position_[2] > maxPos_[2]) {
         position_[2] = maxPos_[2];
+        
+        // Move back in the opposite direction of its original fall
         velocity_[0] = vxOld_ * -1;
         velocity_[1] = vyOld_ * -1;
+        
+        // Stop vertical movement and acceleration
         velocity_[2] = 0;
         acceleration_[1] = 0;
         acceleration_[0] = 0;
         acceleration_[2] = 0;
     }
-    if(((velocity_[0] > 0 && position_[0] >VIRTUALCUBECENTER) || (velocity_[0]<0 && position_[0] < VIRTUALCUBECENTER)) && position_[2] == maxPos_[2]){
+
+    // 5. Center-point Deletion Logic
+    // If the drop has reached the top and crossed back past the center axis, 
+    // we stop its movement and mark it for deletion.
+    if (((velocity_[0] > 0 && position_[0] > VIRTUALCUBECENTER) ||
+         (velocity_[0] < 0 && position_[0] < VIRTUALCUBECENTER)) &&
+        position_[2] == maxPos_[2]) {
         velocity_[0] = 0;
         vxOld_ = 0;
     }
-    if(((velocity_[1] > 0 && position_[1] >VIRTUALCUBECENTER) || (velocity_[1]<0 && position_[1] < VIRTUALCUBECENTER)) && position_[2] == maxPos_[2]){
+    
+    if (((velocity_[1] > 0 && position_[1] > VIRTUALCUBECENTER) ||
+         (velocity_[1] < 0 && position_[1] < VIRTUALCUBECENTER)) &&
+        position_[2] == maxPos_[2]) {
         velocity_[1] = 0;
         vyOld_ = 0;
     }
-    if (velocity_[0] == 0 && velocity_[1] == 0  && position_[2] == maxPos_[2]){
+
+    // If both lateral movements have stopped at the ceiling, the drop's lifecycle is over
+    if (velocity_[0] == 0 && velocity_[1] == 0 && position_[2] == maxPos_[2]) {
         rdyDelete_ = true;
     }
-
 }
 
 bool MatrixRain::Drop::getRdyDelete(){
