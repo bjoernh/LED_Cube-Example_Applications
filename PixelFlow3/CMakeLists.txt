@@ -1,6 +1,6 @@
 project(PixelFlow3)
 
-find_package(matrixapplication 0.3 REQUIRED)
+find_package(matrixapplication 0.4 REQUIRED)
 find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
 
 find_library(IMLIB2_FOUND "Imlib2" PATHS "/opt/homebrew/lib" "/usr/local/lib")
