@@ -1,13 +1,13 @@
-#ifndef SNAKE_PIXELFLOW_H
-#define SNAKE_PIXELFLOW_H
+#ifndef MATRIX_RAIN_H
+#define MATRIX_RAIN_H
 
 #include "CubeApplication.h"
 #include "Joystick.h"
 #include <vector>
 
-class PixelFlow : public CubeApplication{
+class MatrixRain : public CubeApplication{
 public:
-    PixelFlow(std::string serverUri, float fade);
+    MatrixRain(std::string serverUri, float fade);
     bool loop();
 private:
     class Particle;
@@ -16,7 +16,7 @@ private:
     float fade_factor;
 };
 
-class PixelFlow::Particle{
+class MatrixRain::Particle{
 public:
     Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col);
     void step();
@@ -44,7 +44,7 @@ protected:
     Color color_;
 };
 
-class PixelFlow::Drop : public Particle {
+class MatrixRain::Drop : public Particle {
 public:
     Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col);
     void step();
@@ -57,4 +57,4 @@ private:
 };
 
 
-#endif //SNAKE_PIXELFLOW_H
+#endif //MATRIX_RAIN_H
