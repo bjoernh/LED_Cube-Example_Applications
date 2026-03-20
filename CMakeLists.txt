@@ -4,6 +4,7 @@ project(exampleApplications VERSION 0.3.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(Boost_NO_BOOST_CMAKE ON)
 set(Boost_FIND_QUIETLY ON) #FINALLY!!!
 
 set(Boost_USE_MULTITHREADED TRUE)

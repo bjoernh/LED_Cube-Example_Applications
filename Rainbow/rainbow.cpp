@@ -23,7 +23,7 @@ Color ColorFade(Color col1, Color col2, float progress) {
     return returnColor;
 }
 
-Rainbow::Rainbow() : CubeApplication(40) {
+Rainbow::Rainbow() : CubeApplication(40, DEFAULTSERVERURI, "Rainbow") {
     joysticks.push_back(new Joystick(0));
     joysticks.push_back(new Joystick(1));
     joysticks.push_back(new Joystick(2));
@@ -38,8 +38,6 @@ Rainbow::Rainbow() : CubeApplication(40) {
     allTheColors.push_back(Color(255, 0, 255));
     allTheColors.push_back(Color(255, 255, 255));
     allTheColors.push_back(Color(0, 0, 0));
-    // std::cout << "allTheColors.size " << allTheColors.size() << std::endl;
-
 
     allTheColorsRainbow.push_back(Color(255, 0, 0));
     allTheColorsRainbow.push_back(Color(255, 255, 0));
@@ -47,7 +45,6 @@ Rainbow::Rainbow() : CubeApplication(40) {
     allTheColorsRainbow.push_back(Color(0, 255, 255));
     allTheColorsRainbow.push_back(Color(0, 0, 255));
     allTheColorsRainbow.push_back(Color(255, 0, 255));
-    //std::cout << "allTheColorsRainbow.size " << allTheColorsRainbow.size() << std::endl;
 
     allTheColorsRandom.push_back(Color(rand()%127+127, 0, 0));
     allTheColorsRandom.push_back(Color(0,rand()%127+127, 0));
@@ -56,13 +53,12 @@ Rainbow::Rainbow() : CubeApplication(40) {
     allTheColorsRandom.push_back(Color(0,rand()%127+127, rand()%127+127));
     allTheColorsRandom.push_back(Color(rand()%127+127,0,rand()%127+127));
     allTheColorsRandom.push_back(Color(rand()%127+127,rand()%127+127,rand()%127+127));
-    allTheColorsRandom.push_back(Color(rand()%255, 0, 0));
-    allTheColorsRandom.push_back(Color(0,rand()%255, 0));
-    allTheColorsRandom.push_back(Color(0,0,rand()%255));
-    allTheColorsRandom.push_back(Color(rand()%255, rand()%255, 0));
-    allTheColorsRandom.push_back(Color(0,rand()%255, rand()%255));
-    allTheColorsRandom.push_back(Color(rand()%255,0,rand()%255));
-    allTheColorsRandom.push_back(Color(rand()%255,rand()%255,rand()%255));
+
+    params.registerInt("colorMode", "Color Mode", 0, 5, 1, "Colors");
+    params.registerFloat("colorChangeSpeed", "Color Cycle Speed", 0.0f, 2.0f, 1.0f, 0.05f, "Colors");
+    params.registerInt("rainbowSpeed", "Rainbow Flow Speed", 1, 10, 2, "Colors");
+    params.registerInt("pulseInterval", "Pulse Interval (ms)", 100, 50000, 2000, "Pulse");
+    params.registerInt("pulseLength", "Pulse Length (ms)", 100, 5000, 100, "Pulse");
 }
 
 bool Rainbow::loop() {
@@ -84,20 +80,21 @@ bool Rainbow::loop() {
     static uint8_t currentGreenValue = 127;
     static uint8_t currentBlueValue = 127;
     static int valueColorChangePerLoop = 2;
-    static int colorMode = 1;
     static int colorModeOld = 0;
-    static int rainbowSpeedFactor = 2;
     static int rainbowSpeedFactorMax = 10;
-    static float colorChangeSpeedFactor = 1.0f;
     static float colorChangeSpeedFactorMax = 2.0f;
     static int colorFadeNumber = 0;
     static int counterStepRainbow = 0;
     static int counterButton3 = 0;
     static int counterButton3Time = 3000; // milli Seconds
-    static int counterPulseTime = 2000; // mS
     static int tempCounterPulseTime = 2000; // mS
-    static int lengthPulseTime = 100; //  mS
     static int lengthPulseTimeMax = 5000; //  mS
+
+    int colorMode = params.getInt("colorMode");
+    int rainbowSpeedFactor = params.getInt("rainbowSpeed");
+    float colorChangeSpeedFactor = params.getFloat("colorChangeSpeed");
+    int counterPulseTime = params.getInt("pulseInterval");
+    int lengthPulseTime = params.getInt("pulseLength");
     static int counterPulseTimeMax = 50000; // milli Seconds
     static int counterPulse = 0; // milli Seconds
     static int counterPulse2 = 0; // milli Seconds
