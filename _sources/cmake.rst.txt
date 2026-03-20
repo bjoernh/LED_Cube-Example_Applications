@@ -164,7 +164,7 @@ Typical Application CMake Structure
    
    # Additional required packages
 
-   find_package(matrixapplication 0.3 REQUIRED)
+   find_package(matrixapplication 0.4 REQUIRED)
    
    # Define executable and link libraries
    add_executable(applicationName source_files...)
@@ -192,7 +192,7 @@ Library Detection Patterns
 
 .. code-block:: cmake
 
-   find_package(matrixapplication 0.3 REQUIRED)
+   find_package(matrixapplication 0.4 REQUIRED)
    target_link_libraries(applicationName matrixapplication::matrixapplication)
 
 Application Selection

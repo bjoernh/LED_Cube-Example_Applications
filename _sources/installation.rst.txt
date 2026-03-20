@@ -171,7 +171,7 @@ The build system uses CMake's ``find_package`` mechanism to locate dependencies:
 
    find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log system)
 
-   find_package(matrixapplication 0.3 REQUIRED)
+   find_package(matrixapplication 0.4 REQUIRED)
 
 Library Linking Configuration
 ----------------------------

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LED Matrix Cube Examples &mdash; LED Matrix Cube Examples Documentation</title>
+  <title>Dynamic Parameter System &mdash; LED Matrix Cube Examples Documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
@@ -19,7 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Overview" href="overview.html" /> 
+    <link rel="next" title="Applications" href="applications/index.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,7 +31,7 @@
 
           
           
-          <a href="#" class="icon icon-home">
+          <a href="index.html" class="icon icon-home">
             LED Matrix Cube Examples
           </a>
 <div role="search">
@@ -42,7 +43,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#project-purpose">Project Purpose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#architecture-overview">Architecture Overview</a><ul>
@@ -205,16 +206,16 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Dynamic Parameter System</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#core-concepts">Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#how-to-use">How to Use</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="parameters.html#register-parameters-in-the-constructor">1. Register Parameters in the Constructor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="parameters.html#read-parameters-in-your-loop">2. Read Parameters in Your Loop</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Dynamic Parameter System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-concepts">Core Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use">How to Use</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#register-parameters-in-the-constructor">1. Register Parameters in the Constructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-parameters-in-your-loop">2. Read Parameters in Your Loop</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#supported-parameter-types">Supported Parameter Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#presets">Presets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#network-communication">Network Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-parameter-types">Supported Parameter Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#presets">Presets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#network-communication">Network Communication</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="applications/index.html">Applications</a><ul>
@@ -308,17 +309,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">LED Matrix Cube Examples</a>
+          <a href="index.html">LED Matrix Cube Examples</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">LED Matrix Cube Examples</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Dynamic Parameter System</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/parameters.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -326,193 +327,74 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="led-matrix-cube-examples">
-<h1>LED Matrix Cube Examples<a class="headerlink" href="#led-matrix-cube-examples" title="Link to this heading"></a></h1>
-<p>Welcome to the LED Matrix Cube Examples documentation. This comprehensive guide covers example applications for the matrixserver framework, designed to demonstrate various capabilities of 3D LED cube displays and 2D matrix panels.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#project-purpose">Project Purpose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#architecture-overview">Architecture Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#hardware-support">Hardware Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#display-technologies">Display Technologies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#connection-architecture">Connection Architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#platform-specific-features">Platform-Specific Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#development-workflow">Development Workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#package-management">Package Management</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#build-system-requirements">Build System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#platform-detection">Platform Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#building-from-source">Building from Source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#dependency-resolution">Dependency Resolution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting-build-issues">Troubleshooting Build Issues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#deployment">Deployment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#running-applications">Running Applications</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cmake.html">CMake Project Details</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#main-cmake-configuration">Main CMake Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#platform-detection">Platform Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#dependency-management">Dependency Management</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#individual-application-configuration">Individual Application Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#application-selection">Application Selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#package-generation">Package Generation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#build-targets">Build Targets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#custom-build-options">Custom Build Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cmake.html#build-system-maintenance">Build System Maintenance</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#framework-architecture">Framework Architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#application-base-classes">Application Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#specialized-application-types">Specialized Application Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#framework-core-components">Framework Core Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#hardware-abstraction">Hardware Abstraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#design-patterns">Design Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#performance-optimization">Performance Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture.html#real-world-application-patterns">Real-World Application Patterns</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="parameters.html">Dynamic Parameter System</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#core-concepts">Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#how-to-use">How to Use</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#supported-parameter-types">Supported Parameter Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#presets">Presets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameters.html#network-communication">Network Communication</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="applications/index.html">Applications</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="applications/index.html#application-overview">Application Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applications/index.html#application-selection-guide">Application Selection Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applications/index.html#platform-compatibility">Platform Compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applications/index.html#common-application-features">Common Application Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="applications/index.html#development-patterns">Development Patterns</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#framework-base-classes">Framework Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#common-patterns-and-utilities">Common Patterns and Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#quick-reference">Quick Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#application-lifecycle">Application Lifecycle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#connection-architecture">Connection Architecture</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#performance-considerations">Performance Considerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/index.html#error-handling">Error Handling</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>The LED Matrix Cube example applications showcase the capabilities of the matrixserver framework through various interactive demonstrations, games, and visualizations. These examples range from simple 3D graphics tests to complex interactive applications with joystick input and sensor integration.</p>
-<section id="key-features">
-<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p><strong>3D Volumetric Rendering</strong>: Full 3D pixel manipulation in a cubic LED matrix</p></li>
-<li><p><strong>2D Matrix Support</strong>: Traditional flat LED panel applications</p></li>
-<li><p><strong>Interactive Input</strong>: Joystick and sensor integration</p></li>
-<li><p><strong>Cross-Platform</strong>: Runs on desktop systems and Raspberry Pi</p></li>
-<li><p><strong>Modular Architecture</strong>: Clean separation between application logic and hardware interface</p></li>
-<li><p><strong>Real-Time Performance</strong>: Optimized for smooth animations and responsive interactions</p></li>
-</ul>
-</section>
-</section>
-<section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
-<p>To get started with the LED Matrix Cube examples:</p>
+  <section id="dynamic-parameter-system">
+<h1>Dynamic Parameter System<a class="headerlink" href="#dynamic-parameter-system" title="Link to this heading"></a></h1>
+<p>The matrixapplication framework (version 0.4.0+) introduces a powerful Dynamic Parameter System designed to allow real-time configuration of running matrix applications.</p>
+<p>This system bridges the gap between the C++ backend and the new <strong>CubeWebapp</strong> frontend, allowing applications to expose adjustable parameters (like speed, color, spawn rate, etc.) automatically to the web interface.</p>
+<section id="core-concepts">
+<h2>Core Concepts<a class="headerlink" href="#core-concepts" title="Link to this heading"></a></h2>
+<p>The parameter system consists of several levels:</p>
 <ol class="arabic simple">
-<li><p><strong>Prerequisites</strong>: Install the matrixserver framework and dependencies</p></li>
-<li><p><strong>Build</strong>: Use CMake to compile the applications</p></li>
-<li><p><strong>Run</strong>: Start a matrixserver instance and launch an example application</p></li>
+<li><p><strong>AnimationParams</strong>: A C++ class that holds the schema and current values for an application’s parameters.</p></li>
+<li><p><strong>MatrixApplication Integration</strong>: The base class for all applications seamlessly handles incoming network requests for parameter updates and queries.</p></li>
+<li><p><strong>Protobuf Messages</strong>: Data definition language used for transmitting schema and values over WebSockets.</p></li>
+<li><p><strong>CubeWebapp UI</strong>: The web frontend that dynamically generates UI controls based on the application’s configuration.</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build all applications</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+</section>
+<section id="how-to-use">
+<h2>How to Use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
+<p>To expose parameters in your custom application, follow these steps:</p>
+<section id="register-parameters-in-the-constructor">
+<h3>1. Register Parameters in the Constructor<a class="headerlink" href="#register-parameters-in-the-constructor" title="Link to this heading"></a></h3>
+<p>Within your application’s constructor (derived from <code class="docutils literal notranslate"><span class="pre">CubeApplication</span></code> or <code class="docutils literal notranslate"><span class="pre">MatrixApplication</span></code>), register the parameters you wish to expose. They must be registered before the application’s main loop begins.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">MyApplication</span><span class="o">::</span><span class="n">MyApplication</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">CubeApplication</span><span class="p">(</span><span class="s">&quot;MyApplication&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Register an integer parameter</span>
+<span class="w">    </span><span class="n">params</span><span class="p">.</span><span class="n">registerIntParam</span><span class="p">(</span><span class="s">&quot;Speed&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Animation Speed&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
 
-<span class="c1"># Start the simulator server (in another terminal)</span>
-/path/to/matrixserver/build/server_simulator
+<span class="w">    </span><span class="c1">// Register a float parameter</span>
+<span class="w">    </span><span class="n">params</span><span class="p">.</span><span class="n">registerFloatParam</span><span class="p">(</span><span class="s">&quot;Gravity&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Gravity Multiplier&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1f</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0f</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0f</span><span class="p">);</span>
 
-<span class="c1"># Run an example application</span>
-./cubetestapp
+<span class="w">    </span><span class="c1">// Register a boolean parameter</span>
+<span class="w">    </span><span class="n">params</span><span class="p">.</span><span class="n">registerBoolParam</span><span class="p">(</span><span class="s">&quot;EnableSparkles&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Enable Sparkles&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Register an enum (dropdown) parameter</span>
+<span class="w">    </span><span class="n">params</span><span class="p">.</span><span class="n">registerEnumParam</span><span class="p">(</span><span class="s">&quot;ColorMode&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Color Mode&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Rainbow&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Solid&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Pulse&quot;</span><span class="p">},</span><span class="w"> </span><span class="s">&quot;Rainbow&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
-<section id="application-categories">
-<h2>Application Categories<a class="headerlink" href="#application-categories" title="Link to this heading"></a></h2>
-<p>The examples are organized into several categories:</p>
-<dl class="simple">
-<dt><strong>3D Cube Applications</strong></dt><dd><p>Applications that inherit from <code class="docutils literal notranslate"><span class="pre">CubeApplication</span></code> and render 3D volumetric content:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="applications/cubetestapp.html"><span class="doc">CubeTestApp</span></a> - Basic 3D functionality demonstration and testing</p></li>
-<li><p><a class="reference internal" href="applications/snake.html"><span class="doc">Snake</span></a> - Multi-player 3D Snake game with AI opponents</p></li>
-<li><p><a class="reference internal" href="applications/blackout3d.html"><span class="doc">Blackout3D</span></a> - Minimal interactive 3D application template</p></li>
-<li><p><a class="reference internal" href="applications/breakout3d.html"><span class="doc">Breakout3D</span></a> - Full-featured 3D Breakout game with physics</p></li>
-</ul>
-</dd>
-<dt><strong>2D Matrix Applications</strong></dt><dd><p>Applications that inherit from <code class="docutils literal notranslate"><span class="pre">MatrixApplication</span></code> for traditional 2D display:</p>
-<ul class="simple">
-<li><p><span class="xref std std-doc">applications/genetic</span> - Genetic algorithm color evolution visualization</p></li>
-<li><p><span class="xref std std-doc">applications/picture</span> - Image display with animation support and file watching</p></li>
-</ul>
-</dd>
-<dt><strong>Animation and Effects</strong></dt><dd><p>Specialized applications for visual effects:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="applications/pixelflow.html"><span class="doc">PixelFlow</span></a> - Advanced particle simulation series with IMU integration and cross-platform variants</p></li>
-<li><p><span class="xref std std-doc">applications/rainbow</span> - Particle system with IMU integration (Raspberry Pi only)</p></li>
-</ul>
-</dd>
-<dt><strong>Hardware Integration</strong></dt><dd><p>Applications demonstrating sensor and input integration:</p>
-<ul class="simple">
-<li><p><span class="xref std std-doc">applications/imutest</span> - IMU sensor integration (Raspberry Pi only)</p></li>
-</ul>
-</dd>
-</dl>
+<section id="read-parameters-in-your-loop">
+<h3>2. Read Parameters in Your Loop<a class="headerlink" href="#read-parameters-in-your-loop" title="Link to this heading"></a></h3>
+<p>During your application’s <code class="docutils literal notranslate"><span class="pre">tick()</span></code> or main rendering loop, retrieve the current values. Accesses are thread-safe and will immediately reflect any changes made by the user in the CubeWebapp UI.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">MyApplication::tick</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p">.</span><span class="n">getIntParam</span><span class="p">(</span><span class="s">&quot;Speed&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">gravity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p">.</span><span class="n">getFloatParam</span><span class="p">(</span><span class="s">&quot;Gravity&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">sparkles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p">.</span><span class="n">getBoolParam</span><span class="p">(</span><span class="s">&quot;EnableSparkles&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span><span class="p">.</span><span class="n">getStringParam</span><span class="p">(</span><span class="s">&quot;ColorMode&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Use parameters to drive animation</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
-<section id="framework-integration">
-<h2>Framework Integration<a class="headerlink" href="#framework-integration" title="Link to this heading"></a></h2>
-<p>All example applications integrate with the matrixserver framework through:</p>
+</section>
+<section id="supported-parameter-types">
+<h2>Supported Parameter Types<a class="headerlink" href="#supported-parameter-types" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>Connection Management</strong>: Automatic connection to running matrixserver instances via TCP, IPC, or Unix sockets</p></li>
-<li><p><strong>Frame Rate Control</strong>: Configurable FPS with automatic timing regulation</p></li>
-<li><p><strong>Hardware Abstraction</strong>: Universal API that works with simulator, FPGA, and GPIO-based displays</p></li>
-<li><p><strong>Input Processing</strong>: Standardized joystick and sensor input handling</p></li>
+<li><p><strong>Integer</strong>: <code class="docutils literal notranslate"><span class="pre">registerIntParam(id,</span> <span class="pre">name,</span> <span class="pre">min,</span> <span class="pre">max,</span> <span class="pre">default)</span></code> - Rendered as a slider in the UI.</p></li>
+<li><p><strong>Float</strong>: <code class="docutils literal notranslate"><span class="pre">registerFloatParam(id,</span> <span class="pre">name,</span> <span class="pre">min,</span> <span class="pre">max,</span> <span class="pre">default)</span></code> - Rendered as a fine-grained slider.</p></li>
+<li><p><strong>Boolean</strong>: <code class="docutils literal notranslate"><span class="pre">registerBoolParam(id,</span> <span class="pre">name,</span> <span class="pre">default)</span></code> - Rendered as a checkbox.</p></li>
+<li><p><strong>String/Enum</strong>: <code class="docutils literal notranslate"><span class="pre">registerEnumParam(id,</span> <span class="pre">name,</span> <span class="pre">options_vector,</span> <span class="pre">default)</span></code> - Rendered as a dropdown selector.</p></li>
 </ul>
 </section>
-<section id="documentation-structure">
-<h2>Documentation Structure<a class="headerlink" href="#documentation-structure" title="Link to this heading"></a></h2>
-<p>This documentation is organized to help you understand both the individual applications and the underlying framework:</p>
-<ul class="simple">
-<li><p><strong>Installation Guide</strong>: Complete setup instructions for all platforms</p></li>
-<li><p><strong>CMake Reference</strong>: Detailed build system configuration</p></li>
-<li><p><strong>Architecture Overview</strong>: Framework design and application patterns</p></li>
-<li><p><strong>Application Guides</strong>: In-depth documentation for each example</p></li>
-<li><p><strong>API Reference</strong>: Technical reference for base classes and common patterns</p></li>
-</ul>
+<section id="presets">
+<h2>Presets<a class="headerlink" href="#presets" title="Link to this heading"></a></h2>
+<p>The CubeWebapp frontend includes a robust preset management system. Users can save combinations of parameter configurations as JSON files across different applications. When a preset is loaded, the frontend transmits the saved values to the active C++ application automatically, instantly updating its state without requiring a restart.</p>
 </section>
-<section id="getting-help">
-<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>Check the <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a> guide for setup issues</p></li>
-<li><p>Review the <a class="reference internal" href="architecture.html"><span class="doc">Architecture</span></a> documentation to understand framework concepts</p></li>
-<li><p>Examine individual <a class="reference internal" href="applications/index.html"><span class="doc">Applications</span></a> for specific usage examples</p></li>
-<li><p>Refer to the <a class="reference internal" href="api/index.html"><span class="doc">API Reference</span></a> for technical implementation details</p></li>
-</ul>
-</section>
-<section id="license-and-contributing">
-<h2>License and Contributing<a class="headerlink" href="#license-and-contributing" title="Link to this heading"></a></h2>
-<p>This project is part of the matrixserver framework ecosystem. Please refer to the main project repository for licensing information and contribution guidelines.</p>
-</section>
-<section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+<section id="network-communication">
+<h2>Network Communication<a class="headerlink" href="#network-communication" title="Link to this heading"></a></h2>
+<p>Parameter synchronization happens transparently via the <code class="docutils literal notranslate"><span class="pre">matrixserver</span></code> network protocol. When the <code class="docutils literal notranslate"><span class="pre">CubeWebapp</span></code> requests the active schema, the server queries the running application via an <code class="docutils literal notranslate"><span class="pre">appParamValues</span></code> message. Parameter changes from the web interface are dispatched as <code class="docutils literal notranslate"><span class="pre">setAppParam</span></code> commands, which safely update the <code class="docutils literal notranslate"><span class="pre">AnimationParams</span></code> object in the C++ backend.</p>
 </section>
 </section>
 
@@ -520,7 +402,8 @@ cmake<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="applications/index.html" class="btn btn-neutral float-right" title="Applications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
