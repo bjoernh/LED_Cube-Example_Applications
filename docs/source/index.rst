@@ -12,6 +12,7 @@ Welcome to the LED Matrix Cube Examples documentation. This comprehensive guide 
    installation
    cmake
    architecture
+   parameters
    applications/index
    api/index
 
