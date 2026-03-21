@@ -18,6 +18,10 @@ MatrixRain::MatrixRain(std::string serverUri, float fade) : CubeApplication(40, 
     params.registerFloat("fade", "Fade Factor", 0.8f, 1.0f, fade, 0.001f, "Animation");
     params.registerInt("spawnRate", "Spawn Rate", 0, 10, 4, "Animation");
     params.registerFloat("speed", "Speed", 0.1f, 2.0f, 0.5f, 0.01f, "Animation");
+
+    params.registerFloat("audioThreshold", "Audio Vol Threshold", 0.0f, 1.0f, 0.1f, 0.01f, "Audio");
+    params.registerFloat("audioSpeedMult", "Audio Speed Multiplier", 0.0f, 5.0f, 2.0f, 0.1f, "Audio");
+    params.registerBool("audioColorShift", "Audio Color Shift", true, "Audio");
 }
 
 bool MatrixRain::loop(){
@@ -58,6 +62,27 @@ bool MatrixRain::loop(){
     int spawnRate = params.getInt("spawnRate");
     float speedMultiplier = params.getFloat("speed");
 
+    // Audio reactivity mapping
+    float audioVol = 0.0f;
+    std::vector<float> audioFreqs;
+    {
+        std::lock_guard<std::mutex> lock(MatrixApplication::audioDataMutex);
+        audioVol = MatrixApplication::latestAudioVolume;
+        audioFreqs = MatrixApplication::latestAudioFrequencies;
+    }
+
+    float audioThreshold = params.getFloat("audioThreshold");
+    float audioSpeedMult = params.getFloat("audioSpeedMult");
+    bool audioColorShift = params.getBool("audioColorShift");
+
+    if (audioVol > audioThreshold) {
+        float excite = audioVol - audioThreshold;
+        // Increase spawn rate naturally and add extra based on audio
+        spawnRate += (int)(excite * 30.0f);
+        // Multiply speed
+        speedMultiplier += excite * audioSpeedMult;
+    }
+
     for (int foo = 0; foo < spawnRate; foo++){
         float randAngle = rand()%360;
         float vx = speedMultiplier * cos(randAngle*PI/180);
@@ -97,6 +122,21 @@ bool MatrixRain::loop(){
             col1.r((uint8_t)(0));
             col1.g((uint8_t)(255-rand()%200));
             break;
+    }
+
+    // Shift colors based on frequency bounds
+    if (audioColorShift && audioFreqs.size() > 0) {
+        float bass = audioFreqs[0];
+        float treble = audioFreqs.size() > 16 ? audioFreqs[16] : audioFreqs.back();
+
+        if (bass > audioThreshold) {
+            int newR = col1.r() + (int)((bass - audioThreshold) * 255.0f);
+            col1.r((uint8_t)std::min(255, newR));
+        }
+        if (treble > audioThreshold) {
+            int newB = col1.b() + (int)((treble - audioThreshold) * 255.0f);
+            col1.b((uint8_t)std::min(255, newB));
+        }
     }
 
     for(auto r : rdrops) {
