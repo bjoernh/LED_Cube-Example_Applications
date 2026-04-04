@@ -64,7 +64,7 @@ bool MatrixRain::loop(){
 
     // Audio reactivity mapping
     float audioVol = 0.0f;
-    std::vector<float> audioFreqs;
+    std::vector<uint8_t> audioFreqs;
     {
         std::lock_guard<std::mutex> lock(MatrixApplication::audioDataMutex);
         audioVol = MatrixApplication::latestAudioVolume;
