@@ -13,10 +13,8 @@ function on_frame(client, t, screenInfo)
             # Fill with blue color
             fill!(surface.frame, RGB(0.0, 0.0, 1.0))
         end 
-        surface.frame[32, 32] = RGB(1.0, 1.0, 1.0) # White center pixel
         surface
     end
-    first(screen_data).frame[1, 1] = RGB(0.0, 1.0, 0.0) # Green top-left pixel for testing
 
     send_frame(client, screen_data)
 end

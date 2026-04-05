@@ -105,12 +105,20 @@ function on_frame(client, t, screenInfo)
     return nothing
 end
 
+function on_frame_latest(callback)
+    return (client, t, screenInfo) -> @invokelatest callback(client, t, screenInfo)
+end
+
 """
     cube_connect(ip::IPAddr, port::Int)
 
 Establish connection and register with the server.
 """
 function cube_connect(ip::IPAddr, port::Int; on_message=on_message, on_start=on_start, on_frame=on_frame)
+    return _cube_connect(ip, port, on_message, on_start, on_frame)
+end
+
+function _cube_connect(ip::IPAddr, port::Int, on_message::M, on_start::S, on_frame::F) where {M, S, F}
     client = LEDCubeClient(ip, port, on_message, on_start, on_frame)
 
     # Register application
@@ -150,7 +158,7 @@ function cube_connect(ip::IPAddr, port::Int; on_message=on_message, on_start=on_
     return client
 end
 
-function run(client)
+function run(client::LEDCubeClient)
     # TODO: automatic reconnect
 
     @atomic client.is_running = true
@@ -164,7 +172,7 @@ function run(client)
     while client.is_running
         loop_start = time()
 
-        @invokelatest client.on_frame(client, t, client.screenInfo)
+        client.on_frame(client, t, client.screenInfo)
         
         t += frame_time
         elapsed = time() - loop_start

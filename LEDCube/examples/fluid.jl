@@ -82,6 +82,5 @@ end
 
 sim[] = circle(4*2^6, 2^6)
 #client = cube_connect(ip"127.0.0.1", 2017; on_frame=on_frame)
-client = cube_connect(ip"10.99.0.1", 2017; on_frame=on_frame)
+client = cube_connect(ip"10.99.0.1", 2017; on_frame=LEDCube.on_frame_latest(on_frame))
 run_async(client)
-
