@@ -1,6 +1,8 @@
 #include "matrixrain.h"
 #include <string>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 int main(int argc, char *argv[]) {
     std::string serverUri = DEFAULTSERVERURI;
@@ -20,7 +22,7 @@ int main(int argc, char *argv[]) {
     MatrixRain App1(serverUri, fade);
     App1.start();
     
-    while(1) sleep(2);
+    while(1) std::this_thread::sleep_for(std::chrono::seconds(2));
     
     return 0;
 }

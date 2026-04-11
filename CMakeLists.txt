@@ -25,15 +25,24 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
             "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif ()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if(MSVC)
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+    add_compile_definitions(_WIN32_WINNT=0x0A00)  # Windows 10
+else()
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+endif()
 
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/matrixserver/install" ${CMAKE_PREFIX_PATH})
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(EIGEN3 REQUIRED eigen3)
-pkg_check_modules(IMLIB2 REQUIRED imlib2)
-include_directories(${EIGEN3_INCLUDE_DIRS} ${IMLIB2_INCLUDE_DIRS})
-link_directories(${EIGEN3_LIBRARY_DIRS} ${IMLIB2_LIBRARY_DIRS})
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIRS})
+
+if(NOT WIN32)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(IMLIB2 REQUIRED imlib2)
+    include_directories(${IMLIB2_INCLUDE_DIRS})
+    link_directories(${IMLIB2_LIBRARY_DIRS})
+endif()
 
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})

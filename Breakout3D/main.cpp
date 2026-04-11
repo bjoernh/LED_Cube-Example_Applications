@@ -1,4 +1,6 @@
 #include "breakoutgame.h"
+#include <chrono>
+#include <thread>
 
 int main(int argc, char *argv[]) {
   std::string serverUri = DEFAULTSERVERURI;
@@ -9,6 +11,6 @@ int main(int argc, char *argv[]) {
   BreakoutGame App1(serverUri);
   App1.start();
 
-  while(1) sleep(1);
+  while(1) std::this_thread::sleep_for(std::chrono::seconds(1));
   return 0;
 }
