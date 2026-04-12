@@ -8,29 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/">
+        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/tutorial/06-compile/">
       
       
+        <link rel="prev" href="../05-math/">
       
-        <link rel="next" href="tutorial/outline/">
+      
+        <link rel="next" href="../07-advanced/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>LEDCube Example Applications</title>
+        <title>6. Compiling - LEDCube Example Applications</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ledcube-example-applications-documentation" class="md-skip">
+        <a href="#6-building-running-and-testing" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              6. Compiling
             
           </span>
         </div>
@@ -219,11 +221,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -240,11 +240,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="tutorial/outline/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../outline/" class="md-tabs__link">
           
   
   
@@ -264,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="reference/cpp-api/" class="md-tabs__link">
+        <a href="../../reference/cpp-api/" class="md-tabs__link">
           
   
   
@@ -298,7 +300,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -325,37 +327,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -371,48 +346,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Started
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -421,26 +354,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -458,7 +396,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -476,7 +414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/outline/" class="md-nav__link">
+      <a href="../outline/" class="md-nav__link">
         
   
   
@@ -504,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/01-introduction/" class="md-nav__link">
+      <a href="../01-introduction/" class="md-nav__link">
         
   
   
@@ -532,7 +470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/02-setup/" class="md-nav__link">
+      <a href="../02-setup/" class="md-nav__link">
         
   
   
@@ -560,7 +498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/03-framework/" class="md-nav__link">
+      <a href="../03-framework/" class="md-nav__link">
         
   
   
@@ -588,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/04-first-app/" class="md-nav__link">
+      <a href="../04-first-app/" class="md-nav__link">
         
   
   
@@ -616,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/05-math/" class="md-nav__link">
+      <a href="../05-math/" class="md-nav__link">
         
   
   
@@ -641,10 +579,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="tutorial/06-compile/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Compiling
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -660,6 +625,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-compiling-your-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Compiling Your Application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-ensuring-the-simulator-is-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ensuring the Simulator is Ready
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-running-the-client-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Running the Client Application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-testing-and-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Testing and Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -672,7 +712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/07-advanced/" class="md-nav__link">
+      <a href="../07-advanced/" class="md-nav__link">
         
   
   
@@ -759,7 +799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/cpp-api/" class="md-nav__link">
+      <a href="../../reference/cpp-api/" class="md-nav__link">
         
   
   
@@ -787,7 +827,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/protocol/" class="md-nav__link">
+      <a href="../../reference/protocol/" class="md-nav__link">
         
   
   
@@ -842,10 +882,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#1-compiling-your-application" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        1. Compiling Your Application
       
     </span>
   </a>
@@ -853,10 +893,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
+  <a href="#2-ensuring-the-simulator-is-ready" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Reference
+        2. Ensuring the Simulator is Ready
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-running-the-client-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Running the Client Application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-testing-and-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Testing and Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
       
     </span>
   </a>
@@ -883,15 +956,56 @@
   
 
 
-<h1 id="ledcube-example-applications-documentation">LEDCube Example Applications Documentation</h1>
-<p>Welcome to the documentation and tutorials for the LEDCube Example Applications and the <code>matrixserver</code> framework.</p>
-<h2 id="getting-started">Getting Started</h2>
-<p>Check out the <a href="tutorial/outline/">Tutorial Overview</a> to get started with building volumetric applications for your LED Matrix Cube!</p>
-<h2 id="api-reference">API Reference</h2>
+<h1 id="6-building-running-and-testing">6. Building, Running, and Testing</h1>
+<p>In Chapter 4, we wrote the code for our <code>HelloCube</code> application. Now, it is time to bring it to life! </p>
+<p>Because the <code>matrixserver</code> framework and client SDK physically decouple the rendering engine from the hardware driver, we can compile and execute our C++ logic purely on our host computer and watch it display beautifully inside the <code>CubeWebapp</code> simulator we set up in Chapter 2.</p>
+<hr />
+<h2 id="1-compiling-your-application">1. Compiling Your Application</h2>
+<p>Navigate to the directory where you created your <code>CMakeLists.txt</code>, <code>main.cpp</code>, <code>HelloCube.h</code>, and <code>HelloCube.cpp</code> files in your terminal.</p>
+<p>We will follow the standard CMake build pattern (creating a separate <code>build</code> folder keeps our source code directory clean):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Create a dedicated build directory and enter it</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Tell CMake to generate the Makefiles based on your CMakeLists.txt</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>cmake<span class="w"> </span>..
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. Compile the actual executable</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
+</span></code></pre></div>
+<p>If everything was set up correctly in Chapter 2, <code>make</code> will link against <code>libmatrixapplication</code> and produce an executable binary named <code>HelloCube</code> inside your <code>build</code> directory.</p>
+<hr />
+<h2 id="2-ensuring-the-simulator-is-ready">2. Ensuring the Simulator is Ready</h2>
+<p>Before we fire up the application, we must ensure there is a server listening to receive its frame data. </p>
+<p>If your Docker container from Chapter 2 is no longer running, spin it up again:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">2017</span>:2017<span class="w"> </span>-p<span class="w"> </span><span class="m">1337</span>:1337<span class="w"> </span>-p<span class="w"> </span><span class="m">5173</span>:5173<span class="w"> </span>ghcr.io/bjoernh/matrixserver-simulator:latest
+</span></code></pre></div>
+<p>Next, ensure your web browser is deeply connected:
+1. Navigate to <code>https://localhost:5173</code>.
+2. Enter the WebSocket target <code>wss://localhost:5173/matrix-ws</code> in the top bar.
+3. Verify the connection symbol is <strong>Green</strong>. Your virtual 3D cube is waiting for instructions!</p>
+<hr />
+<h2 id="3-running-the-client-application">3. Running the Client Application</h2>
+<p>Return to the terminal where you built your code (you should still be in the <code>build</code> directory).</p>
+<p>Run your application. Our <code>main.cpp</code> defaults to <code>tcp://localhost:2017</code> gracefully, so we can just execute the binary natively:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./HelloCube
+</span></code></pre></div>
+<p><em>(Note: If you run your server on a different machine or a Raspberry Pi down the line, you would simply run <code>./HelloCube tcp://192.168.1.5:2017</code>).</em></p>
+<hr />
+<h2 id="4-testing-and-verification">4. Testing and Verification</h2>
+<p>Look at your browser tab! You should instantly see the data streaming to the 3D model!</p>
+<p><strong>Visual Checklist:</strong></p>
 <ul>
-<li><a href="reference/cpp-api/">C++ API Reference</a></li>
-<li><a href="reference/protocol/">Protocol Reference &amp; Custom Clients</a></li>
+<li><strong>2D Front Panel:</strong> You should see the word <strong>"Hello"</strong> perfectly centered in green.</li>
+<li><strong>2D Back Panel:</strong> If you click and drag your mouse to spin the 3D Cube around in your browser, the back panel should read <strong>"Cube!"</strong> in blue.</li>
+<li><strong>Volumetric Core:</strong> Tracing cleanly along the outer bounds of the cube, a solid red square perimeter should be moving vertically up and down from the floor to the ceiling!</li>
 </ul>
+<p>Because the framework enforces <code>#define OVERSAMPLING</code>, you'll notice the text isn't jagged, but smoothly anti-aliased exactly matching the physical characteristics of the high-density LED hardware!</p>
+<p><strong>Graceful Exit:</strong>
+When you are done marveling at your creation, return to the terminal running your <code>./HelloCube</code> and hit <code>Ctrl+C</code>. The application will tear down the TCP socket safely, and the web simulator will return to a clear state awaiting the next connection.</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>Congratulations! You have effectively entered the matrix. You established a server abstraction, mastered the 3D volumetric math boundaries, set up a C++ development framework, and rendered live data to a virtual matrix. </p>
+<p>In our final chapter, <strong>Chapter 7: Going Further</strong>, we will review advanced features like adding hardware interactivity, dynamic Web-UI parameter tweaking, and how to eventually compile your software to run autonomously on physical Raspberry Pi arrays!</p>
 
 
 
@@ -947,10 +1061,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       

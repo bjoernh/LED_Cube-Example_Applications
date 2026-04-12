@@ -8,29 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/">
+        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/tutorial/05-math/">
       
       
+        <link rel="prev" href="../04-first-app/">
       
-        <link rel="next" href="tutorial/outline/">
+      
+        <link rel="next" href="../06-compile/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>LEDCube Example Applications</title>
+        <title>5. 3D Math - LEDCube Example Applications</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ledcube-example-applications-documentation" class="md-skip">
+        <a href="#5-understanding-3d-voxel-rendering-math" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              5. 3D Math
             
           </span>
         </div>
@@ -219,11 +221,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -240,11 +240,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="tutorial/outline/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../outline/" class="md-tabs__link">
           
   
   
@@ -264,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="reference/cpp-api/" class="md-tabs__link">
+        <a href="../../reference/cpp-api/" class="md-tabs__link">
           
   
   
@@ -298,7 +300,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -325,37 +327,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -371,48 +346,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Started
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -421,26 +354,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -458,7 +396,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -476,7 +414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/outline/" class="md-nav__link">
+      <a href="../outline/" class="md-nav__link">
         
   
   
@@ -504,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/01-introduction/" class="md-nav__link">
+      <a href="../01-introduction/" class="md-nav__link">
         
   
   
@@ -532,7 +470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/02-setup/" class="md-nav__link">
+      <a href="../02-setup/" class="md-nav__link">
         
   
   
@@ -560,7 +498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/03-framework/" class="md-nav__link">
+      <a href="../03-framework/" class="md-nav__link">
         
   
   
@@ -588,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/04-first-app/" class="md-nav__link">
+      <a href="../04-first-app/" class="md-nav__link">
         
   
   
@@ -613,10 +551,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="tutorial/05-math/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. 3D Math
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -632,6 +597,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-voxel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Voxel?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3d-coordinate-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3D Coordinate Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volumetric-movement-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volumetric Movement &amp; Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3d-vectors-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3D Vectors in Practice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-geometric-3d-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Geometric 3D Primitives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -644,7 +684,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/06-compile/" class="md-nav__link">
+      <a href="../06-compile/" class="md-nav__link">
         
   
   
@@ -672,7 +712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/07-advanced/" class="md-nav__link">
+      <a href="../07-advanced/" class="md-nav__link">
         
   
   
@@ -759,7 +799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/cpp-api/" class="md-nav__link">
+      <a href="../../reference/cpp-api/" class="md-nav__link">
         
   
   
@@ -787,7 +827,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/protocol/" class="md-nav__link">
+      <a href="../../reference/protocol/" class="md-nav__link">
         
   
   
@@ -842,10 +882,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#what-is-a-voxel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        What is a Voxel?
       
     </span>
   </a>
@@ -853,10 +893,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
+  <a href="#3d-coordinate-systems" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Reference
+        3D Coordinate Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volumetric-movement-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volumetric Movement &amp; Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3d-vectors-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3D Vectors in Practice
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-geometric-3d-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Geometric 3D Primitives
       
     </span>
   </a>
@@ -883,15 +956,57 @@
   
 
 
-<h1 id="ledcube-example-applications-documentation">LEDCube Example Applications Documentation</h1>
-<p>Welcome to the documentation and tutorials for the LEDCube Example Applications and the <code>matrixserver</code> framework.</p>
-<h2 id="getting-started">Getting Started</h2>
-<p>Check out the <a href="tutorial/outline/">Tutorial Overview</a> to get started with building volumetric applications for your LED Matrix Cube!</p>
-<h2 id="api-reference">API Reference</h2>
+<h1 id="5-understanding-3d-voxel-rendering-math">5. Understanding 3D Voxel Rendering &amp; Math</h1>
+<p>In the previous chapter, we drew a volumetric red line sweeping through the inside of our Cube using <code>drawLine3D(lineStart, lineEnd, Color::red());</code>. </p>
+<p>Before we move on to running the code, it is vital to quickly unpack the physical constraints and math principles behind volumetric rendering within the <code>matrixserver</code> framework. Managing thousands of data points in a true spatial volume requires grasping a few key concepts.</p>
+<hr />
+<h2 id="what-is-a-voxel">What is a Voxel?</h2>
+<p>You are likely familiar with a <strong>Pixel</strong> (Picture Element) — a 2D colored square on a flat screen mapped by <span class="arithmatex">\(X\)</span> (width) and <span class="arithmatex">\(Y\)</span> (height).</p>
+<p>A <strong>Voxel</strong> (Volumetric Pixel) is a 3D pixel. It represents a single LED point floating in physical space, mapped by <span class="arithmatex">\(X\)</span> (width), <span class="arithmatex">\(Y\)</span> (height), and <span class="arithmatex">\(Z\)</span> (depth). A standard monitor has millions of pixels; however, a physical LED Cube has a much lower resolution due to physical constraints. </p>
+<p>If your LED cube panels are <span class="arithmatex">\(64 \times 64\)</span>, the total volumetric space isn't <span class="arithmatex">\(64 \times 64\)</span> (<span class="arithmatex">\(4,096\)</span>), but rather <span class="arithmatex">\(64 \times 64 \times 64\)</span>, which equals <strong><span class="arithmatex">\(262,144\)</span> voxels</strong>! Even at low spatial resolutions, true 3D arrays represent an enormous amount of data structure that the framework manages for you.</p>
+<hr />
+<h2 id="3d-coordinate-systems">3D Coordinate Systems</h2>
+<p>The framework provides an environment constant called <code>CUBESIZE</code>. Default to <code>CUBESIZE = 64</code>.</p>
+<p>Because arrays are 0-indexed, your absolute interior boundaries for any voxel exist from <code>0</code> to <code>CUBESIZE - 1</code> (or <code>0</code> to <code>63</code>).</p>
+<p>However, the hardware matrix introduces an outer-shell wrap known as the <strong>Virtual Cube</strong>. To truly draw on the outermost physical screen glass, you map coordinates to <code>VIRTUALCUBEMAXINDEX</code> (which evaluates to <code>65</code>) or <code>0</code>.</p>
 <ul>
-<li><a href="reference/cpp-api/">C++ API Reference</a></li>
-<li><a href="reference/protocol/">Protocol Reference &amp; Custom Clients</a></li>
+<li><strong>Origin <code>(1, 1, 1)</code>:</strong> The true bottom-front-left corner of the internal volumetric space.</li>
+<li><strong>Surface Shell:</strong> Mapping a coordinate to <code>x=0</code> places it strictly on the Left Panel. Mapping <code>x=65</code> places it on the Right Panel.</li>
 </ul>
+<p>If you attempt to render a voxel at <code>Vector3i(64, 0, 0)</code>, it exists completely outside the bounds of the LED Cube and will be safely clipped (ignored) by the rasterizer, preventing crashes.</p>
+<hr />
+<h2 id="volumetric-movement-boundaries">Volumetric Movement &amp; Boundaries</h2>
+<p>When animating a voxel (like a bouncing ball or our moving red line), we apply a <strong>Vector</strong> to dictate its trajectory per frame. For example, a voxel at <code>(32, 32, 32)</code> with a velocity vector of <code>(1, 0, 0)</code> will move to <code>(33, 32, 32)</code> on the next frame.</p>
+<p>When an object hits the boundary (<span class="arithmatex">\(&gt; 63\)</span> or <span class="arithmatex">\(&lt; 0\)</span>), you must mathematically choose how it behaves:</p>
+<ol>
+<li><strong>Clipping:</strong> Let it exit the volume and disappear (e.g., bullets in a game).</li>
+<li><strong>Wrapping:</strong> Use the modulo operator (<code>%</code>) to safely wrap it.</li>
+<li><strong>Collision / Bouncing:</strong> Invert the trajectory. If velocity is <code>(1, 0, 0)</code> and it hits <code>63</code>, set velocity to <code>(-1, 0, 0)</code> so it travels backwards! (<em>We used this in our First App:</em> we multiplied our <code>direction</code> by <code>-1</code> whenever <code>zPos</code> hit the boundaries, causing the red square to bounce smoothly up and down the outer walls).</li>
+</ol>
+<hr />
+<h2 id="3d-vectors-in-practice">3D Vectors in Practice</h2>
+<p>The framework harnesses the powerful <strong>Eigen</strong> library for its spatial vectors:</p>
+<ul>
+<li><strong><code>Vector3i</code></strong>: Used for discrete Voxel coordinates (Integers). LED matrices cannot render "half a lightbulb," so final drawing operations always use <code>Vector3i</code>.</li>
+<li><strong><code>Vector3f</code></strong>: Used for floating-point calculations like physics engines. Gravity (<code>-9.81</code>) or smooth dampening requires precision. Keep your mathematical logic in <code>Vector3f</code> and simply cast to <code>Vector3i</code> inside the drawing functions!</li>
+</ul>
+<p>You can leverage standard linear algebra against these vectors natively:
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Vector3i</span><span class="w"> </span><span class="nf">posA</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">Vector3i</span><span class="w"> </span><span class="nf">posB</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">);</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">// Calculate the spatial distance between two points</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kt">float</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">posA</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">posB</span><span class="p">).</span><span class="n">norm</span><span class="p">();</span>
+</span></code></pre></div>
+<em>(This is how you calculate hit-detection between two 3D objects!)</em></p>
+<hr />
+<h2 id="drawing-geometric-3d-primitives">Drawing Geometric 3D Primitives</h2>
+<p>When we called <code>drawLine3D()</code>, the framework takes your starting origin <code>Vector3i</code>, the target destination <code>Vector3i</code>, and seamlessly uses algorithms (like an extrapolated <em>Bresenham's line algorithm</em>) to interpolate the shortest path across the 3D grid, lighting up every Voxel along the way perfectly.</p>
+<p>This geometry abstraction gives you tremendous power:</p>
+<ul>
+<li>Want a solid volumetric box? You can calculate 8 corner nodes and draw 12 lines between them!</li>
+<li>You can define a central cluster of vectors, mathematically apply a Rotational Matrix to spin them on the Y-Axis, and draw them every frame so they rotate elegantly inside the physical enclosure of the cube.</li>
+</ul>
+<p>Now that we understand the <span class="arithmatex">\(262,144\)</span> data constraints of <code>CUBESIZE</code> and the mathematical routing used to paint our volumetric shapes, we are officially ready to compile and run our Code!</p>
 
 
 
@@ -947,10 +1062,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       

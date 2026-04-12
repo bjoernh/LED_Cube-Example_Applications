@@ -8,29 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/">
+        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/tutorial/07-advanced/">
       
       
+        <link rel="prev" href="../06-compile/">
       
-        <link rel="next" href="tutorial/outline/">
+      
+        <link rel="next" href="../../reference/cpp-api/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>LEDCube Example Applications</title>
+        <title>7. Advanced Topics - LEDCube Example Applications</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ledcube-example-applications-documentation" class="md-skip">
+        <a href="#7-going-further-advanced-topics" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              7. Advanced Topics
             
           </span>
         </div>
@@ -219,11 +221,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -240,11 +240,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="tutorial/outline/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../outline/" class="md-tabs__link">
           
   
   
@@ -264,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="reference/cpp-api/" class="md-tabs__link">
+        <a href="../../reference/cpp-api/" class="md-tabs__link">
           
   
   
@@ -298,7 +300,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -325,37 +327,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -371,48 +346,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Started
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -421,26 +354,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -458,7 +396,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -476,7 +414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/outline/" class="md-nav__link">
+      <a href="../outline/" class="md-nav__link">
         
   
   
@@ -504,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/01-introduction/" class="md-nav__link">
+      <a href="../01-introduction/" class="md-nav__link">
         
   
   
@@ -532,7 +470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/02-setup/" class="md-nav__link">
+      <a href="../02-setup/" class="md-nav__link">
         
   
   
@@ -560,7 +498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/03-framework/" class="md-nav__link">
+      <a href="../03-framework/" class="md-nav__link">
         
   
   
@@ -588,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/04-first-app/" class="md-nav__link">
+      <a href="../04-first-app/" class="md-nav__link">
         
   
   
@@ -616,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/05-math/" class="md-nav__link">
+      <a href="../05-math/" class="md-nav__link">
         
   
   
@@ -644,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/06-compile/" class="md-nav__link">
+      <a href="../06-compile/" class="md-nav__link">
         
   
   
@@ -669,10 +607,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="tutorial/07-advanced/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Advanced Topics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -688,6 +653,104 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-interactive-parameters-the-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Interactive Parameters &amp; the Web UI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-hardware-interactivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hardware Interactivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Hardware Interactivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#joysticks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joysticks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sensor-hardware-imus-gyroscopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensor Hardware (IMUs &amp; Gyroscopes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-deploying-to-real-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Deploying to Real Hardware
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Deploying to Real Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#end-of-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Tutorial
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -759,7 +822,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/cpp-api/" class="md-nav__link">
+      <a href="../../reference/cpp-api/" class="md-nav__link">
         
   
   
@@ -787,7 +850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/protocol/" class="md-nav__link">
+      <a href="../../reference/protocol/" class="md-nav__link">
         
   
   
@@ -842,10 +905,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#1-interactive-parameters-the-web-ui" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        1. Interactive Parameters &amp; the Web UI
       
     </span>
   </a>
@@ -853,13 +916,69 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
+  <a href="#2-hardware-interactivity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Reference
+        2. Hardware Interactivity
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="2. Hardware Interactivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#joysticks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Joysticks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sensor-hardware-imus-gyroscopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensor Hardware (IMUs &amp; Gyroscopes)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-deploying-to-real-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Deploying to Real Hardware
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Deploying to Real Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#end-of-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End of Tutorial
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -883,15 +1002,60 @@
   
 
 
-<h1 id="ledcube-example-applications-documentation">LEDCube Example Applications Documentation</h1>
-<p>Welcome to the documentation and tutorials for the LEDCube Example Applications and the <code>matrixserver</code> framework.</p>
-<h2 id="getting-started">Getting Started</h2>
-<p>Check out the <a href="tutorial/outline/">Tutorial Overview</a> to get started with building volumetric applications for your LED Matrix Cube!</p>
-<h2 id="api-reference">API Reference</h2>
-<ul>
-<li><a href="reference/cpp-api/">C++ API Reference</a></li>
-<li><a href="reference/protocol/">Protocol Reference &amp; Custom Clients</a></li>
-</ul>
+<h1 id="7-going-further-advanced-topics">7. Going Further (Advanced Topics)</h1>
+<p>You have successfully learned the architecture of the LEDCube, parsed the differences between interior voxel space and the exterior bounds, linked dependencies via CMake, and rendered an application to a virtual simulation. </p>
+<p>Where do you go from here? </p>
+<p>Here is a brief overview of the advanced features baked directly into the <code>matrixserver</code> framework that you can explore next.</p>
+<hr />
+<h2 id="1-interactive-parameters-the-web-ui">1. Interactive Parameters &amp; the Web UI</h2>
+<p>Hardcoding values like <code>Color::red()</code> or setting animation velocities in C++ means recompiling your binary every time you want to make an artistic tweak.</p>
+<p>The framework supports <strong>Dynamic Parameter Exposure</strong>. Because the <code>matrixserver</code> maintains a WebSockets connection with the <code>CubeWebapp</code>, your client C++ application can actually define dynamic UI controls (Sliders, Color Pickers, Dropdowns) on the fly!</p>
+<p>Inside any <code>CubeApplication</code>, you have access to a <code>params</code> object:
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Expose an integer slider to the web interface (1 to 10)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">params</span><span class="p">.</span><span class="n">exposeVariable</span><span class="p">(</span><span class="s">&quot;Animation Speed&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mySpeedVar</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">// Expose a color picker to the web interface</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">params</span><span class="p">.</span><span class="n">exposeVariable</span><span class="p">(</span><span class="s">&quot;Laser Color&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">myColorVar</span><span class="p">);</span>
+</span></code></pre></div></p>
+<p>When your application connects to the server, the Web Simulator will dynamically generate a settings UI panel on the left side of the screen featuring these exact sliders. If a user tweaks a slider in their web browser, the values seamlessly sync back through the WebSocket directly into your C++ <code>/HelloCube</code> variables in real-time!</p>
+<hr />
+<h2 id="2-hardware-interactivity">2. Hardware Interactivity</h2>
+<p>Visualizations are fun, but games and responsive designs are better. The runtime handles standard inputs robustly:</p>
+<h3 id="joysticks">Joysticks</h3>
+<p>If you plug supported gamepads or build out arcade cabinets, you can attach controllers directly:
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Inside constructor</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">Joystick</span><span class="o">*</span><span class="w"> </span><span class="n">player1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Joystick</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// Inside loop()</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">player1</span><span class="o">-&gt;</span><span class="n">getButtonPress</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="c1">// Jump or shoot lasers!</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<h3 id="sensor-hardware-imus-gyroscopes">Sensor Hardware (IMUs &amp; Gyroscopes)</h3>
+<p>If you deploy your app onto a physical Raspberry Pi, the framework natively hooks into <code>MPU6050</code> gyroscopes via I2C. The base matrix application continually updates static variables depicting physical tilting:
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Grab the real-time physical tilt of the hardware</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kt">float</span><span class="w"> </span><span class="n">tiltX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MatrixApplication</span><span class="o">::</span><span class="n">latestSimulatorImuX</span><span class="p">;</span>
+</span></code></pre></div>
+<em>(Checkout the <code>Rainbow</code> example app to see a liquid physics simulation driven entirely by tilting a Raspberry Pi).</em></p>
+<hr />
+<h2 id="3-deploying-to-real-hardware">3. Deploying to Real Hardware</h2>
+<p>The web simulator is an incredible tool, but eventually, you want to see your volumetric math running on blindingly bright LEDs. </p>
+<p>The beauty of the <code>matrixserver</code> decoupling is that <strong>your <code>HelloCube</code> client binary code requires absolutely zero changes to run on real hardware.</strong></p>
+<p>All you change is the server you connect to:
+1. Move your code onto an ARM device (like a Raspberry Pi 4). 
+2. Compile the <code>matrixserver</code> natively, defining a hardware backend (like RGB Matrix standard GPIO pins, or an IceBreaker FPGA module).
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Example building the real FPGA server instead of the Simulator</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cmake<span class="w"> </span>-DHARDWARE_BACKEND<span class="o">=</span>FPGA_RPISPI<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+</span></code></pre></div></p>
+<ol>
+<li>Run the hardware server daemon: <code>./matrix_server</code></li>
+<li>Run your exact same client code: <code>./HelloCube</code></li>
+</ol>
+<p>The exact same TCP protocol fires, but this time, real pixels illuminate the room!</p>
+<p><em>Note: After prototyping you can change the connection method to IPC for best performance.</em></p>
+<hr />
+<h3 id="end-of-tutorial">End of Tutorial</h3>
+<p>Thank you for following along! You are now fully equipped to build multi-threaded, robust volumetric and 2D panel applications. Be sure to explore the <code>LED_Cube-Example_Applications/</code> directory to see complex algorithms (like fluid dynamics, 3D Snake, and Genetic algorithm painters) leveraging everything you have learned!</p>
 
 
 
@@ -947,10 +1111,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       

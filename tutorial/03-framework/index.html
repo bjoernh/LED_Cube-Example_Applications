@@ -8,29 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/">
+        <link rel="canonical" href="https://bjoernh.github.io/LED_Cube-Example_Applications/tutorial/03-framework/">
       
       
+        <link rel="prev" href="../02-setup/">
       
-        <link rel="next" href="tutorial/outline/">
+      
+        <link rel="next" href="../04-first-app/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>LEDCube Example Applications</title>
+        <title>3. Framework - LEDCube Example Applications</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ledcube-example-applications-documentation" class="md-skip">
+        <a href="#3-understanding-the-c-application-framework" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-header__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              3. Framework
             
           </span>
         </div>
@@ -219,11 +221,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -240,11 +240,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="tutorial/outline/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../outline/" class="md-tabs__link">
           
   
   
@@ -264,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="reference/cpp-api/" class="md-tabs__link">
+        <a href="../../reference/cpp-api/" class="md-tabs__link">
           
   
   
@@ -298,7 +300,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
+    <a href="../.." title="LEDCube Example Applications" class="md-nav__button md-logo" aria-label="LEDCube Example Applications" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -325,37 +327,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -371,48 +346,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Started
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -421,26 +354,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -458,7 +396,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -476,7 +414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/outline/" class="md-nav__link">
+      <a href="../outline/" class="md-nav__link">
         
   
   
@@ -504,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/01-introduction/" class="md-nav__link">
+      <a href="../01-introduction/" class="md-nav__link">
         
   
   
@@ -532,7 +470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/02-setup/" class="md-nav__link">
+      <a href="../02-setup/" class="md-nav__link">
         
   
   
@@ -557,10 +495,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="tutorial/03-framework/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Framework
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -576,6 +541,98 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-cubeapplication-base-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The CubeApplication Base Class
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-rendering-loop-paradigm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Rendering Loop Paradigm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-core-data-types-and-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Core Data Types and Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Core Data Types and Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordinates-vector2i-and-vector3i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinates (Vector2i and Vector3i)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifying-faces-screennumber" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifying Faces (ScreenNumber)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Color
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -588,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/04-first-app/" class="md-nav__link">
+      <a href="../04-first-app/" class="md-nav__link">
         
   
   
@@ -616,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/05-math/" class="md-nav__link">
+      <a href="../05-math/" class="md-nav__link">
         
   
   
@@ -644,7 +701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/06-compile/" class="md-nav__link">
+      <a href="../06-compile/" class="md-nav__link">
         
   
   
@@ -672,7 +729,7 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/07-advanced/" class="md-nav__link">
+      <a href="../07-advanced/" class="md-nav__link">
         
   
   
@@ -759,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/cpp-api/" class="md-nav__link">
+      <a href="../../reference/cpp-api/" class="md-nav__link">
         
   
   
@@ -787,7 +844,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/protocol/" class="md-nav__link">
+      <a href="../../reference/protocol/" class="md-nav__link">
         
   
   
@@ -842,10 +899,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#1-the-cubeapplication-base-class" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
+        1. The CubeApplication Base Class
       
     </span>
   </a>
@@ -853,13 +910,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
+  <a href="#2-the-rendering-loop-paradigm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API Reference
+        2. The Rendering Loop Paradigm
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-core-data-types-and-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Core Data Types and Primitives
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Core Data Types and Primitives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordinates-vector2i-and-vector3i" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinates (Vector2i and Vector3i)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifying-faces-screennumber" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifying Faces (ScreenNumber)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Color
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -883,15 +990,77 @@
   
 
 
-<h1 id="ledcube-example-applications-documentation">LEDCube Example Applications Documentation</h1>
-<p>Welcome to the documentation and tutorials for the LEDCube Example Applications and the <code>matrixserver</code> framework.</p>
-<h2 id="getting-started">Getting Started</h2>
-<p>Check out the <a href="tutorial/outline/">Tutorial Overview</a> to get started with building volumetric applications for your LED Matrix Cube!</p>
-<h2 id="api-reference">API Reference</h2>
+<h1 id="3-understanding-the-c-application-framework">3. Understanding the C++ Application Framework</h1>
+<p>Now that your development environment is set up and the simulator is running, let's explore how the <code>libmatrixapplication</code> C++ toolkit is designed to make rendering to an LED cube incredibly intuitive.</p>
+<p>When creating an application, you won't be managing TCP sockets, manually serializing pixel buffers, or dealing with network timings. The framework abstracts all of this into a straightforward Object-Oriented design.</p>
+<hr />
+<h2 id="1-the-cubeapplication-base-class">1. The <code>CubeApplication</code> Base Class</h2>
+<p>Every 3D LED application you build will start by inheriting from a base class called <code>CubeApplication</code> (for 3D volumetric software) or <code>MatrixApplication</code> (for 2D flat content). </p>
+<p>By inheriting from <code>CubeApplication</code>, your class automatically gains the ability to:</p>
 <ul>
-<li><a href="reference/cpp-api/">C++ API Reference</a></li>
-<li><a href="reference/protocol/">Protocol Reference &amp; Custom Clients</a></li>
+<li>Handle initial handshakes and connection protocols to the <code>matrixserver</code>.</li>
+<li>Automatically throttle its compute cycle to a desired Framerate (FPS).</li>
+<li>Keep an internal, thread-safe backbuffer of the Cube's state.</li>
 </ul>
+<p>When you instantiate a <code>CubeApplication</code>, its constructor takes two main arguments:</p>
+<ol>
+<li><strong>Target FPS</strong>: The framerate your logic loop should target (e.g., <code>30</code> or <code>60</code>).</li>
+<li><strong>Server URI</strong>: Where to find the matrixserver (usually <code>tcp://localhost:2017</code>).</li>
+</ol>
+<hr />
+<h2 id="2-the-rendering-loop-paradigm">2. The Rendering Loop Paradigm</h2>
+<p>If you have ever done game development, the rendering paradigm here will feel very familiar. Instead of a linear script execution, your application lives inside of an endless, hardware-timed <code>loop()</code>.</p>
+<p>In your custom class, you will override a single virtual method: <code>bool loop()</code>.
+Every time this function is executed, your job is to draw the <em>current frame</em>.</p>
+<p>A standard frame lifecycle looks like this:</p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">bool</span><span class="w"> </span><span class="nf">MyCustomApp::loop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="c1">// 1. CLEAR the backbuffer from the previous frame</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="c1">// This wipes the canvas clean to black.</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="hll"><span class="w">    </span><span class="n">clear</span><span class="p">();</span>
+</span></span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="c1">// 2. DRAW the current state of your logic</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="hll"><span class="w">    </span><span class="n">drawLine3D</span><span class="p">(</span><span class="n">Vector3i</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">Vector3i</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">red</span><span class="p">());</span>
+</span></span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="c1">// 3. RENDER pushes the buffer to the server</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="hll"><span class="w">    </span><span class="c1">// This serializes the buffer and streams it to the cube visually.</span>
+</span></span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="n">render</span><span class="p">();</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="c1">// 4. Return true to signal the engine to loop again</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="c1">// (Returning false gracefully stops the application)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>By enforcing this structure, you don't have to worry about screen tearing or pushing partial data to the matrix. You construct the entire frame silently, and <code>render()</code> blasts it out all at once.</p>
+<hr />
+<h2 id="3-core-data-types-and-primitives">3. Core Data Types and Primitives</h2>
+<p>The framework comes with semantic data types built specifically for spatial orientation. To draw effectively, you must understand a few standard structures:</p>
+<h3 id="coordinates-vector2i-and-vector3i">Coordinates (<code>Vector2i</code> and <code>Vector3i</code>)</h3>
+<p>Positions in space are represented by vectors from the <strong>Eigen</strong> mathematics library.</p>
+<ul>
+<li>Use <code>Vector3i(x, y, z)</code> for 3D coordinates (used in volumetric manipulation).</li>
+<li>Use <code>Vector2i(x, y)</code> when addressing 2D pixel coordinates directly on a specific facial panel.</li>
+</ul>
+<h3 id="identifying-faces-screennumber">Identifying Faces (<code>ScreenNumber</code>)</h3>
+<p>The 3D Cube is composed of six individual 2D screens. When you want to map a 2D effect (like displaying an image or drawing standard text) to a specific side, you use the <code>ScreenNumber</code> enum:</p>
+<ul>
+<li><code>ScreenNumber::front</code></li>
+<li><code>ScreenNumber::right</code></li>
+<li><code>ScreenNumber::back</code></li>
+<li><code>ScreenNumber::left</code></li>
+<li><code>ScreenNumber::top</code></li>
+<li><code>ScreenNumber::bottom</code></li>
+</ul>
+<h3 id="color"><code>Color</code></h3>
+<p>The framework does not force you to construct raw <code>uint8_t</code> RGB chunks by hand.
+You will use the <code>Color</code> object. It provides helper primitives for pure colors:
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Color</span><span class="w"> </span><span class="n">myColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">red</span><span class="p">();</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">Color</span><span class="w"> </span><span class="n">myColor2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">blue</span><span class="p">();</span>
+</span></code></pre></div>
+You can also freely define any RGB state: 
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Color</span><span class="w"> </span><span class="nf">customPurple</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="p">);</span>
+</span></code></pre></div></p>
+<hr />
+<p>With an understanding of the structure, the Game Loop, and the basic primitives, you are completely ready to write code. In the next chapter, we will open up an IDE and write our "Hello Cube" program from scratch!</p>
 
 
 
@@ -947,10 +1116,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
