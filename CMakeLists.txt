@@ -51,14 +51,14 @@ add_subdirectory(Blackout3D)
 add_subdirectory(PixelFlow3)
 add_subdirectory(MatrixRain)
 add_subdirectory(Snake)
+add_subdirectory(Picture)
 
-IF(BUILD_RASPBERRYPI)
-    add_subdirectory(ImuTest)
-    add_subdirectory(PixelFlow)
-    add_subdirectory(PixelFlow2)
-    add_subdirectory(Rainbow)
-ENDIF()
-#add_subdirectory(Picture)
+add_subdirectory(ImuTest)
+add_subdirectory(PixelFlow)
+add_subdirectory(PixelFlow2)
+add_subdirectory(Rainbow)
+
+
 
 
 set(CPACK_GENERATOR "DEB")

@@ -13,6 +13,7 @@ public:
     bool loop();
 
 private:
+    void drawImage(ScreenNumber screenNr, Vector2i topLeftPoint, Image &image, Vector2i imageStartPoint);
     bool loadImage(std::string filepath);
     bool error;
     std::string error_msg;

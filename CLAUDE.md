@@ -32,6 +32,20 @@ Core dependencies:
 - Imlib2 (image processing)
 - Imlib2 (image processing)
 
+### Running Tests (matrixserver)
+
+```bash
+cd matrixserver/build && cmake .. && make testAll && ./tests/testAll
+```
+
+Tests use Catch2 (single-header, v2) and cover:
+- **Color**: constructors, arithmetic with saturation, HSV conversion, equality
+- **Screen**: pixel read/write, bounds checking, clear/fill/fade, metadata
+- **COBS**: encoding/decoding, stream decoder with split packets
+- **AnimationParams**: parameter registration, get/set, protobuf serialization
+
+Tests are also run in all three CI workflows (AMD64 simulator, ARM64 simulator, RPi).
+
 ### Package Creation
 
 Generate Debian packages: `make package`
@@ -357,22 +371,4 @@ make genetic         # Genetic algorithm
 # Run with specific parameters
 ./picture ~/images/cube_animation.png
 ./picture -s 5 ~/images/slow_animation.png
-```
-
-### Platform Detection in CMake
-
-The build system automatically enables platform-specific applications:
-
-```cmake
-# From CMakeLists.txt
-if(EXISTS "/boot/LICENCE.broadcom")
-    # Raspberry Pi specific applications
-    add_subdirectory(Rainbow)      # IMU particle system
-    add_subdirectory(PixelFlow)    # Original fluid simulation
-    add_subdirectory(PixelFlow2)   # Enhanced fluid simulation
-endif()
-
-# Always available applications
-add_subdirectory(CubeTestApp)
-add_subdirectory(PixelFlow3)       # Cross-platform fluid simulation
 ```

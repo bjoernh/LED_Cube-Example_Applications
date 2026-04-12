@@ -115,3 +115,19 @@ bool Picture::loadImage(std::string path) {
     render();
     return true;
 }
+
+void Picture::drawImage(ScreenNumber screenNr, Vector2i topLeftPoint,
+                                Image &image, Vector2i imageStartPoint) {
+  for (int cols = 0; cols < image.getWidth(); cols++) {
+    if (cols > CUBEMAXINDEX || cols < 0)
+      break;
+    for (int rows = 0; rows < image.getHeight(); rows++) {
+      if (rows > CUBEMAXINDEX || rows < 0)
+        break;
+      setPixel3D(
+          getPointOnScreen(screenNr, Vector2i(cols + topLeftPoint[0],
+                                              rows + topLeftPoint[1])),
+          image.at(cols + imageStartPoint[0], rows + imageStartPoint[1]));
+    }
+  }
+}

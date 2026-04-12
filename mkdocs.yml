@@ -1,0 +1,67 @@
+site_name: LEDCube Example Applications
+site_url: https://bjoernh.github.io/LED_Cube-Example_Applications/
+repo_url: https://github.com/bjoernh/LED_Cube-Example_Applications
+
+plugins:
+  - search
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Tutorial:
+      - Overview: tutorial/outline.md
+      - 1. Introduction: tutorial/01-introduction.md
+      - 2. Setup Env: tutorial/02-setup.md
+      - 3. Framework: tutorial/03-framework.md
+      - 4. First App: tutorial/04-first-app.md
+      - 5. 3D Math: tutorial/05-math.md
+      - 6. Compiling: tutorial/06-compile.md
+      - 7. Advanced Topics: tutorial/07-advanced.md
+  - Reference:
+      - C++ API: reference/cpp-api.md
+      - Protocol & Custom Clients: reference/protocol.md
