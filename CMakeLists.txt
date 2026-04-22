@@ -10,37 +10,41 @@ set(Boost_FIND_QUIETLY ON) #FINALLY!!!
 set(Boost_USE_MULTITHREADED TRUE)
 
 if (EXISTS "/boot/LICENCE.broadcom") # I expect this file to be only found on an Raspian distribution
-    set(BUILD_RASPBERRYPI true)
-    message("Build on Raspberry Pi is enabled")
+  set(BUILD_RASPBERRYPI true)
+  message("Build on Raspberry Pi is enabled")
 endif ()
 
 set(default_build_type "Release")
 
 if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-    set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
+  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
             STRING "Choose the type of build." FORCE)
-    # Set the possible values of build type for cmake-gui
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
             "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif ()
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/matrixserver/install" ${CMAKE_PREFIX_PATH})
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(EIGEN3 REQUIRED eigen3)
+find_package(Eigen3 REQUIRED NO_MODULE)
 pkg_check_modules(IMLIB2 REQUIRED imlib2)
-include_directories(${EIGEN3_INCLUDE_DIRS} ${IMLIB2_INCLUDE_DIRS})
-link_directories(${EIGEN3_LIBRARY_DIRS} ${IMLIB2_LIBRARY_DIRS})
+include_directories(${IMLIB2_INCLUDE_DIRS})
+link_directories(${IMLIB2_LIBRARY_DIRS})
 
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 IF(APPLE)
-	# Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
-	LINK_DIRECTORIES(/usr/local/lib)
+  # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+  LINK_DIRECTORIES(/usr/local/lib)
+  set(CMAKE_INSTALL_RPATH "/usr/local/lib")
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 ENDIF()
 
 

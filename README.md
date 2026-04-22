@@ -146,6 +146,29 @@ make picture         # Image display
    ./picture image.png      # Display image
    ```
 
+## Configuration
+
+### IMU Orientation (Raspberry Pi)
+
+Applications using the MPU6050 IMU sensor (like Rainbow) support configurable orientation corrections via `matrixServerConfig.json`:
+
+```json
+{
+  "imuOrientation": {
+    "xyRotationDeg": 0.0,
+    "xzRotationDeg": 45.0,
+    "yzRotationDeg": 0.0
+  }
+}
+```
+
+The three rotation angles allow you to correct for how the sensor is physically mounted:
+- `xyRotationDeg`: Rotation around the Z axis
+- `xzRotationDeg`: Rotation around the Y axis  
+- `yzRotationDeg`: Rotation around the X axis
+
+All values default to 0° when absent, maintaining backwards compatibility.
+
 ## Platform Support
 
 - **All Platforms**: CubeTestApp, PixelFlow3, basic applications

@@ -1,7 +1,6 @@
 #include "ImuTest.h"
 
 ImuTest::ImuTest() : CubeApplication(30){
-    Imu.init();
 }
 
 bool ImuTest::loop() {

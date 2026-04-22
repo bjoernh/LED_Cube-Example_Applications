@@ -4,6 +4,9 @@ build2/
 cmake-build-debug/
 cmake-build-release/
 
+# output folder
+bin/
+
 # IDE files
 .idea/
 .vscode/

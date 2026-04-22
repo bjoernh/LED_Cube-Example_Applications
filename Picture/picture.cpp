@@ -7,7 +7,7 @@
 #include <memory>
 #include <filesystem>
 
-namespace fs = std::__fs::filesystem;
+namespace fs = std::filesystem;
 std::string filepath =  std::getenv("HOME") + std::string("/pictures/autoload.png");
 fs::file_time_type lastModificationTime;
 int animationPrescale = 2;

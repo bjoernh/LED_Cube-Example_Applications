@@ -143,6 +143,47 @@ Multiple servers can run simultaneously with different renderers:
 - Performance monitoring available through load tracking
 - Thread-safe rendering with configurable timing
 
+### IMU Orientation Configuration
+
+The MPU6050 sensor (used in Rainbow and other IMU-enabled applications) supports configurable orientation corrections. Instead of hardcoded rotations, the sensor now reads orientation settings from `matrixServerConfig.json` via three rotation planes:
+
+**Configuration in matrixServerConfig.json**:
+```json
+{
+  "imuOrientation": {
+    "xyRotationDeg": 0.0,
+    "xzRotationDeg": 45.0,
+    "yzRotationDeg": 0.0
+  }
+}
+```
+
+**Rotation Planes**:
+- `xyRotationDeg`: Rotation in the XY plane (around Z axis)
+- `xzRotationDeg`: Rotation in the XZ plane (around Y axis)
+- `yzRotationDeg`: Rotation in the YZ plane (around X axis)
+
+**Defaults**: All rotations default to 0° when the field is absent, maintaining backwards compatibility with existing configurations.
+
+**Usage in Applications**:
+```cpp
+// Applications using IMU (e.g., Rainbow)
+class Rainbow : public MatrixApplication {
+public:
+    Rainbow() : MatrixApplication(40) {
+        // MPU6050 automatically loads orientation from config
+        imu.init();
+    }
+    
+    bool loop() override {
+        auto acceleration = imu.getAcceleration();  // Already orientation-corrected
+        // ... use acceleration data ...
+    }
+};
+```
+
+The orientation correction is applied internally in the `Mpu6050::applyOrientation()` method, making it transparent to applications.
+
 ## Detailed Application Examples
 
 ### Blackout3D - Minimal Application Template
