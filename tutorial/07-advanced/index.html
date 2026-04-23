@@ -1031,12 +1031,23 @@
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="c1">// Jump or shoot lasers!</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
 </span></code></pre></div></p>
+<p>On non-Raspberry Pi platforms (macOS, Linux desktop), the framework provides a <strong>software joystick fallback</strong> — keyboard or simulated input is mapped to joystick buttons automatically. This means you can develop and test interactive applications in the simulator without any physical gamepad connected.</p>
 <h3 id="sensor-hardware-imus-gyroscopes">Sensor Hardware (IMUs &amp; Gyroscopes)</h3>
 <p>If you deploy your app onto a physical Raspberry Pi, the framework natively hooks into <code>MPU6050</code> gyroscopes via I2C. The base matrix application continually updates static variables depicting physical tilting:
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Grab the real-time physical tilt of the hardware</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kt">float</span><span class="w"> </span><span class="n">tiltX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MatrixApplication</span><span class="o">::</span><span class="n">latestSimulatorImuX</span><span class="p">;</span>
 </span></code></pre></div>
 <em>(Checkout the <code>Rainbow</code> example app to see a liquid physics simulation driven entirely by tilting a Raspberry Pi).</em></p>
+<p><strong>Configurable sensor orientation:</strong> Because the MPU6050 can be mounted at different angles, you can correct for its physical orientation without recompiling. Add an <code>imuOrientation</code> block to <code>matrixServerConfig.json</code>:
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;imuOrientation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;xyRotationDeg&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&quot;xzRotationDeg&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">45.0</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">&quot;yzRotationDeg&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</span></code></pre></div>
+The three fields rotate the raw sensor axes before values reach your application code. All values default to <code>0.0</code> when absent.</p>
 <hr />
 <h2 id="3-deploying-to-real-hardware">3. Deploying to Real Hardware</h2>
 <p>The web simulator is an incredible tool, but eventually, you want to see your volumetric math running on blindingly bright LEDs. </p>
@@ -1044,8 +1055,8 @@
 <p>All you change is the server you connect to:
 1. Move your code onto an ARM device (like a Raspberry Pi 4). 
 2. Compile the <code>matrixserver</code> natively, defining a hardware backend (like RGB Matrix standard GPIO pins, or an IceBreaker FPGA module).
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Example building the real FPGA server instead of the Simulator</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cmake<span class="w"> </span>-DHARDWARE_BACKEND<span class="o">=</span>FPGA_RPISPI<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example building the real FPGA server instead of the Simulator</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cmake<span class="w"> </span>-DHARDWARE_BACKEND<span class="o">=</span>FPGA_RPISPI<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
 </span></code></pre></div></p>
 <ol>
 <li>Run the hardware server daemon: <code>./matrix_server</code></li>
