@@ -43,6 +43,8 @@ if (player1->getButtonPress(0)) {
 }
 ```
 
+On non-Raspberry Pi platforms (macOS, Linux desktop), the framework provides a **software joystick fallback** — keyboard or simulated input is mapped to joystick buttons automatically. This means you can develop and test interactive applications in the simulator without any physical gamepad connected.
+
 ### Sensor Hardware (IMUs & Gyroscopes)
 If you deploy your app onto a physical Raspberry Pi, the framework natively hooks into `MPU6050` gyroscopes via I2C. The base matrix application continually updates static variables depicting physical tilting:
 ```cpp
@@ -50,6 +52,18 @@ If you deploy your app onto a physical Raspberry Pi, the framework natively hook
 float tiltX = MatrixApplication::latestSimulatorImuX;
 ```
 *(Checkout the `Rainbow` example app to see a liquid physics simulation driven entirely by tilting a Raspberry Pi).*
+
+**Configurable sensor orientation:** Because the MPU6050 can be mounted at different angles, you can correct for its physical orientation without recompiling. Add an `imuOrientation` block to `matrixServerConfig.json`:
+```json
+{
+  "imuOrientation": {
+    "xyRotationDeg": 0.0,
+    "xzRotationDeg": 45.0,
+    "yzRotationDeg": 0.0
+  }
+}
+```
+The three fields rotate the raw sensor axes before values reach your application code. All values default to `0.0` when absent.
 
 ---
 
