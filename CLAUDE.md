@@ -38,6 +38,8 @@ Core dependencies:
 cd matrixserver/build && cmake .. && make testAll && ./tests/testAll
 ```
 
+The `testAll` target is excluded from the default `make` build (`EXCLUDE_FROM_ALL`) — build it explicitly with `make testAll` when you want to run tests.
+
 Tests use Catch2 (single-header, v2) and cover:
 - **Color**: constructors, arithmetic with saturation, HSV conversion, equality
 - **Screen**: pixel read/write, bounds checking, clear/fill/fade, metadata
