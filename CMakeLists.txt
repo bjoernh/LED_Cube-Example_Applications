@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.07)
 project(exampleApplications VERSION 0.4.8)
 
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 set(Boost_NO_BOOST_CMAKE ON)
 set(Boost_FIND_QUIETLY ON) #FINALLY!!!
@@ -43,9 +43,11 @@ include_directories(${PROTOBUF_INCLUDE_DIRS})
 IF(APPLE)
   # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
   LINK_DIRECTORIES(/usr/local/lib)
-  set(CMAKE_INSTALL_RPATH "/usr/local/lib")
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-ENDIF()
+  set(CMAKE_INSTALL_RPATH "/usr/local/lib;${CMAKE_PREFIX_PATH}/lib")
+  set(CMAKE_BUILD_RPATH "${CMAKE_PREFIX_PATH}/lib")
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+
+endif ()
 
 
 add_subdirectory(Genetic)

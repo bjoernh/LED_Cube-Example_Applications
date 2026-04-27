@@ -16,8 +16,8 @@ Create a file named `CMakeLists.txt` in your project folder:
 cmake_minimum_required(VERSION 3.07)
 project(HelloCube)
 
-# Ensure C++17 is used
-set(CMAKE_CXX_STANDARD 17)
+# Ensure C++20 is used
+set(CMAKE_CXX_STANDARD 20)
 
 # Find the Matrix Server Framework and its dependencies
 find_package(Protobuf REQUIRED)
