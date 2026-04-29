@@ -1,3 +1,5 @@
+#include <format>
+#include <iostream>
 #include "aplay.h"
 
 Aplay::Aplay(){
@@ -36,7 +38,7 @@ void Aplay::playSoundBuffer(std::vector<unsigned char> buffer){
   int err;
 /*  snd_pcm_t *handle;
   if ((err = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-          printf("Playback open error: %s\n", snd_strerror(err));
+          std::cerr << std::format("Playback open error: {}\n", snd_strerror(err));
           exit(EXIT_FAILURE);
   }
   if ((err = snd_pcm_set_params(handle,
@@ -46,7 +48,7 @@ void Aplay::playSoundBuffer(std::vector<unsigned char> buffer){
                                 40000,
                                 1,
                                 0)) < 0) {
-          printf("Playback open error: %s\n", snd_strerror(err));
+          std::cerr << std::format("Playback open error: {}\n", snd_strerror(err));
           exit(EXIT_FAILURE);
   }
   snd_pcm_writei(handle, buffer.data(), buffer.size());

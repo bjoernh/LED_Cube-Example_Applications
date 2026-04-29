@@ -1,6 +1,6 @@
 #include "snake.h"
 //general
-#include <stdio.h>
+#include <format>
 #include <algorithm>
 #include <iterator>
 #include <cmath>
@@ -49,12 +49,12 @@ bool Snake::loop() {
         else
             fontColor = highScoreColor;
 
-        drawText(top, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, "HIGHSCORE " + std::to_string(currentHighScore));
-        drawText(left, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, "HIGHSCORE " + std::to_string(currentHighScore));
-        drawText(front, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, "HIGHSCORE " + std::to_string(currentHighScore));
-        drawText(right, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, "HIGHSCORE " + std::to_string(currentHighScore));
-        drawText(back, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, "HIGHSCORE " + std::to_string(currentHighScore));
-        drawText(bottom, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, "HIGHSCORE " + std::to_string(currentHighScore));
+        drawText(top, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
+        drawText(left, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
+        drawText(front, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
+        drawText(right, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
+        drawText(back, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
+        drawText(bottom, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
 
         highScoreTimer--;
         if (highScoreTimer == 0) {

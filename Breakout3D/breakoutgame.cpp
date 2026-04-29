@@ -1,5 +1,5 @@
 #include "breakoutgame.h"
-#include <stdio.h>
+#include <format>
 #include <algorithm>
 #include <iterator>
 #include <cmath>
@@ -204,9 +204,9 @@ bool BreakoutGame::loop(){
 
       scrNrCounter = 0;
       for(auto player : players_){
-        drawText((ScreenNumber)scrNrCounter, Vector2i(0,58), player->color(), std::to_string(player->getId()) + ": ");
+        drawText((ScreenNumber)scrNrCounter, Vector2i(0,58), player->color(), std::format("{}: ", player->getId()));
         drawText((ScreenNumber)scrNrCounter, Vector2i(8,58), Color::white(), std::to_string(player->score()));
-        drawText((ScreenNumber)(scrNrCounter+2), Vector2i(0,58), player->color(), std::to_string(player->getId()) + ": ");
+        drawText((ScreenNumber)(scrNrCounter+2), Vector2i(0,58), player->color(), std::format("{}: ", player->getId()));
         drawText((ScreenNumber)(scrNrCounter+2), Vector2i(8,58), Color::white(), std::to_string(player->score()));
         scrNrCounter++;
       }
@@ -235,14 +235,14 @@ bool BreakoutGame::loop(){
       clear();
       scrNrCounter = 0;
       for(auto p : players_){
-        drawText((ScreenNumber)scrNrCounter, Vector2i(CUBECENTER-24,CharacterBitmaps::centered), p->color(), "PLAYER "+ std::to_string(p->getId()) + ": ");
+        drawText((ScreenNumber)scrNrCounter, Vector2i(CUBECENTER-24,CharacterBitmaps::centered), p->color(), std::format("PLAYER {}: ", p->getId()));
         drawText((ScreenNumber)scrNrCounter, Vector2i(CUBECENTER+13,CharacterBitmaps::centered), Color::white(), std::to_string(p->score()));
-        drawText((ScreenNumber)(scrNrCounter+2), Vector2i(CUBECENTER-24,CharacterBitmaps::centered), p->color(), "PLAYER "+ std::to_string(p->getId()) + ": ");
+        drawText((ScreenNumber)(scrNrCounter+2), Vector2i(CUBECENTER-24,CharacterBitmaps::centered), p->color(), std::format("PLAYER {}: ", p->getId()));
         drawText((ScreenNumber)(scrNrCounter+2), Vector2i(CUBECENTER+13,CharacterBitmaps::centered), Color::white(), std::to_string(p->score()));
         scrNrCounter++;
       }
       if(postgameCounter%2){
-        std::string topstring = "PLAYER " + std::to_string(getLeadingPlayer()->getId()) + " WON";
+        std::string topstring = std::format("PLAYER {} WON", getLeadingPlayer()->getId());
         drawText(top, Vector2i(CharacterBitmaps::centered,CharacterBitmaps::centered), getLeadingPlayer()->color(), topstring);
       }
       if(loopcount/2%2 == 0){
