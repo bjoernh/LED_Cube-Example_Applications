@@ -40,24 +40,29 @@ jobs:
         run: sudo mkdir -p /boot && sudo touch /boot/LICENCE.broadcom
 
       - name: Build and Install matrixserver from submodule (all hardware backends)
-        working-directory: matrixserver
         run: |
-          make -C renderer/RGBMatrixRenderer/rpi-rgb-led-matrix/lib clean || true
-          rm -rf build && mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/matrixserver/install" \
+          make -C "$GITHUB_WORKSPACE/matrixserver/renderer/RGBMatrixRenderer/rpi-rgb-led-matrix/lib" clean || true
+          rm -rf "$GITHUB_WORKSPACE/matrixserver/build"
+          mkdir "$GITHUB_WORKSPACE/matrixserver/build"
+          cmake -S "$GITHUB_WORKSPACE/matrixserver" \
+            -B "$GITHUB_WORKSPACE/matrixserver/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/matrixserver/install" \
             -DENABLE_FPGA_FTDI=ON \
             -DENABLE_FPGA_RPISPI=ON \
-            -DENABLE_RGB_MATRIX=ON \
-            ..
-          make -j$(nproc)
-          make install
+            -DENABLE_RGB_MATRIX=ON
+          cmake --build "$GITHUB_WORKSPACE/matrixserver/build" -- -j$(nproc)
+          cmake --install "$GITHUB_WORKSPACE/matrixserver/build"
 
       - name: Build Example Applications
         run: |
-          rm -rf build && mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make -j$(nproc)
+          rm -rf "$GITHUB_WORKSPACE/build"
+          mkdir "$GITHUB_WORKSPACE/build"
+          cmake -S "$GITHUB_WORKSPACE" \
+            -B "$GITHUB_WORKSPACE/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/matrixserver/install"
+          cmake --build "$GITHUB_WORKSPACE/build" -- -j$(nproc)
 
       - name: Create Debian Package Workspace
         run: |

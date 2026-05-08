@@ -42,17 +42,20 @@ jobs:
 
       - name: Build and Install matrixserver from submodule
         run: |
-          cd matrixserver
-          mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install ..
-          make -j$(nproc)
-          make install
+          cmake -S "$GITHUB_WORKSPACE/matrixserver" \
+            -B "$GITHUB_WORKSPACE/matrixserver/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/matrixserver/install"
+          cmake --build "$GITHUB_WORKSPACE/matrixserver/build" -- -j$(nproc)
+          cmake --install "$GITHUB_WORKSPACE/matrixserver/build"
 
       - name: Build Example Applications
         run: |
-          mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
-          make -j$(nproc)
+          cmake -S "$GITHUB_WORKSPACE" \
+            -B "$GITHUB_WORKSPACE/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/matrixserver/install"
+          cmake --build "$GITHUB_WORKSPACE/build" -- -j$(nproc)
 
       - name: Create Debian Package Workspace
         run: |
