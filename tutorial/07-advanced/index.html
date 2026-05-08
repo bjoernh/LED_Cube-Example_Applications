@@ -1054,12 +1054,16 @@ The three fields rotate the raw sensor axes before values reach your application
 <p>The beauty of the <code>matrixserver</code> decoupling is that <strong>your <code>HelloCube</code> client binary code requires absolutely zero changes to run on real hardware.</strong></p>
 <p>All you change is the server you connect to:
 1. Move your code onto an ARM device (like a Raspberry Pi 4). 
-2. Compile the <code>matrixserver</code> natively, defining a hardware backend (like RGB Matrix standard GPIO pins, or an IceBreaker FPGA module).
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example building the real FPGA server instead of the Simulator</span>
+2. Compile the <code>matrixserver</code> natively, enabling one or more hardware backends (<code>HARDWARE_BACKEND</code> is a semicolon-separated list).
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Compile in the FPGA RPi-SPI backend alongside the always-available simulator</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cmake<span class="w"> </span>-DHARDWARE_BACKEND<span class="o">=</span>FPGA_RPISPI<span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>make
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or enable all hardware backends and pick at runtime:</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># cmake -DHARDWARE_BACKEND=&quot;FPGA_FTDI;FPGA_RPISPI;RGB_MATRIX&quot; .. &amp;&amp; make</span>
 </span></code></pre></div></p>
 <ol>
-<li>Run the hardware server daemon: <code>./matrix_server</code></li>
+<li>Run the same <code>matrix_server</code> binary, selecting the hardware backend with <code>--backend=</code>:
+   <code>./matrix_server --backend=fpga-rpispi</code></li>
 <li>Run your exact same client code: <code>./HelloCube</code></li>
 </ol>
 <p>The exact same TCP protocol fires, but this time, real pixels illuminate the room!</p>

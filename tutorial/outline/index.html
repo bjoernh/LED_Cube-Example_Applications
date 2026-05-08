@@ -1067,7 +1067,7 @@
 <li><strong>Interactivity:</strong> How to listen for input from sensors (like IMUs) or joysticks to make interactive games like <em>Snake3D</em> or <em>Breakout3D</em>.</li>
 <li><strong>Migrating to Physical Hardware:</strong> </li>
 <li>Compiling applications natively on an ARM device (e.g., Raspberry Pi).</li>
-<li>Changing out the <code>matrix_server_simulator</code> daemon for a real hardware server daemon using FPGA or GPIO backends.</li>
+<li>Switching the <code>matrix_server</code> daemon from <code>--backend=simulator</code> to a hardware backend (e.g., <code>--backend=fpga-rpispi</code> or <code>--backend=rgb-matrix</code>) to drive an FPGA or GPIO matrix panel.</li>
 </ul>
 
 
