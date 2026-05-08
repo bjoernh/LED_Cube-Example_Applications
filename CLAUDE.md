@@ -30,7 +30,36 @@ Core dependencies:
 - matrixapplication library >= 0.3 (from matrixserver framework)
 - Boost (thread, log, system components)
 - Imlib2 (image processing)
-- Imlib2 (image processing)
+
+### Picking up a freshly built matrixserver (LC_RPATH gotcha)
+
+When iterating on the matrixserver framework alongside the example apps, the canonical
+flow is to build matrixserver and `make install` it into `matrixserver/install/`, then
+build the example apps. Example apps' `find_package(matrixapplication)` looks at
+`matrixserver/install/` first via `CMAKE_PREFIX_PATH`, so the build links the freshly
+installed library and headers.
+
+**Runtime caveat:** the example apps' CMake bakes only `LC_RPATH = /usr/local/lib` into
+each binary. After `make install` to a local prefix, the *build* uses the freshly
+installed lib (so the API is verified), but at *runtime* the dynamic loader still falls
+back to `/usr/local/lib/libmatrixapplication.dylib` — the previously installed system
+copy. The binary will silently run against the old library.
+
+To actually run an example app against a freshly built matrixserver, point the loader at
+the install tree before launching:
+
+```bash
+# macOS
+export DYLD_LIBRARY_PATH=$(pwd)/matrixserver/install/lib
+# Linux
+export LD_LIBRARY_PATH=$(pwd)/matrixserver/install/lib
+
+./build/bin/Snake
+```
+
+Alternatives: `sudo make install` matrixserver to `/usr/local` (replaces the system
+copy), or `install_name_tool -add_rpath …/matrixserver/install/lib build/bin/<App>`
+post-build on macOS.
 
 ### Running Tests (matrixserver)
 
@@ -117,18 +146,24 @@ Applications connect to matrixserver instances using:
 - **Fallback**: IPC (boost message queue) for local communication
 - **Alternative**: Unix sockets
 
-Multiple servers can run simultaneously with different renderers:
-- server_simulator - Software development/testing
-- server_FPGA - FTDI USB interface for FPGA boards  
-- server_FPGA_RPISPI - Raspberry Pi SPI interface
-- server_RGBMatrix - Raspberry Pi GPIO matrix panels
+There is exactly one server executable, `matrix_server`. The renderer is
+selected at runtime via `--backend=<name>`:
+- `simulator` — software development/testing (always available)
+- `fpga-ftdi` — FTDI USB interface for FPGA boards
+- `fpga-rpispi` — Raspberry Pi SPI interface
+- `rgb-matrix` — Raspberry Pi GPIO matrix panels
+
+Hardware backends are only selectable when compiled in via
+`-DHARDWARE_BACKEND=…` (semicolon-separated list of `FPGA_FTDI`,
+`FPGA_RPISPI`, `RGB_MATRIX`). `matrix_server --help` lists the backends
+present in the current binary.
 
 ### Development Workflow
 
-1. Start appropriate matrixserver (from matrixserver/ directory):
+1. Start the matrixserver (from `matrixserver/` directory):
    ```bash
-   ./build/server_simulator  # For development
-   ./build/server_FPGA       # For FPGA hardware
+   ./build/server/matrix_server                       # default: --backend=simulator
+   ./build/server/matrix_server --backend=fpga-ftdi   # FPGA hardware (if compiled in)
    ```
 
 2. Build and run example application:

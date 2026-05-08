@@ -96,13 +96,38 @@ The matrixserver framework must be compiled and installed before building these 
 **Required matrixserver components:**
 - `libmatrixapplication` - Core application framework (version >= 0.3)
 - Header files for `CubeApplication` and `MatrixApplication` base classes
-- Server executables (server_simulator, server_FPGA, etc.)
+- Server executable: `matrix_server` (one binary; backend selected at runtime via `--backend=<simulator|fpga-ftdi|fpga-rpispi|rgb-matrix>`)
 
 **Troubleshooting:**
 - The build system checks `./matrixserver/install/` first, then falls back to system paths
 - If using a custom install location, pass `-DCMAKE_PREFIX_PATH=/your/path` to CMake
-- On macOS, you may need to set `DYLD_LIBRARY_PATH` to include the library location
 - Ensure all matrixserver dependencies are installed (Boost, OpenGL, etc.)
+
+**LC_RPATH gotcha when iterating on matrixserver alongside the example apps:**
+
+The example apps' CMake bakes only `LC_RPATH = /usr/local/lib` into each binary. So
+when you `make install` matrixserver into a *local* `matrixserver/install/` prefix, the
+example app *build* picks up the new library at link time (the API is verified), but at
+*runtime* the dynamic loader still falls back to `/usr/local/lib/libmatrixapplication.*`
+— the previously installed system copy. The binary will silently run against the old
+library.
+
+To actually run an app against the freshly built matrixserver, point the loader at the
+install tree:
+
+```bash
+# macOS
+export DYLD_LIBRARY_PATH=/path/to/matrixserver/install/lib
+
+# Linux
+export LD_LIBRARY_PATH=/path/to/matrixserver/install/lib
+
+./build/bin/Snake
+```
+
+Or alternatively: `sudo make install` matrixserver to `/usr/local` so the existing rpath
+matches (replaces the system copy), or on macOS patch the binary in place with
+`install_name_tool -add_rpath /path/to/matrixserver/install/lib build/bin/<App>`.
 
 #### Additional prerequisites
 
@@ -135,8 +160,8 @@ make picture         # Image display
 1. Start a matrixserver instance:
    ```bash
    # From matrixserver directory
-   ./build/server_simulator  # For development
-   ./build/server_FPGA       # For FPGA hardware
+   ./build/server/matrix_server                       # default: --backend=simulator
+   ./build/server/matrix_server --backend=fpga-ftdi   # for FPGA hardware (must be compiled in)
    ```
 
 2. Run an example application:
@@ -177,11 +202,16 @@ All values default to 0° when absent, maintaining backwards compatibility.
 
 ## Hardware Compatibility
 
-Applications work with various matrixserver backends:
-- **server_simulator** - Software development and testing
-- **server_FPGA** - FTDI USB interface for FPGA boards
-- **server_FPGA_RPISPI** - Raspberry Pi SPI interface
-- **server_RGBMatrix** - Raspberry Pi GPIO matrix panels
+Applications work with the unified `matrix_server` binary, which selects a
+renderer backend at runtime via `--backend=<name>`:
+- **`simulator`** — Software development and testing (always available)
+- **`fpga-ftdi`** — FTDI USB interface for FPGA boards
+- **`fpga-rpispi`** — Raspberry Pi SPI interface
+- **`rgb-matrix`** — Raspberry Pi GPIO matrix panels
+
+Hardware backends are only selectable if they were compiled into the binary
+via `-DHARDWARE_BACKEND=…` at build time. `matrix_server --help` lists which
+backends the current binary supports.
 
 ## Package Creation
 

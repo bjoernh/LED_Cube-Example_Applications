@@ -1,0 +1,110 @@
+name: Build Example Applications Pi (ARM64)
+
+on:
+  workflow_run:
+    workflows: ["Build Example Applications (AMD64)"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  build-and-package-pi:
+    name: Build and Package Pi (ARM64)
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event != 'pull_request') }}
+    runs-on: [self-hosted, linux, ARM64]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            build-essential cmake git pkg-config \
+            libeigen3-dev libboost-thread-dev libboost-log-dev \
+            libboost-system-dev libboost-regex-dev libboost-chrono-dev \
+            libboost-date-time-dev libboost-filesystem-dev libboost-atomic-dev \
+            libboost-program-options-dev libasound2-dev libprotobuf-dev \
+            protobuf-compiler libimlib2-dev libftdi1-dev
+
+      - name: Build and install wiringPi natively
+        run: |
+          git clone https://github.com/WiringPi/WiringPi.git
+          cd WiringPi && sudo ./build && cd .. && rm -rf WiringPi
+
+      - name: Mock Raspberry Pi detection for CMake
+        run: sudo mkdir -p /boot && sudo touch /boot/LICENCE.broadcom
+
+      - name: Build and Install matrixserver from submodule (all hardware backends)
+        run: |
+          cd matrixserver
+          make -C renderer/RGBMatrixRenderer/rpi-rgb-led-matrix/lib clean || true
+          mkdir build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=../install \
+            -DHARDWARE_BACKEND="FPGA_FTDI;FPGA_RPISPI;RGB_MATRIX" ..
+          make -j$(nproc)
+          make install
+
+      - name: Build Example Applications
+        run: |
+          mkdir build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          make -j$(nproc)
+
+      - name: Create Debian Package Workspace
+        run: |
+          PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          if [ -z "$PROJECT_VERSION" ]; then echo "Failed to extract version"; exit 1; fi
+
+          mkdir -p deb-workspace/opt/cube/bin
+          cp bin/cubetestapp  deb-workspace/opt/cube/bin/
+          cp bin/Genetic      deb-workspace/opt/cube/bin/
+          cp bin/Breakout3D   deb-workspace/opt/cube/bin/
+          cp bin/Blackout3D   deb-workspace/opt/cube/bin/
+          cp bin/PixelFlow3   deb-workspace/opt/cube/bin/
+          cp bin/MatrixRain   deb-workspace/opt/cube/bin/
+          cp bin/Snake        deb-workspace/opt/cube/bin/
+          cp bin/Picture      deb-workspace/opt/cube/bin/
+          cp bin/imutestapp   deb-workspace/opt/cube/bin/
+          cp bin/PixelFlow    deb-workspace/opt/cube/bin/
+          cp bin/PixelFlow2   deb-workspace/opt/cube/bin/
+          cp bin/Rainbow      deb-workspace/opt/cube/bin/
+
+          mkdir -p deb-workspace/usr/local/lib
+          cp matrixserver/install/lib/libmatrixapplication.so deb-workspace/usr/local/lib/
+          cp /usr/local/lib/libwiringPi.so*    deb-workspace/usr/local/lib/
+          cp /usr/local/lib/libwiringPiDev.so* deb-workspace/usr/local/lib/
+
+          mkdir -p deb-workspace/DEBIAN
+          cat <<EOF > deb-workspace/DEBIAN/control
+          Package: led-cube-exampleapplications
+          Version: ${PROJECT_VERSION}
+          Section: base
+          Priority: optional
+          Architecture: arm64
+          Maintainer: Bjoern Hauffe<oss@64b.de>
+          Description: LEDCube matrixserver example applications for Raspberry Pi
+          Depends: libboost-thread1.83.0, libboost-log1.83.0, libboost-system1.83.0, libboost-regex1.83.0, libboost-chrono1.83.0, libboost-date-time1.83.0, libboost-filesystem1.83.0, libboost-atomic1.83.0, libboost-program-options1.83.0, libasound2t64, libprotobuf32t64, libimlib2t64, libftdi1-2
+          EOF
+
+          cat <<'EOF' > deb-workspace/DEBIAN/postinst
+          #!/bin/sh
+          ldconfig
+          EOF
+          chmod 755 deb-workspace/DEBIAN/postinst
+
+      - name: Build Debian Package
+        run: |
+          PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PROJECT_VERSION}_arm64.deb"
+
+      - name: Upload Debian Package Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: led-cube-exampleapplications-arm64
+          path: led-cube-exampleapplications_*_arm64.deb

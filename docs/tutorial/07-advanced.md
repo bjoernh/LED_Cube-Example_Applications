@@ -75,13 +75,17 @@ The beauty of the `matrixserver` decoupling is that **your `HelloCube` client bi
 
 All you change is the server you connect to:
 1. Move your code onto an ARM device (like a Raspberry Pi 4). 
-2. Compile the `matrixserver` natively, defining a hardware backend (like RGB Matrix standard GPIO pins, or an IceBreaker FPGA module).
+2. Compile the `matrixserver` natively, enabling one or more hardware backends (`HARDWARE_BACKEND` is a semicolon-separated list).
 ```bash
-# Example building the real FPGA server instead of the Simulator
+# Compile in the FPGA RPi-SPI backend alongside the always-available simulator
 cmake -DHARDWARE_BACKEND=FPGA_RPISPI .. && make
+
+# Or enable all hardware backends and pick at runtime:
+# cmake -DHARDWARE_BACKEND="FPGA_FTDI;FPGA_RPISPI;RGB_MATRIX" .. && make
 ```
 
-3. Run the hardware server daemon: `./matrix_server`
+3. Run the same `matrix_server` binary, selecting the hardware backend with `--backend=`:
+   `./matrix_server --backend=fpga-rpispi`
 4. Run your exact same client code: `./HelloCube`
 
 The exact same TCP protocol fires, but this time, real pixels illuminate the room!

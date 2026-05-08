@@ -59,4 +59,4 @@
 * **Interactivity:** How to listen for input from sensors (like IMUs) or joysticks to make interactive games like *Snake3D* or *Breakout3D*.
 * **Migrating to Physical Hardware:** 
   * Compiling applications natively on an ARM device (e.g., Raspberry Pi).
-  * Changing out the `matrix_server_simulator` daemon for a real hardware server daemon using FPGA or GPIO backends.
+  * Switching the `matrix_server` daemon from `--backend=simulator` to a hardware backend (e.g., `--backend=fpga-rpispi` or `--backend=rgb-matrix`) to drive an FPGA or GPIO matrix panel.
