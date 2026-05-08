@@ -40,19 +40,22 @@ jobs:
         run: sudo mkdir -p /boot && sudo touch /boot/LICENCE.broadcom
 
       - name: Build and Install matrixserver from submodule (all hardware backends)
+        working-directory: matrixserver
         run: |
-          cd matrixserver
           make -C renderer/RGBMatrixRenderer/rpi-rgb-led-matrix/lib clean || true
-          mkdir build && cd build
+          rm -rf build && mkdir build && cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=../install \
-            -DHARDWARE_BACKEND="FPGA_FTDI;FPGA_RPISPI;RGB_MATRIX" ..
+            -DCMAKE_INSTALL_PREFIX="${GITHUB_WORKSPACE}/matrixserver/install" \
+            -DENABLE_FPGA_FTDI=ON \
+            -DENABLE_FPGA_RPISPI=ON \
+            -DENABLE_RGB_MATRIX=ON \
+            ..
           make -j$(nproc)
           make install
 
       - name: Build Example Applications
         run: |
-          mkdir build && cd build
+          rm -rf build && mkdir build && cd build
           cmake -DCMAKE_BUILD_TYPE=Release ..
           make -j$(nproc)
 
