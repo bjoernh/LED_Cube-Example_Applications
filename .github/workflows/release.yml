@@ -242,10 +242,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
         run: |
-          LATEST=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+          REPO="${{ github.repository }}"
+          LATEST=$(gh release view --repo "$REPO" --json tagName -q .tagName 2>/dev/null || true)
           NOTES_FLAG=""
           [ -n "$LATEST" ] && NOTES_FLAG="--notes-start-tag $LATEST"
           gh release create "$TAG" debs/*.deb \
+            --repo "$REPO" \
             --prerelease --generate-notes $NOTES_FLAG \
             --title "Release $TAG" \
-          || gh release upload "$TAG" debs/*.deb --clobber
+          || gh release upload "$TAG" debs/*.deb --repo "$REPO" --clobber
