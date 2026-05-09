@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.07)
-project(exampleApplications VERSION 0.4.9)
+project(exampleApplications VERSION 0.5.0)
 
 
 set(CMAKE_CXX_STANDARD 20)
@@ -46,8 +46,14 @@ IF(APPLE)
   set(CMAKE_INSTALL_RPATH "/usr/local/lib;${CMAKE_PREFIX_PATH}/lib")
   set(CMAKE_BUILD_RPATH "${CMAKE_PREFIX_PATH}/lib")
   set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-
-endif ()
+elseif(UNIX)
+  # Bake /usr/local/lib into the binary so it finds libmatrixapplication.so
+  # at runtime regardless of ldconfig state. CMAKE_BUILD_WITH_INSTALL_RPATH
+  # ensures the build-output binaries in bin/ already carry this RPATH, since
+  # the deb packages copy from bin/ rather than running cmake --install.
+  set(CMAKE_INSTALL_RPATH "/usr/lib")
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+endif()
 
 
 add_subdirectory(Genetic)
