@@ -1,0 +1,251 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-amd64:
+    name: Build & package (AMD64)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Verify tag matches CMake version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          TAG_BASE_VERSION=$(echo "$TAG_VERSION" | cut -d'-' -f1)
+          if [ "$PROJECT_VERSION" != "$TAG_BASE_VERSION" ]; then
+            echo "::error::CMake project version ($PROJECT_VERSION) does not match Git tag version ($TAG_BASE_VERSION)!"
+            exit 1
+          fi
+          echo "Version match verified: $PROJECT_VERSION"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            build-essential cmake git pkg-config ccache \
+            libeigen3-dev libboost-all-dev libasound2-dev \
+            libprotobuf-dev protobuf-compiler libimlib2-dev
+
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ccache-amd64-${{ github.sha }}
+          restore-keys: |
+            ccache-amd64-
+
+      - name: Build matrixserver from submodule
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: |
+          cmake -S "$GITHUB_WORKSPACE/matrixserver" \
+            -B "$GITHUB_WORKSPACE/matrixserver/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/matrixserver/install" \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build "$GITHUB_WORKSPACE/matrixserver/build" -- -j$(nproc)
+          cmake --install "$GITHUB_WORKSPACE/matrixserver/build"
+
+      - name: Build example applications
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: |
+          cmake -S "$GITHUB_WORKSPACE" \
+            -B "$GITHUB_WORKSPACE/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/matrixserver/install" \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build "$GITHUB_WORKSPACE/build" -- -j$(nproc)
+          ccache -s
+
+      - name: Build .deb
+        run: |
+          PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          mkdir -p deb-workspace/opt/cube/bin deb-workspace/DEBIAN
+          for app in cubetestapp Genetic Breakout3D Blackout3D PixelFlow3 \
+                     MatrixRain Snake Picture imutestapp PixelFlow PixelFlow2 Rainbow; do
+            cp "bin/$app" deb-workspace/opt/cube/bin/
+          done
+          cat <<EOF > deb-workspace/DEBIAN/control
+          Package: led-cube-exampleapplications
+          Version: ${PROJECT_VERSION}
+          Section: base
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Bjoern Hauffe<oss@64b.de>
+          Description: LEDCube matrixserver example applications (AMD64/Simulator)
+          Depends: matrixserver-simulator
+          EOF
+          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PROJECT_VERSION}_amd64.deb"
+
+      - name: Upload .deb artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: led-cube-exampleapplications-amd64
+          path: led-cube-exampleapplications_*_amd64.deb
+
+  build-arm64:
+    name: Build & package (ARM64)
+    needs: build-amd64
+    if: github.event_name != 'pull_request'
+    runs-on: [self-hosted, linux, ARM64]
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            build-essential cmake git pkg-config ccache \
+            libeigen3-dev libboost-thread-dev libboost-log-dev \
+            libboost-system-dev libboost-regex-dev libboost-chrono-dev \
+            libboost-date-time-dev libboost-filesystem-dev libboost-atomic-dev \
+            libboost-program-options-dev libasound2-dev libprotobuf-dev \
+            protobuf-compiler libimlib2-dev libftdi1-dev
+
+      - name: Build and install wiringPi (skip if present)
+        run: |
+          if [ ! -f /usr/local/lib/libwiringPi.so ] && [ ! -f /usr/lib/libwiringPi.so ]; then
+            git clone --depth 1 https://github.com/WiringPi/WiringPi.git /tmp/WiringPi
+            cd /tmp/WiringPi && sudo ./build && cd / && rm -rf /tmp/WiringPi
+          else
+            echo "wiringPi already installed, skipping"
+          fi
+
+      - name: Mock Raspberry Pi detection for CMake
+        run: sudo mkdir -p /boot && sudo touch /boot/LICENCE.broadcom
+
+      - name: Restore ccache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ccache-arm64-${{ github.sha }}
+          restore-keys: |
+            ccache-arm64-
+
+      - name: Build matrixserver from submodule (all hardware backends)
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: |
+          make -C "$GITHUB_WORKSPACE/matrixserver/renderer/RGBMatrixRenderer/rpi-rgb-led-matrix/lib" clean || true
+          rm -rf "$GITHUB_WORKSPACE/matrixserver/build"
+          cmake -S "$GITHUB_WORKSPACE/matrixserver" \
+            -B "$GITHUB_WORKSPACE/matrixserver/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/matrixserver/install" \
+            -DENABLE_FPGA_FTDI=ON \
+            -DENABLE_FPGA_RPISPI=ON \
+            -DENABLE_RGB_MATRIX=ON \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build "$GITHUB_WORKSPACE/matrixserver/build" -- -j$(nproc)
+          cmake --install "$GITHUB_WORKSPACE/matrixserver/build"
+
+      - name: Build example applications
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+        run: |
+          rm -rf "$GITHUB_WORKSPACE/build"
+          cmake -S "$GITHUB_WORKSPACE" \
+            -B "$GITHUB_WORKSPACE/build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/matrixserver/install" \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --build "$GITHUB_WORKSPACE/build" -- -j$(nproc)
+          ccache -s
+
+      - name: Build .deb
+        run: |
+          PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          mkdir -p deb-workspace/opt/cube/bin deb-workspace/DEBIAN
+          for app in cubetestapp Genetic Breakout3D Blackout3D PixelFlow3 \
+                     MatrixRain Snake Picture imutestapp PixelFlow PixelFlow2 Rainbow; do
+            cp "bin/$app" deb-workspace/opt/cube/bin/
+          done
+          cat <<EOF > deb-workspace/DEBIAN/control
+          Package: led-cube-exampleapplications
+          Version: ${PROJECT_VERSION}
+          Section: base
+          Priority: optional
+          Architecture: arm64
+          Maintainer: Bjoern Hauffe<oss@64b.de>
+          Description: LEDCube matrixserver example applications for Raspberry Pi
+          Depends: matrixserver-pi
+          EOF
+          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PROJECT_VERSION}_arm64.deb"
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: led-cube-exampleapplications-arm64
+          path: led-cube-exampleapplications_*_arm64.deb
+
+  release:
+    name: Create pre-release & upload to APT
+    needs: [build-amd64, build-arm64]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all .deb artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: debs
+          pattern: led-cube-exampleapplications-*
+          merge-multiple: true
+
+      - name: List downloaded packages
+        run: find debs -name "*.deb" | sort
+
+      - name: Upload to APT repository (sftp)
+        env:
+          UPLOAD_HOST: ${{ vars.UPLOAD_HOST }}
+          UPLOAD_USER: ${{ vars.UPLOAD_USER }}
+          UPLOAD_SSH_KEY: ${{ secrets.UPLOAD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          umask 077
+          printf '%s\n' "$UPLOAD_SSH_KEY" > ~/.ssh/id_upload
+          ssh-keyscan -p 22322 -t ed25519,rsa "$UPLOAD_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          sftp -P 22322 -i ~/.ssh/id_upload -o StrictHostKeyChecking=yes \
+               -b - "$UPLOAD_USER@$UPLOAD_HOST" <<EOF
+          cd /docker/apt-repo/data/incoming
+          $(for f in debs/*.deb; do echo "put $f"; done)
+          bye
+          EOF
+
+      - name: Create GitHub pre-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          LATEST=$(gh release view --json tagName -q .tagName 2>/dev/null || true)
+          NOTES_FLAG=""
+          [ -n "$LATEST" ] && NOTES_FLAG="--notes-start-tag $LATEST"
+          gh release create "$TAG" debs/*.deb \
+            --prerelease --generate-notes $NOTES_FLAG \
+            --title "Release $TAG" \
+          || gh release upload "$TAG" debs/*.deb --clobber
