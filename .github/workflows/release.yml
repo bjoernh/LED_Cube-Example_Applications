@@ -75,6 +75,13 @@ jobs:
       - name: Build .deb
         run: |
           PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG_VERSION=${GITHUB_REF#refs/tags/v}
+            # Use ~ instead of - so prereleases sort before the final release in apt
+            PKG_VERSION=${TAG_VERSION/-/\~}
+          else
+            PKG_VERSION=$PROJECT_VERSION
+          fi
           mkdir -p deb-workspace/opt/cube/bin deb-workspace/DEBIAN
           for app in cubetestapp Genetic Breakout3D Blackout3D PixelFlow3 \
                      MatrixRain Snake Picture imutestapp PixelFlow PixelFlow2 Rainbow; do
@@ -82,7 +89,7 @@ jobs:
           done
           cat <<EOF > deb-workspace/DEBIAN/control
           Package: led-cube-exampleapplications
-          Version: ${PROJECT_VERSION}
+          Version: ${PKG_VERSION}
           Section: base
           Priority: optional
           Architecture: amd64
@@ -90,7 +97,7 @@ jobs:
           Description: LEDCube matrixserver example applications (AMD64/Simulator)
           Depends: matrixserver-simulator
           EOF
-          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PROJECT_VERSION}_amd64.deb"
+          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PKG_VERSION}_amd64.deb"
 
       - name: Upload .deb artifact
         if: github.event_name != 'pull_request'
@@ -178,6 +185,13 @@ jobs:
       - name: Build .deb
         run: |
           PROJECT_VERSION=$(grep -oP 'project\([^ ]+ VERSION \K[0-9.]+' CMakeLists.txt)
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG_VERSION=${GITHUB_REF#refs/tags/v}
+            # Use ~ instead of - so prereleases sort before the final release in apt
+            PKG_VERSION=${TAG_VERSION/-/\~}
+          else
+            PKG_VERSION=$PROJECT_VERSION
+          fi
           mkdir -p deb-workspace/opt/cube/bin deb-workspace/DEBIAN
           for app in cubetestapp Genetic Breakout3D Blackout3D PixelFlow3 \
                      MatrixRain Snake Picture imutestapp PixelFlow PixelFlow2 Rainbow; do
@@ -185,7 +199,7 @@ jobs:
           done
           cat <<EOF > deb-workspace/DEBIAN/control
           Package: led-cube-exampleapplications
-          Version: ${PROJECT_VERSION}
+          Version: ${PKG_VERSION}
           Section: base
           Priority: optional
           Architecture: arm64
@@ -193,7 +207,7 @@ jobs:
           Description: LEDCube matrixserver example applications for Raspberry Pi
           Depends: matrixserver-pi
           EOF
-          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PROJECT_VERSION}_arm64.deb"
+          dpkg-deb --build deb-workspace "led-cube-exampleapplications_${PKG_VERSION}_arm64.deb"
 
       - name: Upload .deb artifact
         uses: actions/upload-artifact@v4
