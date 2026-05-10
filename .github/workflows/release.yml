@@ -6,12 +6,27 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  BUILDER_IMAGE: ghcr.io/bjoernh/matrixserver-builder:latest
+
+# Force bash everywhere to avoid issues with /bin/sh inside containers
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build-amd64:
     name: Build & package (AMD64)
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/bjoernh/matrixserver-builder:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: read
+      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,13 +45,8 @@ jobs:
           fi
           echo "Version match verified: $PROJECT_VERSION"
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            build-essential cmake git pkg-config ccache \
-            libeigen3-dev libboost-all-dev libasound2-dev \
-            libprotobuf-dev protobuf-compiler libimlib2-dev
+      - name: Ensure ccache present
+        run: command -v ccache >/dev/null || (apt-get update && apt-get install -y ccache)
 
       - name: Restore ccache
         uses: actions/cache@v4
@@ -111,36 +121,25 @@ jobs:
     needs: build-amd64
     if: github.event_name != 'pull_request'
     runs-on: [self-hosted, linux, ARM64]
+    container:
+      image: ghcr.io/bjoernh/matrixserver-builder:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: read
+      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            build-essential cmake git pkg-config ccache \
-            libeigen3-dev libboost-thread-dev libboost-log-dev \
-            libboost-system-dev libboost-regex-dev libboost-chrono-dev \
-            libboost-date-time-dev libboost-filesystem-dev libboost-atomic-dev \
-            libboost-program-options-dev libasound2-dev libprotobuf-dev \
-            protobuf-compiler libimlib2-dev libftdi1-dev
-
-      - name: Build and install wiringPi (skip if present)
-        run: |
-          if [ ! -f /usr/local/lib/libwiringPi.so ] && [ ! -f /usr/lib/libwiringPi.so ]; then
-            git clone --depth 1 https://github.com/WiringPi/WiringPi.git /tmp/WiringPi
-            cd /tmp/WiringPi && sudo ./build && cd / && rm -rf /tmp/WiringPi
-          else
-            echo "wiringPi already installed, skipping"
-          fi
+      - name: Ensure ccache present
+        run: command -v ccache >/dev/null || (apt-get update && apt-get install -y ccache)
 
       - name: Mock Raspberry Pi detection for CMake
-        run: sudo mkdir -p /boot && sudo touch /boot/LICENCE.broadcom
+        run: mkdir -p /boot && touch /boot/LICENCE.broadcom
 
       - name: Restore ccache
         uses: actions/cache@v4
@@ -214,6 +213,10 @@ jobs:
         with:
           name: led-cube-exampleapplications-arm64
           path: led-cube-exampleapplications_*_arm64.deb
+
+      - name: Hand workspace back to self-hosted runner user
+        if: always()
+        run: chown -R 1000:1000 "$GITHUB_WORKSPACE"
 
   release:
     name: Create pre-release & upload to APT
