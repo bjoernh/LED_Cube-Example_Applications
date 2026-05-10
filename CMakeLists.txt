@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.07)
-project(exampleApplications VERSION 0.5.0)
+project(exampleApplications VERSION 0.4.9)
 
 
 set(CMAKE_CXX_STANDARD 20)
