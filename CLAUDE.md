@@ -134,6 +134,23 @@ public:
 - `CharacterBitmaps::centered` for automatic text centering
 - Screen-specific text rendering for cube faces
 
+**Cube Coordinate System — read this before writing particle/voxel code:**
+
+The valid 3D voxel index range is **`[0, VIRTUALCUBEMAXINDEX]` = `[0, 65]`** on every axis. The six outer faces sit at the extremes of this range:
+
+| Face   | Plane                       |
+|--------|-----------------------------|
+| left   | `x == 0`                    |
+| right  | `x == VIRTUALCUBEMAXINDEX`  |
+| front  | `y == 0`                    |
+| back   | `y == VIRTUALCUBEMAXINDEX`  |
+| top    | `z == 0`                    |
+| bottom | `z == VIRTUALCUBEMAXINDEX`  |
+
+`getRandomPointOnScreen()` and `getPointOnScreen()` return voxels at these surface planes (including coordinate `0`). Clamping particle positions to `[VIRTUALCUBEMININDEX, VIRTUALCUBEMAXINDEX]` is a recurring bug — `VIRTUALCUBEMININDEX = 1` is **not** the surface lower bound, it refers to the inner body. Using it as a clamp pushes anything spawned on `left`, `front`, or `top` one voxel inside the cube where it is invisible. Always clamp to `[0, VIRTUALCUBEMAXINDEX]`.
+
+`getPointOnScreen(face, Vector2i p2)` takes **face-local 2D coordinates in `[0, CUBEMAXINDEX]` = `[0, 63]`** and adds 1 internally — pass values from `rand() % CUBESIZE`, not from the VIRTUAL range.
+
 **Input Integration**:
 - Joystick support for interactive applications
 - IMU (MPU6050) integration on Raspberry Pi

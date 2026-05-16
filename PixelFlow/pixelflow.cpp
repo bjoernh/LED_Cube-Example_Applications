@@ -55,7 +55,24 @@ ScreenNumber getScreenNumberThis(Vector3i point) {
     return result;
 }
 
-PixelFlow::PixelFlow() : CubeApplication(40) {
+PixelFlow::PixelFlow() : CubeApplication(40, DEFAULTSERVERURI, "PixelFlow1") {
+    joysticks.push_back(new Joystick(0));
+    joysticks.push_back(new Joystick(1));
+    joysticks.push_back(new Joystick(2));
+    joysticks.push_back(new Joystick(3));
+
+    // Audio reactivity (IMU still drives drop direction). Joystick button 1 toggles.
+    params.registerBool ("audioEnabled",    "Audio Reactive",      false,                   "Audio");
+    params.registerFloat("audioGain",       "Audio Gain",          1.0f, 200.0f, 50.0f, 1.0f, "Audio");
+    params.registerFloat("beatThreshold",   "Beat Threshold",      1.1f, 2.5f, 1.4f, 0.05f, "Audio");
+    params.registerFloat("audioInfluence",  "Audio Influence",     0.0f, 1.0f, 0.6f, 0.05f, "Audio");
+    params.registerInt  ("baseSpawn",       "Base Spawn Rate",     1, 200, 60,              "Audio");
+    params.registerInt  ("beatSpawnBurst",  "Beat Spawn Burst",    0, 300, 50,              "Audio");
+    params.registerFloat("audioBassGain",   "Bass Gain (FFT prep)",   0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+    params.registerFloat("audioMidGain",    "Mid Gain (FFT prep)",    0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+    params.registerFloat("audioTrebleGain", "Treble Gain (FFT prep)", 0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+
+    audio_.init();
 }
 
 bool PixelFlow::loop(){
@@ -65,10 +82,33 @@ bool PixelFlow::loop(){
     static Color col1(0,255-rand()%100,255-rand()%200);
 
 
+    for (auto joystick : joysticks) {
+        if (joystick->getButtonPress(1)) {
+            params.setBool("audioEnabled", !params.getBool("audioEnabled"));
+        }
+        joystick->clearAllButtonPresses();
+    }
+
+    // Sync audio tuning from params each frame.
+    audio_.setEnabled(params.getBool("audioEnabled"));
+    audio_.setGain(params.getFloat("audioGain"));
+    audio_.setBeatThreshold(params.getFloat("beatThreshold"));
+
+    const bool  audioOn  = params.getBool("audioEnabled") && audio_.isAvailable();
+    const float audioInf = audioOn ? params.getFloat("audioInfluence") : 0.0f;
+    const float volume   = audio_.getVolume();
+    const bool  beat     = audio_.consumeBeat();
+    if (beat) counterColChange++;
+
 //    clear();
     fade(0.85);
-    //create new Raindrops
-    for (int foo = 0; foo < 60; foo++){
+    //create new Raindrops — IMU picks active face & start point; audio scales spawn rate & brightness.
+    int baseSpawn = params.getInt("baseSpawn");
+    float rateBlend = (1.0f - audioInf) + audioInf * (0.3f + 2.5f * volume);
+    int spawnCount = std::max(1, int(baseSpawn * rateBlend));
+    float brightBlend = (1.0f - audioInf) + audioInf * (0.4f + 1.5f * volume);
+    col1 *= brightBlend;
+    for (int foo = 0; foo < spawnCount; foo++){
         float randAngle = rand()%360;
         float speed = 0;
         float vx = speed * cos(randAngle*PI/180);
@@ -97,6 +137,38 @@ bool PixelFlow::loop(){
         }
         Vector3f startPoint = imuPoint.template cast<float>();
         rdrops.push_back(std::make_shared<Drop>(Vector3i(VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX), startPoint, startSpeed, Vector3f(0,0,0),col1));
+    }
+
+    // Beat burst: bright outward-launched drops from the IMU intersection point.
+    if (beat) {
+        int burst = params.getInt("beatSpawnBurst");
+        auto imuPoint = Imu.getCubeAccIntersect();
+        Vector3f startPoint = imuPoint.template cast<float>();
+        for (int b = 0; b < burst; b++) {
+            float randAngle = rand()%360;
+            float burstSpeed = 1.2f;
+            Vector3f burstVel(0,0,0);
+            switch(getScreenNumber(imuPoint)){
+                case ScreenNumber::top:
+                case ScreenNumber::bottom:
+                    burstVel[0] = burstSpeed * cos(randAngle*PI/180);
+                    burstVel[1] = burstSpeed * sin(randAngle*PI/180);
+                    break;
+                case ScreenNumber::front:
+                case ScreenNumber::back:
+                    burstVel[0] = burstSpeed * cos(randAngle*PI/180);
+                    burstVel[2] = burstSpeed * sin(randAngle*PI/180);
+                    break;
+                case ScreenNumber::left:
+                case ScreenNumber::right:
+                    burstVel[1] = burstSpeed * cos(randAngle*PI/180);
+                    burstVel[2] = burstSpeed * sin(randAngle*PI/180);
+                    break;
+                default:
+                    break;
+            }
+            rdrops.push_back(std::make_shared<Drop>(Vector3i(VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX), startPoint, burstVel, Vector3f(0,0,0), Color::white()));
+        }
     }
 
     if (counter%50 == 0) {

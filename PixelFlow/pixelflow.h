@@ -4,6 +4,8 @@
 #include "CubeApplication.h"
 #include "Joystick.h"
 #include <Mpu6050.h>
+#include <AudioInput.h>
+#include <vector>
 
 class PixelFlow : public CubeApplication{
 public:
@@ -11,6 +13,8 @@ public:
     bool loop();
 private:
     Mpu6050 Imu;
+    AudioInput audio_;
+    std::vector<Joystick *> joysticks;
     class Particle;
     class SurfaceParticle;
     class Drop;

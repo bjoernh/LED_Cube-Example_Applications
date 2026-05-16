@@ -5,6 +5,7 @@
 #include "Joystick.h"
 #include <vector>
 #include <Mpu6050.h>
+#include <AudioInput.h>
 
 class Rainbow : public CubeApplication{
 public:
@@ -14,6 +15,7 @@ private:
     class Particle;
     class Drop;
     Mpu6050 Imu;
+    AudioInput audio_;
     std::vector<Color> allTheColors;
     std::vector<Color> allTheColorsRainbow;
     std::vector<Color> allTheColorsRandom;

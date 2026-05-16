@@ -17,10 +17,16 @@ int main(int argc, char *argv[]) {
     
     CubeTest App1(serverUri);
     App1.start();
-    
-    std::signal(SIGUSR1, signal_handler);
-   
 
-    while(1) sleep(1);
+    std::signal(SIGUSR1, signal_handler);
+
+    // Exit when the framework pauses, kills, or ends us. MainMenu spawns a
+    // fresh process when the user picks the app again — staying alive would
+    // orphan the old process and leak the audio device to the new instance.
+    while (true) {
+        AppState s = App1.getAppState();
+        if (s != AppState::starting && s != AppState::running) break;
+        sleep(1);
+    }
     return 0;
 }

@@ -2,11 +2,15 @@
 #define MATRIXSERVER_CUBETEST_H
 
 #include <CubeApplication.h>
+#include <AudioInput.h>
 
 class CubeTest : public CubeApplication{
 public:
     CubeTest(std::string serverUri = DEFAULTSERVERURI);
     bool loop();
+
+private:
+    AudioInput audio_;
 };
 
 #endif //MATRIXSERVER_CUBETEST_H

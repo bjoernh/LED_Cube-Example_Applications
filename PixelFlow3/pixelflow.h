@@ -3,6 +3,7 @@
 
 #include "CubeApplication.h"
 #include "Joystick.h"
+#include "AudioInput.h"
 #include <vector>
 
 class PixelFlow : public CubeApplication{
@@ -13,6 +14,7 @@ private:
     class Particle;
     class Drop;
     std::vector<Joystick *> joysticks;
+    AudioInput audio_;
 };
 
 class PixelFlow::Particle{

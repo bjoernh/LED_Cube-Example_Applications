@@ -17,6 +17,19 @@ PixelFlow::PixelFlow(std::string serverUri) : CubeApplication(40, serverUri, "Pi
     params.registerFloat("fade", "Fade Factor", 0.0f, 1.0f, 0.85f, 0.01f, "Animation");
     params.registerInt("spawnRate", "Spawn Rate", 1, 100, 30, "Animation");
     params.registerFloat("speed", "Speed", 0.1f, 3.0f, 0.5f, 0.01f, "Animation");
+
+    // Audio reactivity. Joystick button 1 toggles audioEnabled at runtime.
+    params.registerBool ("audioEnabled",    "Audio Reactive",      false,                   "Audio");
+    params.registerFloat("audioGain",       "Audio Gain",          1.0f, 200.0f, 50.0f, 1.0f, "Audio");
+    params.registerFloat("beatThreshold",   "Beat Threshold",      1.1f, 2.5f, 1.4f, 0.05f, "Audio");
+    params.registerFloat("audioInfluence",  "Audio Influence",     0.0f, 1.0f, 0.6f, 0.05f, "Audio");
+    params.registerInt  ("beatSpawnBurst",  "Beat Spawn Burst",    0, 300, 50,              "Audio");
+    // FFT bands — exposed for future use; AudioInput already computes them.
+    params.registerFloat("audioBassGain",   "Bass Gain (FFT prep)",   0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+    params.registerFloat("audioMidGain",    "Mid Gain (FFT prep)",    0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+    params.registerFloat("audioTrebleGain", "Treble Gain (FFT prep)", 0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+
+    audio_.init();
 }
 
 bool PixelFlow::loop(){
@@ -31,6 +44,9 @@ bool PixelFlow::loop(){
         if (joystick->getButtonPress(0)) {
             counterColChange++;
         }
+        if (joystick->getButtonPress(1)) {
+            params.setBool("audioEnabled", !params.getBool("audioEnabled"));
+        }
         if (joystick->getButtonPress(3)) {
             isPaused = !isPaused;
         }
@@ -40,16 +56,45 @@ bool PixelFlow::loop(){
     if(isPaused)
         return true;
 
+    // Sync audio tuning from params (web UI updates live).
+    audio_.setEnabled(params.getBool("audioEnabled"));
+    audio_.setGain(params.getFloat("audioGain"));
+    audio_.setBeatThreshold(params.getFloat("beatThreshold"));
+
+    const bool  audioOn  = params.getBool("audioEnabled") && audio_.isAvailable();
+    const float audioInf = audioOn ? params.getFloat("audioInfluence") : 0.0f;
+    const float volume   = audio_.getVolume();          // 0 when disabled
+    const bool  beat     = audio_.consumeBeat();        // false when disabled
+
+    // Beat triggers a color flip on top of the joystick button.
+    if (beat) counterColChange++;
 
     fade(params.getFloat("fade"));
-    //create new Raindrops
-    int spawnRate = params.getInt("spawnRate");
+    //create new Raindrops — spawn rate scaled by volume, brightness scaled by volume.
+    int baseRate = params.getInt("spawnRate");
+    float rateBlend = (1.0f - audioInf) + audioInf * (0.3f + 2.5f * volume);
+    int spawnRate = std::max(1, int(baseRate * rateBlend));
     float speedMultiplier = params.getFloat("speed");
+    // Audio brightness modulation: quiet → dim, loud → boost.
+    float brightBlend = (1.0f - audioInf) + audioInf * (0.4f + 1.5f * volume);
+    col1 *= brightBlend;
     for (int foo = 0; foo < spawnRate; foo++){
         float randAngle = rand()%360;
         float vx = speedMultiplier * cos(randAngle*PI/180);
         float vy = speedMultiplier * sin(randAngle*PI/180);
         rdrops.push_back(std::make_shared<Drop>(Vector3i(VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX), Vector3f(VIRTUALCUBECENTER,VIRTUALCUBECENTER,0), Vector3f(vx,vy,0), Vector3f(0,0,0),col1));
+    }
+
+    // Beat burst: extra outward-launched drops in white.
+    if (beat) {
+        int burst = params.getInt("beatSpawnBurst");
+        float burstSpeed = speedMultiplier * 1.5f;
+        for (int b = 0; b < burst; b++) {
+            float randAngle = rand()%360;
+            float vx = burstSpeed * cos(randAngle*PI/180);
+            float vy = burstSpeed * sin(randAngle*PI/180);
+            rdrops.push_back(std::make_shared<Drop>(Vector3i(VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX), Vector3f(VIRTUALCUBECENTER,VIRTUALCUBECENTER,0), Vector3f(vx,vy,0), Vector3f(0,0,0), Color::white()));
+        }
     }
 
 //    if (counter%50 == 0) {

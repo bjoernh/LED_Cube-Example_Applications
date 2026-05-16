@@ -54,11 +54,28 @@ Rainbow::Rainbow() : CubeApplication(40, DEFAULTSERVERURI, "Rainbow") {
     allTheColorsRandom.push_back(Color(rand()%127+127,0,rand()%127+127));
     allTheColorsRandom.push_back(Color(rand()%127+127,rand()%127+127,rand()%127+127));
 
+    // Momentary trigger: webapp sets this to true, loop() clears all drops and
+    // resets the animation, then sets it back to false.
+    params.registerBool("reset", "Reset Particles", false, "Control");
+
     params.registerInt("colorMode", "Color Mode", 0, 5, 1, "Colors");
     params.registerFloat("colorChangeSpeed", "Color Cycle Speed", 0.0f, 2.0f, 1.0f, 0.05f, "Colors");
     params.registerInt("rainbowSpeed", "Rainbow Flow Speed", 1, 10, 2, "Colors");
     params.registerInt("pulseInterval", "Pulse Interval (ms)", 100, 50000, 2000, "Pulse");
     params.registerInt("pulseLength", "Pulse Length (ms)", 100, 5000, 100, "Pulse");
+
+    // Audio reactivity. Joystick button 1 toggles audioEnabled at runtime.
+    params.registerBool ("audioEnabled",       "Audio Reactive",      false,                   "Audio");
+    params.registerFloat("audioGain",          "Audio Gain",          1.0f, 200.0f, 50.0f, 1.0f, "Audio");
+    params.registerFloat("beatThreshold",      "Beat Threshold",      1.1f, 2.5f, 1.4f, 0.05f, "Audio");
+    params.registerFloat("audioInfluence",     "Audio Influence",     0.0f, 1.0f, 0.6f, 0.05f, "Audio");
+    params.registerFloat("beatPulseSpeed",     "Beat Pulse Strength", 0.0f, 2.0f, 0.6f, 0.05f, "Audio");
+    params.registerFloat("audioRainbowBoost",  "Volume → Rainbow Boost", 0.0f, 4.0f, 1.5f, 0.05f, "Audio");
+    params.registerFloat("audioBassGain",      "Bass Gain (FFT prep)",   0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+    params.registerFloat("audioMidGain",       "Mid Gain (FFT prep)",    0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+    params.registerFloat("audioTrebleGain",    "Treble Gain (FFT prep)", 0.0f, 3.0f, 1.0f, 0.05f, "Audio FFT");
+
+    audio_.init();
 }
 
 bool Rainbow::loop() {
@@ -106,6 +123,30 @@ bool Rainbow::loop() {
     static int counterPulseMiddle = 500; // in ms
     static int counterPulseLong = 1000; //  in ms
     static int counterPulseLongStart = 0; //  in ms
+
+    // Momentary reset: clear all drops and reset the animation state.
+    if (params.getBool("reset")) {
+        rdrops.clear();
+        stepCounter = 0;
+        counterColChange = 0;
+        countBlacked = 0;
+        countRainbow = 0;
+        counterStepRainbow = 0;
+        col1 = Color(255, 0, 0);
+        col1Old = col1;
+        col2Old = col1;
+        col1BeforeBlack = col1;
+        col1RainbowOld = col1;
+        col1RainbowNew = col1;
+        isBlacked = false;
+        isBlackedDone = false;
+        counterPulse = 0;
+        counterPulse2 = 0;
+        counterPulse3 = 0;
+        counterBackColorPulse = 0;
+        clear();             // wipe any rendered pixels immediately
+        params.setBool("reset", false);
+    }
     static bool trigerAxsis0 = 0; //  in ms
     auto imuPoint = Imu.getAcceleration();
     auto imuPointOld = Imu.getAcceleration();
@@ -117,8 +158,23 @@ bool Rainbow::loop() {
         isPaused = !isPaused;
         std::cout << "isPaused: " << isPaused << std::endl;
     }
+    // Button 1 -> Toggle audio reactivity.
+    if (joysticks.at(0)->getButtonPress(1)) {
+        params.setBool("audioEnabled", !params.getBool("audioEnabled"));
+        std::cout << "audioEnabled: " << params.getBool("audioEnabled") << std::endl;
+    }
     if (isPaused)
         return true;
+
+    // Audio: sync runtime tuning from params each frame.
+    audio_.setEnabled(params.getBool("audioEnabled"));
+    audio_.setGain(params.getFloat("audioGain"));
+    audio_.setBeatThreshold(params.getFloat("beatThreshold"));
+
+    const bool  audioOn  = params.getBool("audioEnabled") && audio_.isAvailable();
+    const float audioInf = audioOn ? params.getFloat("audioInfluence") : 0.0f;
+    const float audioVol = audio_.getVolume();      // 0 when disabled
+    const bool  audioBeat = audio_.consumeBeat();   // false when disabled
 
     colorModeOld =colorMode;
     // Button Y -> Mode
@@ -373,6 +429,20 @@ bool Rainbow::loop() {
         }
     }*/
 
+
+    // Audio modulation (no-op when audioInf == 0).
+    //   beat   → boost colorChangeSpeedFactor so the spawn gate fires this frame.
+    //   volume → multiply col1 brightness and add extra rainbow-counter ticks.
+    if (audioBeat) {
+        const float pulseStrength = audioInf * params.getFloat("beatPulseSpeed");
+        if (pulseStrength > colorChangeSpeedFactor) colorChangeSpeedFactor = pulseStrength;
+    }
+    if (audioInf > 0.0f) {
+        const float rainbowBoost = params.getFloat("audioRainbowBoost");
+        countRainbow += int(audioInf * audioVol * rainbowBoost);
+        const float brightBlend = (1.0f - audioInf) + audioInf * (0.4f + 1.5f * audioVol);
+        col1 *= brightBlend;
+    }
 
     col1 *= (float) ((rand() % 70)) / 100.0f + 0.7f;
 
