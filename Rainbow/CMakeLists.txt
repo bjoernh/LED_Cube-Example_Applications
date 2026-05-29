@@ -1,15 +1,18 @@
-project(Rainbow)
+# Ported to libcube (Cube 2.0). Build standalone:
+#   cmake -S . -B build -DCMAKE_PREFIX_PATH=<libcube-staging-prefix>
+#   cmake --build build
+# (libcube is found via pkg-config; PKG_CONFIG_PATH must include its lib/pkgconfig.)
+cmake_minimum_required(VERSION 3.20)
+project(Rainbow CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
-set(MAINSRC
-    main.cpp rainbow.cpp rainbow.h)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
-add_executable(Rainbow ${MAINSRC})
-target_link_libraries(Rainbow ${MAINLIBS}) #-l flag
+add_executable(rainbow main.cpp rainbow.cpp)
+target_link_libraries(rainbow PRIVATE PkgConfig::CUBE)
 
-install(TARGETS Rainbow DESTINATION /home/pi/APPS)
+install(TARGETS rainbow DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/rainbow)
