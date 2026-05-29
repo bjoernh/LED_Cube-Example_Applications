@@ -1,64 +1,69 @@
 #ifndef RAINBOW_H
 #define RAINBOW_H
 
-#include "CubeApplication.h"
-#include "Joystick.h"
-#include <vector>
-#include <Mpu6050.h>
+#include <cube/cube.h>
 
-class Rainbow : public CubeApplication{
+#include <memory>
+#include <vector>
+
+// Ported to libcube (Cube 2.0). Parameters live in schema.toml; the IMU comes
+// from cube::Imu; the app is driven by cube::run().
+class Rainbow : public cube::CubeApp {
 public:
     Rainbow();
-    bool loop();
+    bool loop() override;
+
 private:
     class Particle;
     class Drop;
-    Mpu6050 Imu;
-    std::vector<Color> allTheColors;
-    std::vector<Color> allTheColorsRainbow;
-    std::vector<Color> allTheColorsRandom;
-    std::vector<Joystick *> joysticks;
+
+    cube::Imu imu_;
+    cube::Joystick joystick_;
+    std::vector<cube::Color> allTheColors_;
+    std::vector<cube::Color> allTheColorsRainbow_;
+    std::vector<cube::Color> allTheColorsRandom_;
 };
 
-class Rainbow::Particle{
+class Rainbow::Particle {
 public:
-    Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    Particle(cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
     void accelerate();
     void move();
 
-    Vector3f position();
-    Vector3f velocity();
-    Vector3f acceleration();
+    [[nodiscard]] cube::Vec3f position() const;
+    [[nodiscard]] cube::Vec3f velocity() const;
+    [[nodiscard]] cube::Vec3f acceleration() const;
 
-    Vector3i iPosition();
-    Vector3i iVelocity();
-    Vector3i iAcceleration();
+    [[nodiscard]] cube::Vec3i iPosition() const;
+    [[nodiscard]] cube::Vec3i iVelocity() const;
+    [[nodiscard]] cube::Vec3i iAcceleration() const;
 
-    void position(Vector3f pos);
-    void velocity(Vector3f vel);
-    void acceleration(Vector3f accel);
+    void position(cube::Vec3f pos);
+    void velocity(cube::Vec3f vel);
+    void acceleration(cube::Vec3f accel);
 
-    Color color();
-    void color(Color Col);
+    [[nodiscard]] cube::Color color() const;
+    void color(cube::Color col);
+
 protected:
-    Vector3f position_;
-    Vector3f velocity_;
-    Vector3f acceleration_;
-    Color color_;
+    cube::Vec3f position_;
+    cube::Vec3f velocity_;
+    cube::Vec3f acceleration_;
+    cube::Color color_;
 };
 
 class Rainbow::Drop : public Particle {
 public:
-    Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    Drop(cube::Vec3i maxPos, cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
-    bool getRdyDelete();
+    [[nodiscard]] bool getRdyDelete() const;
+
 private:
-    float vxOld_;
-    float vyOld_;
-    Vector3i maxPos_;
-    bool rdyDelete_;
+    float vxOld_{0.0F};
+    float vyOld_{0.0F};
+    cube::Vec3i maxPos_;
+    bool rdyDelete_{false};
 };
 
-
-#endif
+#endif  // RAINBOW_H
