@@ -1,17 +1,17 @@
-project(Snake)
+# Ported to libcube (Cube 2.0). Build standalone:
+#   PKG_CONFIG_PATH=<libcube-prefix>/lib/pkgconfig cmake -S . -B build
+#   cmake --build build
+cmake_minimum_required(VERSION 3.20)
+project(Snake CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
-set(MAINSRC
-  snake.cpp
-  main.cpp
-)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
-add_executable(Snake ${MAINSRC})
-target_link_libraries(Snake ${MAINLIBS})
+add_executable(snake main.cpp snake.cpp)
+target_link_libraries(snake PRIVATE PkgConfig::CUBE)
 
-install(TARGETS Snake DESTINATION /home/pi/APPS)
+install(TARGETS snake DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/snake)

@@ -1,162 +1,170 @@
 #include "snake.h"
-//general
-#include <format>
+
 #include <algorithm>
-#include <iterator>
 #include <cmath>
-
-#include <iostream>
+#include <cstdlib>
+#include <format>
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
 
-Snake::Snake(std::string serverUri) : CubeApplication(40, serverUri){
-    float startSpeed = 0.2;
-    players.push_back(new Player(this, 0, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green(), 10));
-    players.push_back(new Player(this, 1, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green() + Color::red(), 10));
-    players.push_back(new Player(this, 2, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::blue() + Color::red(), 10));
-    players.push_back(new Player(this, 3, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::red(), 10));
-    players.push_back(new Player(this, 4, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::blue()*0.5, 10));
-    players.push_back(new Player(this, 5, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::blue() + Color::red()*0.3, 10));
-    players.push_back(new Player(this, 6, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::green()*0.4+Color::blue()*0.2, 10));
-    players.push_back(new Player(this, 7, getRandomPointOnScreen(top).cast<float>(), Vector3f(0, startSpeed, 0), Color::white()*0.6, 10));
-//  for(int i = 4; i < 20; i++)
-//      players.push_back(new Player(this, i, getRandomPointOnScreen(anyScreen).cast<float>(), Vector3f(0, startSpeed, 0), Color::random(), 10));
+using cube::Color;
+using cube::EdgeNumber;
+using cube::ScreenNumber;
+using cube::Vec3f;
+using cube::Vec3i;
+
+namespace {
+// §10 cheat sheet: getAxis(0) -> Axis::LeftX. Snake uses only the left-stick X
+// to steer; players 1..7 are AI (no second controller — multi-controller is
+// out of scope for libcube v1).
+constexpr int kMax = cube::VIRTUAL_CUBE_MAX_INDEX;  // 65
+
+[[nodiscard]] Vec3f toF(Vec3i v) {
+    return Vec3f{static_cast<float>(v.x), static_cast<float>(v.y), static_cast<float>(v.z)};
+}
+[[nodiscard]] Vec3i toI(Vec3f v) {
+    return Vec3i{static_cast<int>(std::lround(v.x)), static_cast<int>(std::lround(v.y)),
+                 static_cast<int>(std::lround(v.z))};
+}
+[[nodiscard]] float norm(Vec3f v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
+}  // namespace
+
+Snake::Snake() : cube::CubeApp("snake", 40) {
+    const float startSpeed = 0.2F;
+    const auto spawn = [&](cube::Color c) {
+        return new Player(this, static_cast<int>(players.size()),
+                          toF(getRandomPointOnScreen(ScreenNumber::top)),
+                          Vec3f{0.0F, startSpeed, 0.0F}, c, 10);
+    };
+    players.push_back(spawn(Color::green()));
+    players.push_back(spawn(Color::green() + Color::red()));
+    players.push_back(spawn(Color::blue() + Color::red()));
+    players.push_back(spawn(Color::red()));
+    players.push_back(spawn(Color::blue() * 0.5F));
+    players.push_back(spawn(Color::blue() + Color::red() * 0.3F));
+    players.push_back(spawn(Color::green() * 0.4F + Color::blue() * 0.2F));
+    players.push_back(spawn(Color::white() * 0.6F));
+
     for (int i = 0; i < 20; i++) {
-        food.push_back(new Food(this, getRandomPointOnScreen(front), Color::randomBlue() * 2));
-        food.push_back(new Food(this, getRandomPointOnScreen(right), Color::randomBlue() * 2));
-        food.push_back(new Food(this, getRandomPointOnScreen(back), Color::randomBlue() * 2));
-        food.push_back(new Food(this, getRandomPointOnScreen(left), Color::randomBlue() * 2));
-        food.push_back(new Food(this, getRandomPointOnScreen(top), Color::randomBlue() * 2));
-        food.push_back(new Food(this, getRandomPointOnScreen(bottom), Color::randomBlue() * 2));
+        food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::front), Color::randomBlue() * 2.0F));
+        food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::right), Color::randomBlue() * 2.0F));
+        food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::back), Color::randomBlue() * 2.0F));
+        food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::left), Color::randomBlue() * 2.0F));
+        food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::top), Color::randomBlue() * 2.0F));
+        food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::bottom), Color::randomBlue() * 2.0F));
     }
-    currentHighScore = 1000;
     updateHighScoreFromToFile();
 }
 
 bool Snake::loop() {
-    static long loopcount = 0;
     static bool highScoreTime = false;
     static int highScoreTimer = 120;
     static Color highScoreColor = Color::white();
 
     clear();
 
-    //High score animation
     if (highScoreTime) {
-        Color fontColor = highScoreColor;
-
-        if(highScoreTimer/5%2 == 0)
-            fontColor = Color::black();
-        else
-            fontColor = highScoreColor;
-
-        drawText(top, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
-        drawText(left, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
-        drawText(front, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
-        drawText(right, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
-        drawText(back, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
-        drawText(bottom, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), fontColor, std::format("HIGHSCORE {}", currentHighScore));
-
-        highScoreTimer--;
-        if (highScoreTimer == 0) {
+        const Color fontColor = (highScoreTimer / 5 % 2 == 0) ? Color::black() : highScoreColor;
+        const std::string text = std::format("HIGHSCORE {}", currentHighScore);
+        for (const auto face : {ScreenNumber::top, ScreenNumber::left, ScreenNumber::front,
+                                ScreenNumber::right, ScreenNumber::back, ScreenNumber::bottom}) {
+            drawText(face, {cube::Font::centered, cube::Font::centered}, fontColor, text);
+        }
+        if (--highScoreTimer == 0) {
             highScoreTimer = 120;
             highScoreTime = false;
         }
     }
 
-
-    //normal gameplay
     for (int oversampling = 8; oversampling > 0; oversampling--) {
-        for (auto player : players) {
+        for (auto* player : players) {
             player->handleJoystick();
             player->step();
-            for (auto player2 : players) {
-                if (player->collidesWith(player2->iPosition()) && player != player2 && !player->getIsDying() &&
-                    !player2->getIsDying()) {
+            for (auto* player2 : players) {
+                if (player->collidesWith(player2->iPosition()) && player != player2 &&
+                    !player->getIsDying() && !player2->getIsDying()) {
                     player2->die();
-                    player->grow(player2->getSnakeLength() / 4);
-                    player->speedUp(1.10);
+                    player->grow(static_cast<unsigned int>(player2->getSnakeLength() / 4));
+                    player->speedUp(1.10F);
                     if (updateHighScoreFromToFile(player2->getSnakeLength())) {
                         highScoreTime = true;
                         highScoreColor = player2->getDefaultColor();
                     }
                 }
             }
-            if (player->getIsDead())
+            if (player->getIsDead()) {
                 player->reset();
+            }
             player->render();
         }
 
-        for (auto f : food) {
-            for (auto p : players) {
+        for (auto* f : food) {
+            for (auto* p : players) {
                 if (p->iPosition() == f->getPosition()) {
                     p->grow(2);
-                    p->speedUp(1.05);
+                    p->speedUp(1.05F);
                     f->eat();
-                    food.push_back(new Food(this, getRandomPointOnScreen(anyScreen), Color::randomBlue() * 2));
+                    food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::anyScreen),
+                                            Color::randomBlue() * 2.0F));
                 }
             }
             f->render();
         }
-        food.erase(std::remove_if(food.begin(), food.end(), [](Food *f) { return (f->getIsEaten()); }), food.end());
+        food.erase(std::remove_if(food.begin(), food.end(),
+                                  [](Food* f) { return f->getIsEaten(); }),
+                   food.end());
     }
 
-    drawText(top, Vector2i(CharacterBitmaps::right, 58), highScoreColor * 0.5, std::to_string(currentHighScore));
-
-    render();
-    loopcount++;
+    drawText(ScreenNumber::top, {cube::Font::right, 58}, highScoreColor * 0.5F,
+             std::to_string(currentHighScore));
     return true;
 }
 
-
-bool Snake::updateHighScoreFromToFile(int score, std::string filename) {
+bool Snake::updateHighScoreFromToFile(int score, const std::string& filename) {
     bool returnValue = false;
-    std::ifstream configFileReadStream(filename);
-
     std::fstream highScoreFile;
-    highScoreFile.open(filename.data(), std::fstream::binary | std::fstream::in);
+    highScoreFile.open(filename, std::fstream::binary | std::fstream::in);
     if (highScoreFile) {
         highScoreFile >> currentHighScore;
-        std::cout << "file open successful, highscore: " << currentHighScore << std::endl;
     } else {
-        //create file
-        highScoreFile.open(filename.data(),
-                           std::fstream::binary | std::fstream::in | std::fstream::out | std::fstream::trunc);
+        highScoreFile.clear();
+        highScoreFile.open(filename, std::fstream::binary | std::fstream::in |
+                                         std::fstream::out | std::fstream::trunc);
         highScoreFile << 0;
-        std::cout << "file created successful" << std::endl;
     }
 
     if (score > currentHighScore) {
         std::cout << "NEW HIGHSCORE: " << score << std::endl;
         currentHighScore = score;
         returnValue = true;
-
         highScoreFile.close();
-        highScoreFile.open(filename.data(),
-                           std::fstream::binary | std::fstream::in | std::fstream::out | std::fstream::trunc);
+        highScoreFile.open(filename, std::fstream::binary | std::fstream::in |
+                                         std::fstream::out | std::fstream::trunc);
         highScoreFile << currentHighScore;
     }
-
     highScoreFile.close();
     return returnValue;
 }
 
-Snake::Player::Player(CubeApplication *renderCube, int joysticknumber, Vector3f setPosition, Vector3f setVelocity,
-                      Color setColor, unsigned int length) : joystick(joysticknumber) {
-    ca = renderCube;
+// ── Player ──────────────────────────────────────────────────────────────────
+Snake::Player::Player(cube::CubeApp* renderCube, int joysticknumber, Vec3f setPosition,
+                      Vec3f setVelocity, Color setColor, unsigned int length)
+    : ca(renderCube) {
+    joystickNumber = joysticknumber;
     tail.push_back(position);
     position = setPosition;
     velocity = setVelocity;
-    acceleration = Vector3f(0, 0, 0);
+    acceleration = Vec3f{0.0F, 0.0F, 0.0F};
     color = setColor;
     defaultPosition = position;
     defaultVelocity = velocity;
     snakeLength = length;
     defaultSnakeLength = snakeLength;
     defaultColor = color;
-    isDying = false;
-    isDead = false;
 }
-
 
 void Snake::Player::reset() {
     position = defaultPosition;
@@ -168,42 +176,41 @@ void Snake::Player::reset() {
     tail.clear();
 }
 
-
 void Snake::Player::step() {
     if (!isDying) {
         accelerate();
         move();
         warp();
 
-        for (unsigned int i = 0; i < 3; i++) {
-            if (position[i] < 0.01 && position[i] > 0)
+        for (int i = 0; i < 3; i++) {
+            if (position[i] < 0.01F && position[i] > 0) {
                 position[i] = 0;
-            if (position[i] > VIRTUALCUBEMAXINDEX - 0.01)
-                position[i] = VIRTUALCUBEMAXINDEX;
+            }
+            if (position[i] > static_cast<float>(kMax) - 0.01F) {
+                position[i] = static_cast<float>(kMax);
+            }
         }
 
-        //append to tail
-        if (iPosition() != tail.back().cast<int>())
-            tail.push_back(iPosition().cast<float>());
+        if (iPosition() != toI(tail.back())) {
+            tail.push_back(toF(iPosition()));
+        }
 
-        //Check collisions
-        Vector3i head = iPosition();
+        const Vec3i head = iPosition();
         int colCounter = 0;
-        for (auto t : tail)
-            if (head == t.cast<int>())
+        for (const auto& t : tail) {
+            if (head == toI(t)) {
                 colCounter++;
-        if (colCounter > 1)
-            die();
-
-        //cap the tailssize
-        if (tail.size() > snakeLength)
-            tail.erase(tail.begin(), tail.end() - snakeLength);
-    } else {
-        if (dieCounter / 40 % 2) {
-            color = Color::black();
-        } else {
-            color = Color::white();
+            }
         }
+        if (colCounter > 1) {
+            die();
+        }
+
+        if (tail.size() > snakeLength) {
+            tail.erase(tail.begin(), tail.end() - static_cast<long>(snakeLength));
+        }
+    } else {
+        color = (dieCounter / 40 % 2) ? Color::black() : Color::white();
         dieCounter++;
         if (dieCounter >= 200) {
             isDead = true;
@@ -211,59 +218,53 @@ void Snake::Player::step() {
     }
 }
 
-void Snake::Player::accelerate() {
-    velocity += acceleration;
-}
-
-void Snake::Player::move() {
-    position += velocity;
-}
+void Snake::Player::accelerate() { velocity += acceleration; }
+void Snake::Player::move() { position += velocity; }
 
 void Snake::Player::warp() {
-    //constrain position values
-    for (int i = 0; i < 3; i++)
-        position[i] = constrain(position[i], 0.0f, (float) VIRTUALCUBEMAXINDEX);
+    for (int i = 0; i < 3; i++) {
+        position[i] = std::clamp(position[i], 0.0F, static_cast<float>(kMax));
+    }
 
-    Vector3i currentPosition = iPosition();
-    EdgeNumber currentEdge = ca->getEdgeNumber(currentPosition);
+    const Vec3i currentPosition = iPosition();
+    const EdgeNumber currentEdge = cube::CubeApp::getEdgeNumber(currentPosition);
 
-    if (currentEdge != anyEdge) {
-        if (currentEdge != lastEdge) {
-            switch (currentEdge) {
-                case topLeft:
-                case topRight:
-                case bottomRight:
-                case bottomLeft:
-                    std::swap(velocity[2], velocity[0]);
-                    break;
-                case topFront:
-                case topBack:
-                case bottomBack:
-                case bottomFront:
-                    std::swap(velocity[2], velocity[1]);
-                    break;
-                case frontRight:
-                case backLeft:
-                case leftFront:
-                case rightBack:
-                    std::swap(velocity[0], velocity[1]);
-                    break;
-                case anyEdge:
-                default:
-                    break;
-            }
-            //set position to the rounded position to eliminate being always slightly below the surface due to rounding errors
-            position = currentPosition.cast<float>();
-            //constrain velocity directions, reflect if neccessary
-            if ((currentPosition[0] == 0 && velocity[0] < 0) ||
-                (currentPosition[0] == VIRTUALCUBEMAXINDEX && velocity[0] > 0))
-                velocity[0] *= -1;
-            if ((currentPosition[1] == 0 && velocity[1] < 0) ||
-                (currentPosition[1] == VIRTUALCUBEMAXINDEX && velocity[1] > 0))
-                velocity[1] *= -1;
-            if ((currentPosition[2] == 0 && velocity[2] < 0) ||
-                (currentPosition[2] == VIRTUALCUBEMAXINDEX && velocity[2] > 0))
-                velocity[2] *= -1;
+    if (currentEdge != EdgeNumber::anyEdge && currentEdge != lastEdge) {
+        switch (currentEdge) {
+        case EdgeNumber::topLeft:
+        case EdgeNumber::topRight:
+        case EdgeNumber::bottomRight:
+        case EdgeNumber::bottomLeft:
+            std::swap(velocity[2], velocity[0]);
+            break;
+        case EdgeNumber::topFront:
+        case EdgeNumber::topBack:
+        case EdgeNumber::bottomBack:
+        case EdgeNumber::bottomFront:
+            std::swap(velocity[2], velocity[1]);
+            break;
+        case EdgeNumber::frontRight:
+        case EdgeNumber::backLeft:
+        case EdgeNumber::leftFront:
+        case EdgeNumber::rightBack:
+            std::swap(velocity[0], velocity[1]);
+            break;
+        case EdgeNumber::anyEdge:
+        default:
+            break;
+        }
+        position = toF(currentPosition);
+        if ((currentPosition[0] == 0 && velocity[0] < 0) ||
+            (currentPosition[0] == kMax && velocity[0] > 0)) {
+            velocity[0] *= -1;
+        }
+        if ((currentPosition[1] == 0 && velocity[1] < 0) ||
+            (currentPosition[1] == kMax && velocity[1] > 0)) {
+            velocity[1] *= -1;
+        }
+        if ((currentPosition[2] == 0 && velocity[2] < 0) ||
+            (currentPosition[2] == kMax && velocity[2] > 0)) {
+            velocity[2] *= -1;
         }
     }
     lastIPosition = currentPosition;
@@ -271,8 +272,8 @@ void Snake::Player::warp() {
 }
 
 void Snake::Player::handleJoystick() {
-    if (joystick.isFound()) {
-        float newAxis0 = joystick.getAxis(0);
+    if (joystickNumber == 0 && joystick.isConnected()) {
+        const float newAxis0 = joystick.axis(cube::Axis::LeftX);
         if (newAxis0 < 0 && lastAxis0 == 0) {
             turnLeft();
         } else if (newAxis0 > 0 && lastAxis0 == 0) {
@@ -285,7 +286,7 @@ void Snake::Player::handleJoystick() {
 }
 
 void Snake::Player::doKiMove() {
-    int random = rand() % 512;
+    const int random = std::rand() % 512;
     if (random == 55) {
         turnLeft();
     } else if (random == 66) {
@@ -294,75 +295,76 @@ void Snake::Player::doKiMove() {
 }
 
 void Snake::Player::render() {
-    for (auto t : tail) {
-        ca->setPixel3D(t[0], t[1], t[2], color);
+    for (const auto& t : tail) {
+        ca->setPixel3D(toI(t), color);
     }
 }
 
 void Snake::Player::turnLeft() {
-    if (!isDying && !ca->isOnEdge(iPosition())) {
-        if (position[2] == 0) {
-            std::swap(velocity[0], velocity[1]);
-            velocity[0] = -velocity[0];
-        } else if (position[2] == VIRTUALCUBEMAXINDEX) {
-            std::swap(velocity[0], velocity[1]);
-            velocity[1] = -velocity[1];
-        } else if (position[1] == 0) {
-            std::swap(velocity[0], velocity[2]);
-            velocity[2] = -velocity[2];
-        } else if (position[1] == VIRTUALCUBEMAXINDEX) {
-            std::swap(velocity[0], velocity[2]);
-            velocity[0] = -velocity[0];
-        } else if (position[0] == 0) {
-            std::swap(velocity[1], velocity[2]);
-            velocity[1] = -velocity[1];
-        } else if (position[0] == VIRTUALCUBEMAXINDEX) {
-            std::swap(velocity[1], velocity[2]);
-            velocity[2] = -velocity[2];
-        } else {
-            std::cout << position << std::endl;
-        }
+    if (isDying || cube::CubeApp::isOnEdge(iPosition())) {
+        return;
+    }
+    if (position[2] == 0) {
+        std::swap(velocity[0], velocity[1]);
+        velocity[0] = -velocity[0];
+    } else if (position[2] == static_cast<float>(kMax)) {
+        std::swap(velocity[0], velocity[1]);
+        velocity[1] = -velocity[1];
+    } else if (position[1] == 0) {
+        std::swap(velocity[0], velocity[2]);
+        velocity[2] = -velocity[2];
+    } else if (position[1] == static_cast<float>(kMax)) {
+        std::swap(velocity[0], velocity[2]);
+        velocity[0] = -velocity[0];
+    } else if (position[0] == 0) {
+        std::swap(velocity[1], velocity[2]);
+        velocity[1] = -velocity[1];
+    } else if (position[0] == static_cast<float>(kMax)) {
+        std::swap(velocity[1], velocity[2]);
+        velocity[2] = -velocity[2];
     }
 }
 
 void Snake::Player::turnRight() {
-    if (!isDying && !ca->isOnEdge(iPosition())) {
-        if (position[2] == 0) {
-            std::swap(velocity[0], velocity[1]);
-            velocity[1] = -velocity[1];
-        } else if (position[2] == VIRTUALCUBEMAXINDEX) {
-            std::swap(velocity[0], velocity[1]);
-            velocity[0] = -velocity[0];
-        } else if (position[1] == 0) {
-            std::swap(velocity[0], velocity[2]);
-            velocity[0] = -velocity[0];
-        } else if (position[1] == VIRTUALCUBEMAXINDEX) {
-            std::swap(velocity[0], velocity[2]);
-            velocity[2] = -velocity[2];
-        } else if (position[0] == 0) {
-            std::swap(velocity[1], velocity[2]);
-            velocity[2] = -velocity[2];
-        } else if (position[0] == VIRTUALCUBEMAXINDEX) {
-            std::swap(velocity[1], velocity[2]);
-            velocity[1] = -velocity[1];
-        }
+    if (isDying || cube::CubeApp::isOnEdge(iPosition())) {
+        return;
+    }
+    if (position[2] == 0) {
+        std::swap(velocity[0], velocity[1]);
+        velocity[1] = -velocity[1];
+    } else if (position[2] == static_cast<float>(kMax)) {
+        std::swap(velocity[0], velocity[1]);
+        velocity[0] = -velocity[0];
+    } else if (position[1] == 0) {
+        std::swap(velocity[0], velocity[2]);
+        velocity[0] = -velocity[0];
+    } else if (position[1] == static_cast<float>(kMax)) {
+        std::swap(velocity[0], velocity[2]);
+        velocity[2] = -velocity[2];
+    } else if (position[0] == 0) {
+        std::swap(velocity[1], velocity[2]);
+        velocity[2] = -velocity[2];
+    } else if (position[0] == static_cast<float>(kMax)) {
+        std::swap(velocity[1], velocity[2]);
+        velocity[1] = -velocity[1];
     }
 }
 
-bool Snake::Player::collidesWith(Vector3i point) {
-    for (auto t : tail)
-        if (t.cast<int>() == point)
+bool Snake::Player::collidesWith(Vec3i point) {
+    for (const auto& t : tail) {
+        if (toI(t) == point) {
             return true;
+        }
+    }
     return false;
 }
 
-void Snake::Player::grow(unsigned int howMuch) {
-    snakeLength += howMuch;
-}
+void Snake::Player::grow(unsigned int howMuch) { snakeLength += howMuch; }
 
 void Snake::Player::speedUp(float factor) {
-    if (velocity.norm() < 1.0f)
-        velocity *= constrain(factor, 1.0f, 2.0f);
+    if (norm(velocity) < 1.0F) {
+        velocity = velocity * std::clamp(factor, 1.0F, 2.0F);
+    }
 }
 
 void Snake::Player::die() {
@@ -371,50 +373,10 @@ void Snake::Player::die() {
     dieCounter = 0;
 }
 
-bool Snake::Player::getIsDying() {
-    return isDying;
-}
+cube::Vec3i Snake::Player::iPosition() const { return toI(position); }
 
-bool Snake::Player::getIsDead() {
-    return isDead;
-}
+// ── Food ────────────────────────────────────────────────────────────────────
+Snake::Food::Food(cube::CubeApp* renderCube, Vec3i setPosition, Color setColor)
+    : position(setPosition), color(setColor), ca(renderCube) {}
 
-int Snake::Player::getSnakeLength() {
-    return snakeLength;
-}
-
-Vector3i Snake::Player::iPosition() {
-    return Vector3i(round(position[0]), round(position[1]), round(position[2]));
-}
-
-Color Snake::Player::getDefaultColor() {
-    return defaultColor;
-};
-
-
-Snake::Food::Food(CubeApplication *renderCube, Vector3i setPosition, Color setColor) {
-    isEaten = false;
-    position = setPosition;
-    color = setColor;
-    ca = renderCube;
-}
-
-Vector3i Snake::Food::getPosition() {
-    return position;
-}
-
-Color Snake::Food::getColor() {
-    return color;
-}
-
-bool Snake::Food::getIsEaten() {
-    return isEaten;
-}
-
-void Snake::Food::eat() {
-    isEaten = true;
-}
-
-void Snake::Food::render() {
-    ca->setPixel3D(position, color);
-}
+void Snake::Food::render() { ca->setPixel3D(position, color); }

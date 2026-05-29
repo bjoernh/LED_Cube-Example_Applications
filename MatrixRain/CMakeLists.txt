@@ -1,17 +1,18 @@
-project(MatrixRain)
+# Ported to libcube (Cube 2.0). Build standalone:
+#   cmake -S . -B build -DCMAKE_PREFIX_PATH=<libcube-staging-prefix>
+#   cmake --build build
+# (libcube is found via pkg-config; PKG_CONFIG_PATH must include its lib/pkgconfig.)
+cmake_minimum_required(VERSION 3.20)
+project(MatrixRain CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINSRC
-    main.cpp matrixrain.cpp matrixrain.h)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
+add_executable(matrixrain main.cpp matrixrain.cpp)
+target_link_libraries(matrixrain PRIVATE PkgConfig::CUBE)
 
-add_executable(MatrixRain ${MAINSRC})
-target_link_libraries(MatrixRain ${MAINLIBS} ${Boost_LIBRARIES}) #-l flag
-
-install(TARGETS MatrixRain DESTINATION /home/pi/APPS)
+install(TARGETS matrixrain DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/matrixrain)

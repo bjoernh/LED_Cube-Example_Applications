@@ -1,330 +1,189 @@
 #include "matrixrain.h"
-#include <cmath>
 
-#include <iostream>
 #include <algorithm>
-#include <cctype>
-#include <memory>
+#include <cmath>
+#include <cstdint>
+#include <cstdlib>
+#include <numbers>
+#include <vector>
 
-#define PI 3.14159265
+using cube::Color;
+using cube::Vec3f;
+using cube::Vec3i;
 
-MatrixRain::MatrixRain(std::string serverUri, float fade) : CubeApplication(40, serverUri, "MatrixRain") {
-    joysticks.push_back(new Joystick(0));
-    joysticks.push_back(new Joystick(1));
-    joysticks.push_back(new Joystick(2));
-    joysticks.push_back(new Joystick(3));
-    fade_factor = fade;
+namespace {
+// Legacy SN30 Pro joystick index -> cube::Btn, per spec §10 cheat sheet.
+//   index 0 -> A (§10), index 3 -> Y (§10).
+// MatrixRain only uses A (cycle colour) and Y (pause); the legacy shoulder
+// (6/7) handlers nudged a `fade_factor` that was never fed to fade(), so they
+// were no-ops and are dropped.
+constexpr int kMax = cube::VIRTUAL_CUBE_MAX_INDEX;     // 65
+constexpr int kCenter = cube::VIRTUAL_CUBE_CENTER;     // 33
+}  // namespace
 
-    params.registerFloat("fade", "Fade Factor", 0.8f, 1.0f, fade, 0.001f, "Animation");
-    params.registerInt("spawnRate", "Spawn Rate", 0, 10, 4, "Animation");
-    params.registerFloat("speed", "Speed", 0.1f, 2.0f, 0.5f, 0.01f, "Animation");
+MatrixRain::MatrixRain() : cube::CubeApp("matrixrain", 40) {}
 
-    params.registerFloat("audioThreshold", "Audio Vol Threshold", 0.0f, 1.0f, 0.1f, 0.01f, "Audio");
-    params.registerFloat("audioSpeedMult", "Audio Speed Multiplier", 0.0f, 5.0f, 2.0f, 0.1f, "Audio");
-    params.registerBool("audioColorShift", "Audio Color Shift", true, "Audio");
-}
-
-bool MatrixRain::loop(){
-    static std::vector<std::shared_ptr<Drop>> rdrops;
-    static int counter = 0;
-    static int counterColChange = 0;
-    static Color col1(0,255-rand()%100,255-rand()%200);
-    static bool isPaused = false;
-
-
-    for (auto joystick : joysticks) {
-        if (joystick->getButtonPress(0)) {
-            counterColChange++;
-        }
-        if (joystick->getButtonPress(3)) {
-            isPaused = !isPaused;
-        }
-        /* decrease particle fade on left shoulder button press */
-        if (joystick->getButtonPress(6)) {
-            if (fade_factor >= 0.05)
-                fade_factor -= 0.2;
-        }
-        /* increase particle fade on right shoulder button press */
-        if (joystick->getButtonPress(7)) {
-            if (fade_factor <= 1.0)
-                fade_factor += 0.2;
-        }
-
-        joystick->clearAllButtonPresses();
+bool MatrixRain::loop() {
+    if (joystick_.justPressed(cube::Btn::A)) {
+        ++counterColChange_;
     }
-
-    if(isPaused)
+    if (joystick_.justPressed(cube::Btn::Y)) {
+        isPaused_ = !isPaused_;
+    }
+    if (isPaused_) {
         return true;
-
-
-    fade(params.getFloat("fade"));
-    //create new Raindrops
-    int spawnRate = params.getInt("spawnRate");
-    float speedMultiplier = params.getFloat("speed");
-
-    // Audio reactivity mapping
-    float audioVol = 0.0f;
-    std::vector<uint8_t> audioFreqs;
-    {
-        std::lock_guard<std::mutex> lock(MatrixApplication::audioDataMutex);
-        audioVol = MatrixApplication::latestAudioVolume;
-        audioFreqs = MatrixApplication::latestAudioFrequencies;
     }
 
-    float audioThreshold = params.getFloat("audioThreshold");
-    float audioSpeedMult = params.getFloat("audioSpeedMult");
-    bool audioColorShift = params.getBool("audioColorShift");
+    fade(params().getFloat("fade"));
+
+    int spawnRate = params().getInt("spawnRate");
+    float speedMultiplier = params().getFloat("speed");
+
+    // Audio reactivity (cube::Microphone; volume/bands are 0..255 -> 0..1).
+    const float audioVol = static_cast<float>(mic_.volume()) / 255.0F;
+    const std::vector<std::uint8_t> audioFreqs = mic_.frequencies();
+    const float audioThreshold = params().getFloat("audioThreshold");
+    const float audioSpeedMult = params().getFloat("audioSpeedMult");
+    const bool audioColorShift = params().getBool("audioColorShift");
 
     if (audioVol > audioThreshold) {
-        float excite = audioVol - audioThreshold;
-        // Increase spawn rate naturally and add extra based on audio
-        spawnRate += (int)(excite * 30.0f);
-        // Multiply speed
+        const float excite = audioVol - audioThreshold;
+        spawnRate += static_cast<int>(excite * 30.0F);
         speedMultiplier += excite * audioSpeedMult;
     }
 
-    for (int foo = 0; foo < spawnRate; foo++){
-        float randAngle = rand()%360;
-        float vx = speedMultiplier * cos(randAngle*PI/180);
-        float vy = speedMultiplier * sin(randAngle*PI/180);
-        rdrops.push_back(std::make_shared<Drop>(Vector3i(VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX,VIRTUALCUBEMAXINDEX), Vector3f(VIRTUALCUBECENTER,VIRTUALCUBECENTER,0), Vector3f(vx,vy,0), Vector3f(0,0,0),col1));
+    for (int i = 0; i < spawnRate; ++i) {
+        const float randAngle = static_cast<float>(std::rand() % 360);
+        const float vx = speedMultiplier * std::cos(randAngle * std::numbers::pi_v<float> / 180.0F);
+        const float vy = speedMultiplier * std::sin(randAngle * std::numbers::pi_v<float> / 180.0F);
+        drops_.push_back(std::make_shared<Drop>(Vec3i{kMax, kMax, kMax},
+                                                Vec3f{static_cast<float>(kCenter),
+                                                      static_cast<float>(kCenter), 0.0F},
+                                                Vec3f{vx, vy, 0.0F}, Vec3f{0.0F, 0.0F, 0.0F},
+                                                col1_));
     }
 
-    switch (counterColChange%2) {
-        case 0:
-            col1.r((uint8_t)0);
-            col1.g((uint8_t)255);
-            col1.b((uint8_t)150);
-            col1 *= (float)((rand()%100))/100.0f;
-            break;
-        case 1:
-            col1.g((uint8_t)(0));
-            col1.b((uint8_t)(255-rand()%100));
-            col1.r((uint8_t)(255-rand()%200));
-            break;
-        case 2:
-            col1.b((uint8_t)(0));
-            col1.r((uint8_t)(255-rand()%100));
-            col1.g((uint8_t)(255-rand()%200));
-            break;
-        case 3:
-            col1.r((uint8_t)(0));
-            col1.g((uint8_t)(0));
-            col1.b((uint8_t)(255-rand()%200));
-            break;
-        case 4:
-            col1.g((uint8_t)(0));
-            col1.b((uint8_t)(0));
-            col1.r((uint8_t)(255-rand()%200));
-            break;
-        case 5:
-            col1.b((uint8_t)(0));
-            col1.r((uint8_t)(0));
-            col1.g((uint8_t)(255-rand()%200));
-            break;
+    // Colour palette cycles between two greens/cyans (legacy switch was %2).
+    if (counterColChange_ % 2 == 0) {
+        col1_ = Color{0, 255, 150};
+        col1_ *= static_cast<float>(std::rand() % 100) / 100.0F;
+    } else {
+        col1_ = Color{static_cast<std::uint8_t>(255 - std::rand() % 200), 0,
+                      static_cast<std::uint8_t>(255 - std::rand() % 100)};
     }
 
-    // Shift colors based on frequency bounds
-    if (audioColorShift && audioFreqs.size() > 0) {
-        float bass = audioFreqs[0];
-        float treble = audioFreqs.size() > 16 ? audioFreqs[16] : audioFreqs.back();
-
+    // Shift colour by audio energy in the low/high bands.
+    if (audioColorShift && !audioFreqs.empty()) {
+        const float bass = static_cast<float>(audioFreqs.front()) / 255.0F;
+        const float treble =
+            static_cast<float>(audioFreqs.size() > 16 ? audioFreqs[16] : audioFreqs.back()) /
+            255.0F;
         if (bass > audioThreshold) {
-            int newR = col1.r() + (int)((bass - audioThreshold) * 255.0f);
-            col1.r((uint8_t)std::min(255, newR));
+            col1_.r(static_cast<std::uint8_t>(
+                std::min(255, col1_.r() + static_cast<int>((bass - audioThreshold) * 255.0F))));
         }
         if (treble > audioThreshold) {
-            int newB = col1.b() + (int)((treble - audioThreshold) * 255.0f);
-            col1.b((uint8_t)std::min(255, newB));
+            col1_.b(static_cast<std::uint8_t>(
+                std::min(255, col1_.b() + static_cast<int>((treble - audioThreshold) * 255.0F))));
         }
     }
 
-    for(auto r : rdrops) {
-        if (counter%1 == 0) {
-            r->step();
-        }
-        //setPixelSmooth3D(r->position(), r->color());
+    for (const auto& r : drops_) {
+        r->step();
         setPixel3D(r->iPosition(), r->color());
     }
-
-    //remove drops from the bottom
-    rdrops.erase(std::remove_if(rdrops.begin(),rdrops.end(),[](std::shared_ptr<Drop> r){return (r->getRdyDelete());}),rdrops.end());
-
-    render();
-    counter++;
-
+    drops_.erase(std::remove_if(drops_.begin(), drops_.end(),
+                                [](const std::shared_ptr<Drop>& r) { return r->getRdyDelete(); }),
+                 drops_.end());
     return true;
 }
 
+// ── Particle ────────────────────────────────────────────────────────────────
+MatrixRain::Particle::Particle(Vec3f pos, Vec3f vel, Vec3f accel, Color col)
+    : position_(pos), velocity_(vel), acceleration_(accel), color_(col) {}
 
-MatrixRain::Drop::Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col)
-        : Particle(pos, vel, accel, col){
-    maxPos_ = maxPos;
-    vxOld_ = 0.0f;
-    vyOld_ = 0.0f;
-    rdyDelete_ = false;
-}
-
-void MatrixRain::Drop::step() {
-    // 1. Core Physics Update (updates position based on current velocity and acceleration)
-    Particle::step();
-
-    // 2. Lateral Boundary Collision Handling
-    // If the drop hits the sides (X or Y boundaries), we transition it to 
-    // vertical "return" mode.
-    if (position_[0] < 0 || position_[1] < 0 || position_[0] > maxPos_[0] ||
-        position_[1] > maxPos_[1]) {
-        
-        // Transition to rising (Z-velocity)
-        velocity_[2] = 0.2;
-        // Apply slight random acceleration variation to the rise speed
-        acceleration_[2] = 0.001 + ((float)(rand() % 10) / 200.0f);
-        
-        // Stop lateral acceleration
-        acceleration_[1] = 0;
-        acceleration_[0] = 0;
-
-        // Save original lateral velocities to allow return later
-        if (vxOld_ == 0 && vyOld_ == 0) {
-            vxOld_ = velocity_[0];
-            vyOld_ = velocity_[1];
-        }
-        
-        // Kill current lateral movement while rising up the side
-        velocity_[0] = 0;
-        velocity_[1] = 0;
-    }
-
-    // Snap positions to boundaries if exceeded
-    if (position_[0] < 0) {
-        position_[0] = 0;
-        position_[2] = 0;
-    }
-
-    if (position_[1] < 0) {
-        position_[1] = 0;
-        position_[2] = 0;
-    }
-
-    if (position_[0] > maxPos_[0]) {
-        position_[0] = maxPos_[0];
-        position_[2] = 0;
-    }
-
-    if (position_[1] > maxPos_[1]) {
-        position_[1] = maxPos_[1];
-        position_[2] = 0;
-    }
-
-    // 3. Ground Collision (Bottom of Cube)
-    // If the drop hits Z < 0, bounce it back up
-    if (position_[2] < 0) {
-        position_[2] = 0;
-        velocity_[2] *= -1;
-    }
-
-    // 4. Ceiling Collision / Return to Origin
-    // Once the drop reaches the top (Z = maxPos_[2]), it starts moving 
-    // back towards the center of the cube before disappearing.
-    if (position_[2] > maxPos_[2]) {
-        position_[2] = maxPos_[2];
-        
-        // Move back in the opposite direction of its original fall
-        velocity_[0] = vxOld_ * -1;
-        velocity_[1] = vyOld_ * -1;
-        
-        // Stop vertical movement and acceleration
-        velocity_[2] = 0;
-        acceleration_[1] = 0;
-        acceleration_[0] = 0;
-        acceleration_[2] = 0;
-    }
-
-    // 5. Center-point Deletion Logic
-    // If the drop has reached the top and crossed back past the center axis, 
-    // we stop its movement and mark it for deletion.
-    if (((velocity_[0] > 0 && position_[0] > VIRTUALCUBECENTER) ||
-         (velocity_[0] < 0 && position_[0] < VIRTUALCUBECENTER)) &&
-        position_[2] == maxPos_[2]) {
-        velocity_[0] = 0;
-        vxOld_ = 0;
-    }
-    
-    if (((velocity_[1] > 0 && position_[1] > VIRTUALCUBECENTER) ||
-         (velocity_[1] < 0 && position_[1] < VIRTUALCUBECENTER)) &&
-        position_[2] == maxPos_[2]) {
-        velocity_[1] = 0;
-        vyOld_ = 0;
-    }
-
-    // If both lateral movements have stopped at the ceiling, the drop's lifecycle is over
-    if (velocity_[0] == 0 && velocity_[1] == 0 && position_[2] == maxPos_[2]) {
-        rdyDelete_ = true;
-    }
-}
-
-bool MatrixRain::Drop::getRdyDelete(){
-    return rdyDelete_;
-}
-
-
-MatrixRain::Particle::Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col)
-        :position_(pos),
-         velocity_(vel),
-         acceleration_(accel),
-         color_(col){}
-
-void MatrixRain::Particle::step(){
+void MatrixRain::Particle::step() {
     accelerate();
     move();
 }
+void MatrixRain::Particle::move() { position_ += velocity_; }
+void MatrixRain::Particle::accelerate() { velocity_ += acceleration_; }
 
-void MatrixRain::Particle::move(){
-    position_ += velocity_;
-}
-
-void MatrixRain::Particle::accelerate(){
-    velocity_ += acceleration_;
-}
-
-Vector3f MatrixRain::Particle::position(){
-    return position_;
+Vec3i MatrixRain::Particle::iPosition() const {
+    return Vec3i{static_cast<int>(std::lround(position_.x)),
+                 static_cast<int>(std::lround(position_.y)),
+                 static_cast<int>(std::lround(position_.z))};
 }
 
-Vector3f MatrixRain::Particle::velocity(){
-    return velocity_;
-}
+// ── Drop ────────────────────────────────────────────────────────────────────
+MatrixRain::Drop::Drop(Vec3i maxPos, Vec3f pos, Vec3f vel, Vec3f accel, Color col)
+    : Particle(pos, vel, accel, col), maxPos_(maxPos) {}
 
-Vector3f MatrixRain::Particle::acceleration(){
-    return acceleration_;
-}
+void MatrixRain::Drop::step() {
+    Particle::step();
 
-Vector3i MatrixRain::Particle::iPosition(){
-    return Vector3i(round(position()[0]),round(position()[1]),round(position()[2]));
-}
+    // Lateral boundary: transition to rising up the side.
+    if (position_[0] < 0 || position_[1] < 0 || position_[0] > static_cast<float>(maxPos_[0]) ||
+        position_[1] > static_cast<float>(maxPos_[1])) {
+        velocity_[2] = 0.2F;
+        acceleration_[2] = 0.001F + (static_cast<float>(std::rand() % 10) / 200.0F);
+        acceleration_[1] = 0.0F;
+        acceleration_[0] = 0.0F;
+        if (vxOld_ == 0.0F && vyOld_ == 0.0F) {
+            vxOld_ = velocity_[0];
+            vyOld_ = velocity_[1];
+        }
+        velocity_[0] = 0.0F;
+        velocity_[1] = 0.0F;
+    }
 
-Vector3i MatrixRain::Particle::iVelocity(){
-    return Vector3i(round(velocity()[0]),round(velocity()[1]),round(position()[2]));
-}
+    if (position_[0] < 0) {
+        position_[0] = 0.0F;
+        position_[2] = 0.0F;
+    }
+    if (position_[1] < 0) {
+        position_[1] = 0.0F;
+        position_[2] = 0.0F;
+    }
+    if (position_[0] > static_cast<float>(maxPos_[0])) {
+        position_[0] = static_cast<float>(maxPos_[0]);
+        position_[2] = 0.0F;
+    }
+    if (position_[1] > static_cast<float>(maxPos_[1])) {
+        position_[1] = static_cast<float>(maxPos_[1]);
+        position_[2] = 0.0F;
+    }
 
-Vector3i MatrixRain::Particle::iAcceleration(){
-    return Vector3i(round(acceleration()[0]),round(acceleration()[1]),round(acceleration()[2]));
-}
+    if (position_[2] < 0) {  // ground bounce
+        position_[2] = 0.0F;
+        velocity_[2] *= -1.0F;
+    }
 
-void MatrixRain::Particle::position(Vector3f pos){
-    position_ = pos;
-}
-void MatrixRain::Particle::velocity(Vector3f vel){
-    velocity_ = vel;
-}
-void MatrixRain::Particle::acceleration(Vector3f accel){
-    acceleration_ = accel;
-}
+    if (position_[2] > static_cast<float>(maxPos_[2])) {  // ceiling: return to centre
+        position_[2] = static_cast<float>(maxPos_[2]);
+        velocity_[0] = vxOld_ * -1.0F;
+        velocity_[1] = vyOld_ * -1.0F;
+        velocity_[2] = 0.0F;
+        acceleration_[0] = 0.0F;
+        acceleration_[1] = 0.0F;
+        acceleration_[2] = 0.0F;
+    }
 
-Color MatrixRain::Particle::color(){
-    return color_;
+    const float ceil = static_cast<float>(maxPos_[2]);
+    const float center = static_cast<float>(kCenter);
+    if (((velocity_[0] > 0 && position_[0] > center) ||
+         (velocity_[0] < 0 && position_[0] < center)) &&
+        position_[2] == ceil) {
+        velocity_[0] = 0.0F;
+        vxOld_ = 0.0F;
+    }
+    if (((velocity_[1] > 0 && position_[1] > center) ||
+         (velocity_[1] < 0 && position_[1] < center)) &&
+        position_[2] == ceil) {
+        velocity_[1] = 0.0F;
+        vyOld_ = 0.0F;
+    }
+    if (velocity_[0] == 0.0F && velocity_[1] == 0.0F && position_[2] == ceil) {
+        rdyDelete_ = true;
+    }
 }
-void MatrixRain::Particle::color(Color Col){
-    color_ = Col;
-}
-

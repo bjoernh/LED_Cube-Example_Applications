@@ -1,0 +1,5 @@
+[app]
+name = "snake"
+display_name = "Snake"
+version = "2.0.0"
+category = "game"

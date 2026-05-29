@@ -1,60 +1,59 @@
 #ifndef MATRIX_RAIN_H
 #define MATRIX_RAIN_H
 
-#include "CubeApplication.h"
-#include "Joystick.h"
+#include <cube/cube.h>
+
+#include <memory>
 #include <vector>
 
-class MatrixRain : public CubeApplication{
+// Ported to libcube (Cube 2.0). Parameters live in schema.toml; audio comes
+// from cube::Microphone; the app is driven by cube::run().
+class MatrixRain : public cube::CubeApp {
 public:
-    MatrixRain(std::string serverUri, float fade);
-    bool loop();
+    MatrixRain();
+    bool loop() override;
+
 private:
     class Particle;
     class Drop;
-    std::vector<Joystick *> joysticks;
-    float fade_factor;
+
+    cube::Joystick joystick_;
+    cube::Microphone mic_;
+    std::vector<std::shared_ptr<Drop>> drops_;
+    cube::Color col1_{0, 200, 150};
+    int counterColChange_{0};
+    bool isPaused_{false};
 };
 
-class MatrixRain::Particle{
+class MatrixRain::Particle {
 public:
-    Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    Particle(cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
+
+    [[nodiscard]] cube::Vec3i iPosition() const;
+    [[nodiscard]] cube::Color color() const { return color_; }
+
+protected:
     void accelerate();
     void move();
 
-    Vector3f position();
-    Vector3f velocity();
-    Vector3f acceleration();
-
-    Vector3i iPosition();
-    Vector3i iVelocity();
-    Vector3i iAcceleration();
-
-    void position(Vector3f pos);
-    void velocity(Vector3f vel);
-    void acceleration(Vector3f accel);
-
-    Color color();
-    void color(Color Col);
-protected:
-    Vector3f position_;
-    Vector3f velocity_;
-    Vector3f acceleration_;
-    Color color_;
+    cube::Vec3f position_;
+    cube::Vec3f velocity_;
+    cube::Vec3f acceleration_;
+    cube::Color color_;
 };
 
 class MatrixRain::Drop : public Particle {
 public:
-    Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    Drop(cube::Vec3i maxPos, cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
-    bool getRdyDelete();
+    [[nodiscard]] bool getRdyDelete() const { return rdyDelete_; }
+
 private:
-    float vxOld_;
-    float vyOld_;
-    Vector3i maxPos_;
-    bool rdyDelete_;
+    float vxOld_{0.0F};
+    float vyOld_{0.0F};
+    cube::Vec3i maxPos_;
+    bool rdyDelete_{false};
 };
 
-
-#endif //MATRIX_RAIN_H
+#endif  // MATRIX_RAIN_H
