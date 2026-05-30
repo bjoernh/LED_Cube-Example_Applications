@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <filesystem>
 #include <format>
 #include <fstream>
 #include <iostream>
@@ -124,6 +125,13 @@ bool Snake::loop() {
 }
 
 bool Snake::updateHighScoreFromToFile(int score, const std::string& filename) {
+    try {
+        std::filesystem::path p(filename);
+        if (p.has_parent_path()) {
+            std::filesystem::create_directories(p.parent_path());
+        }
+    } catch (...) {}
+
     bool returnValue = false;
     std::fstream highScoreFile;
     highScoreFile.open(filename, std::fstream::binary | std::fstream::in);
