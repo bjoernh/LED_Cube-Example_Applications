@@ -2,6 +2,7 @@
 #define __GENETIC_H__
 
 #include <cube/cube.h>
+#include <random>
 #include <string>
 
 class Genetic : public cube::CubeApp {
@@ -45,6 +46,7 @@ private:
   int target_;
   citizen* children_;
   citizen* parents_;
+  std::mt19937 rng_;
 };
 
 #endif

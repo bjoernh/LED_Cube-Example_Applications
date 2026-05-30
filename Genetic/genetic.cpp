@@ -20,6 +20,9 @@ Genetic::Genetic() : cube::CubeApp("genetic", 40) {
     parents_ = new citizen[popSize_];
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
+    std::random_device rd;
+    rng_.seed(rd());
+
     // Set a random target_
     target_ = std::rand() & 0xFFFFFF;
 
@@ -30,41 +33,35 @@ Genetic::Genetic() : cube::CubeApp("genetic", 40) {
 }
 
 bool Genetic::loop() {
-  static long loopcount = 0;
-  if (loopcount % 2 == 0) {
-    swap();
-    sort();
-    mate();
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(children_, children_ + popSize_, g);
+  swap();
+  sort();
+  mate();
+  std::shuffle(children_, children_ + popSize_, rng_);
 
-    // Draw citizens to canvas
-    for (int i = 0; i < popSize_; i++) {
-      int c = children_[i].dna;
-      int x = i % width_;
-      int y = i / width_;
-      cube::Color col{static_cast<std::uint8_t>(R(c)),
-                      static_cast<std::uint8_t>(G(c)),
-                      static_cast<std::uint8_t>(B(c))};
-      for (int faceIdx = 0; faceIdx < 6; ++faceIdx) {
-        screen(static_cast<cube::ScreenNumber>(faceIdx)).setPixel(x, y, col);
-      }
-    }
-
-    // When we reach the 85% fitness threshold...
-    if (is85PercentFit()) {
-      // ...set a new random target_
-      target_ = std::rand() & 0xFFFFFF;
-
-      // Randomly mutate everyone for sake of new colors
-      for (int i = 0; i < popSize_; ++i) {
-        mutate(children_[i]);
-      }
+  // Draw citizens to canvas
+  for (int i = 0; i < popSize_; i++) {
+    int c = children_[i].dna;
+    int x = i % width_;
+    int y = i / width_;
+    cube::Color col{static_cast<std::uint8_t>(R(c)),
+                    static_cast<std::uint8_t>(G(c)),
+                    static_cast<std::uint8_t>(B(c))};
+    for (int faceIdx = 0; faceIdx < 6; ++faceIdx) {
+      screen(static_cast<cube::ScreenNumber>(faceIdx)).setPixel(x, y, col);
     }
   }
 
-  loopcount++;
+  // When we reach the 85% fitness threshold...
+  if (is85PercentFit()) {
+    // ...set a new random target_
+    target_ = std::rand() & 0xFFFFFF;
+
+    // Randomly mutate everyone for sake of new colors
+    for (int i = 0; i < popSize_; ++i) {
+      mutate(children_[i]);
+    }
+  }
+
   return true;
 }
 
