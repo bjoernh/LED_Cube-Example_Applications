@@ -31,7 +31,7 @@ constexpr const T& constrain(const T& v, const T& lo, const T& hi) {
 }
 }  // namespace
 
-BreakoutGame::BreakoutGame() : cube::CubeApp("breakoutgame", 40) {
+BreakoutGame::BreakoutGame() : cube::CubeApp("breakout3d", 40) {
     reset();
     updateHighScoreFromToFile(0);
 }
