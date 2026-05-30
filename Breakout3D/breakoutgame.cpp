@@ -33,9 +33,7 @@ constexpr const T& constrain(const T& v, const T& lo, const T& hi) {
 
 BreakoutGame::BreakoutGame() : cube::CubeApp("breakoutgame", 40) {
     reset();
-    const char* home = std::getenv("HOME");
-    std::string filename = (home ? std::string(home) : std::string("/tmp")) + "/.breakouthighscore";
-    updateHighScoreFromToFile(0, filename);
+    updateHighScoreFromToFile(0);
 }
 
 void BreakoutGame::reset(int gameDuration) {
@@ -182,8 +180,6 @@ bool BreakoutGame::isBlockAtPoint(cube::Vec3f point) {
 
 bool BreakoutGame::loop() {
     static int loopcount = 0;
-    const char* home = std::getenv("HOME");
-    std::string filename = (home ? std::string(home) : std::string("/tmp")) + "/.breakouthighscore";
 
     switch (gameState_) {
         case pregame: {
@@ -258,7 +254,7 @@ bool BreakoutGame::loop() {
             }
             if (postgameCounter < 0) {
                 if (getLeadingPlayer() != nullptr) {
-                    updateHighScoreFromToFile(getLeadingPlayer()->score(), filename);
+                    updateHighScoreFromToFile(getLeadingPlayer()->score());
                 }
                 reset();
             }
@@ -270,6 +266,13 @@ bool BreakoutGame::loop() {
 }
 
 bool BreakoutGame::updateHighScoreFromToFile(int score, std::string filename) {
+    try {
+        std::filesystem::path p(filename);
+        if (p.has_parent_path()) {
+            std::filesystem::create_directories(p.parent_path());
+        }
+    } catch (...) {}
+
     bool returnValue = false;
     std::ifstream checkFile(filename);
     if (checkFile) {

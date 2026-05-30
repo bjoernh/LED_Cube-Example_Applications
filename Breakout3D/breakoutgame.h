@@ -31,7 +31,7 @@ public:
     Player *getLeadingPlayer();
 
 private:
-    bool updateHighScoreFromToFile(int score = 0, std::string filename = "");
+    bool updateHighScoreFromToFile(int score = 0, std::string filename = "/var/lib/cube/apps/breakout3d/highscore.txt");
 
     std::vector<Player *> players_;
     std::vector<Ball *> balls_;
