@@ -10,5 +10,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(genetic main.cpp genetic.cpp)
 target_link_libraries(genetic PRIVATE PkgConfig::CUBE)
 
-install(TARGETS genetic DESTINATION bin)
+install(TARGETS genetic DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/genetic)

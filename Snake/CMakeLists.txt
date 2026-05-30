@@ -13,5 +13,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(snake main.cpp snake.cpp)
 target_link_libraries(snake PRIVATE PkgConfig::CUBE)
 
-install(TARGETS snake DESTINATION bin)
+install(TARGETS snake DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/snake)

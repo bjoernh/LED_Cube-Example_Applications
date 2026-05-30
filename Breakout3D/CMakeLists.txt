@@ -10,5 +10,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(breakout3d main.cpp breakoutgame.cpp)
 target_link_libraries(breakout3d PRIVATE PkgConfig::CUBE)
 
-install(TARGETS breakout3d DESTINATION bin)
+install(TARGETS breakout3d DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/breakout3d)

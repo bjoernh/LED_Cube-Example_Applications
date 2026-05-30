@@ -14,5 +14,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(matrixrain main.cpp matrixrain.cpp)
 target_link_libraries(matrixrain PRIVATE PkgConfig::CUBE)
 
-install(TARGETS matrixrain DESTINATION bin)
+install(TARGETS matrixrain DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/matrixrain)

@@ -10,5 +10,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(imutest main.cpp ImuTest.cpp)
 target_link_libraries(imutest PRIVATE PkgConfig::CUBE)
 
-install(TARGETS imutest DESTINATION bin)
+install(TARGETS imutest DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/imutest)

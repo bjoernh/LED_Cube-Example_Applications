@@ -10,5 +10,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(portalcube main.cpp PortalCube.cpp)
 target_link_libraries(portalcube PRIVATE PkgConfig::CUBE)
 
-install(TARGETS portalcube DESTINATION bin)
+install(TARGETS portalcube DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/portalcube)

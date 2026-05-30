@@ -11,5 +11,5 @@ pkg_check_modules(IMLIB2 REQUIRED IMPORTED_TARGET imlib2)
 add_executable(picture main.cpp picture.cpp Image.cpp)
 target_link_libraries(picture PRIVATE PkgConfig::CUBE PkgConfig::IMLIB2)
 
-install(TARGETS picture DESTINATION bin)
+install(TARGETS picture DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/picture)

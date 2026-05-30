@@ -14,5 +14,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(rainbow main.cpp rainbow.cpp)
 target_link_libraries(rainbow PRIVATE PkgConfig::CUBE)
 
-install(TARGETS rainbow DESTINATION bin)
+install(TARGETS rainbow DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/rainbow)

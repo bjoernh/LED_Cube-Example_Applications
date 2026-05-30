@@ -10,5 +10,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(cubetestapp main.cpp CubeTest.cpp)
 target_link_libraries(cubetestapp PRIVATE PkgConfig::CUBE)
 
-install(TARGETS cubetestapp DESTINATION bin)
+install(TARGETS cubetestapp DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/cubetestapp)

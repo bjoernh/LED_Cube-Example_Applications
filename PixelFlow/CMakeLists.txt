@@ -10,5 +10,5 @@ pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 add_executable(pixelflow main.cpp pixelflow.cpp)
 target_link_libraries(pixelflow PRIVATE PkgConfig::CUBE)
 
-install(TARGETS pixelflow DESTINATION bin)
+install(TARGETS pixelflow DESTINATION libexec/cube/apps)
 install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/pixelflow)
