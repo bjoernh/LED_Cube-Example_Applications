@@ -1,20 +1,14 @@
-project(Breakout3D)
+cmake_minimum_required(VERSION 3.20)
+project(Breakout3D CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINSRC
-        breakoutgame.cpp
-        main.cpp
-        #aplay.cpp
-        )
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
-set(MAINLIBS
-        #  libasound.so
-        matrixapplication::matrixapplication
-        )
+add_executable(breakout3d main.cpp breakoutgame.cpp)
+target_link_libraries(breakout3d PRIVATE PkgConfig::CUBE)
 
-add_executable(Breakout3D ${MAINSRC})
-target_link_libraries(Breakout3D ${MAINLIBS})
-
-install(TARGETS Breakout3D DESTINATION /home/pi/APPS)
+install(TARGETS breakout3d DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/breakout3d)

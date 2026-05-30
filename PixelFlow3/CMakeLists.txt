@@ -1,28 +1,14 @@
-project(PixelFlow3)
+cmake_minimum_required(VERSION 3.20)
+project(PixelFlow3 CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_library(IMLIB2_FOUND "Imlib2" PATHS "/opt/homebrew/lib" "/usr/local/lib")
- IF(IMLIB2_FOUND)
- 	MESSAGE("\tIMLIB2 Found")
-  LINK_DIRECTORIES(/opt/homebrew/lib)
-  INCLUDE_DIRECTORIES(/opt/homebrew/include)
- ELSE(IMLIB2_FOUND)
- 	MESSAGE(FATAL_ERROR "\tIMLIB2 Not Found")
- ENDIF(IMLIB2_FOUND)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
+add_executable(pixelflow3 main.cpp pixelflow.cpp)
+target_link_libraries(pixelflow3 PRIVATE PkgConfig::CUBE)
 
-
-
-set(MAINSRC
-    main.cpp pixelflow.cpp pixelflow.h)
-
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
-
-add_executable(PixelFlow3 ${MAINSRC})
-target_link_libraries(PixelFlow3 ${MAINLIBS}) #-l flag
-
-install(TARGETS PixelFlow3 DESTINATION /home/pi/APPS)
+install(TARGETS pixelflow3 DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/pixelflow3)

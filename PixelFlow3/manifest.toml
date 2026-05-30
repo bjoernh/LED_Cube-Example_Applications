@@ -1,0 +1,5 @@
+[app]
+name = "pixelflow3"
+display_name = "Pixel Flow 3"
+version = "2.0.0"
+category = "visualizer"

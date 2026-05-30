@@ -1,0 +1,5 @@
+[app]
+name = "cubetestapp"
+display_name = "Cube Test App"
+version = "2.0.0"
+category = "utility"

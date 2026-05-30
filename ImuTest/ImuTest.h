@@ -1,15 +1,14 @@
 #ifndef MATRIXSERVER_CUBETEST_H
 #define MATRIXSERVER_CUBETEST_H
 
-#include <CubeApplication.h>
-#include <Mpu6050.h>
+#include <cube/cube.h>
 
-class ImuTest : public CubeApplication{
+class ImuTest : public cube::CubeApp {
 public:
     ImuTest();
-    bool loop();
+    bool loop() override;
 private:
-    Mpu6050 Imu;
+    cube::Imu imu_;
 };
 
 #endif //MATRIXSERVER_CUBETEST_H

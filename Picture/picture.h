@@ -1,25 +1,23 @@
 #ifndef PICTURE_H
 #define PICTURE_H
 
-#include "CubeApplication.h"
-#include "Joystick.h"
+#include <cube/cube.h>
 #include "Image.h"
-#include <vector>
+#include <string>
 
-class Picture : public CubeApplication {
+class Picture : public cube::CubeApp {
 public:
     Picture(int argc, char *argv[]);
-
-    bool loop();
+    bool loop() override;
 
 private:
-    void drawImage(ScreenNumber screenNr, Vector2i topLeftPoint, Image &image, Vector2i imageStartPoint);
+    void drawImage(cube::ScreenNumber screenNr, cube::Vec2i topLeftPoint, Image &image, cube::Vec2i imageStartPoint);
     bool loadImage(std::string filepath);
-    bool error;
+
+    bool error{false};
     std::string error_msg;
     Image autoload;
-    std::vector<Joystick *> joysticks;
+    cube::Joystick joystick_;
 };
-
 
 #endif //PICTURE_H

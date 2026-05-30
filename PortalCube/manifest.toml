@@ -1,0 +1,5 @@
+[app]
+name = "portalcube"
+display_name = "Portal Cube"
+version = "2.0.0"
+category = "visualizer"

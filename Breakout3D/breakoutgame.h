@@ -1,92 +1,72 @@
 #ifndef __BREAKOUTGAME_H__
 #define __BREAKOUTGAME_H__
 
-#include <CubeApplication.h>
-
-#include <Joystick.h>
-//#include "aplay.h"
+#include <cube/cube.h>
+#include <string>
+#include <vector>
 
 #define DEFAULTGAMEDURATION 120
-#define DEFAULTHIGHSCOREFILE "/home/pi/.breakouthighscore"
 
-class BreakoutGame : public CubeApplication {
+class BreakoutGame : public cube::CubeApp {
 protected:
     class Player;
-
     class Ball;
-
     class Block;
 
     enum GameState {
         pregame, ingame, postgame
     };
 public:
-    BreakoutGame(std::string serverUri = DEFAULTSERVERURI);
+    BreakoutGame();
 
     void playerLoop();
-
     void ballLoop();
-
     void blockLoop();
+    bool loop() override;
 
-    bool loop();
-
-    bool isBlockAtPoint(Vector3f point);
-
+    bool isBlockAtPoint(cube::Vec3f point);
     void spawnBallForPlayer(int playerId);
-
     void reset(int gameDuration = DEFAULTGAMEDURATION);
 
     Player *getLeadingPlayer();
 
 private:
-    bool updateHighScoreFromToFile(int score = 0, std::string filename = DEFAULTHIGHSCOREFILE);
+    bool updateHighScoreFromToFile(int score = 0, std::string filename = "");
 
     std::vector<Player *> players_;
     std::vector<Ball *> balls_;
     std::vector<Block *> blocks_;
-    std::vector<Joystick *> joysticks_;
+    cube::Joystick joystick_;
     int remainingSeconds_;
     GameState gameState_;
-//  Aplay soundPlayer_;
-    int currentHighScore;
+    int currentHighScore{0};
+    int postgameCounter{0};
 };
 
 class BreakoutGame::Player {
 public:
-    Player(CubeApplication *renderCube, int id, Joystick *joystick);
+    Player(cube::CubeApp *renderCube, int id, int joystickId);
 
     void render();
-
     void step();
-
     void doKIMove();
-
     void generatePaddle();
 
-    Vector3i centerPosition();
-
-    bool collidesWith(Vector3i pos);
-
-    void blink(Color color);
+    cube::Vec3i centerPosition();
+    bool collidesWith(cube::Vec3i pos);
+    void blink(cube::Color color);
 
     int getId();
-
-    Color color();
-
+    cube::Color color();
     bool addToScore(float value);
-
     int score();
 
     void setLastBall(Ball *ball);
-
     Ball *lastBall();
 
-    Joystick *joystick();
-
 private:
-    Vector3i centerPosition_;
-    std::vector<Vector3i> paddlePixels_;
+    cube::Vec3i centerPosition_;
+    std::vector<cube::Vec3i> paddlePixels_;
     int score_;
     int id_;
     int width_;
@@ -96,104 +76,81 @@ private:
     int maxPos_;
     int minPos_;
     int blinkCount_;
-    Color blinkColor_;
-    Color color_;
-    CubeApplication *ca_;
-    Joystick *joystick_;
+    cube::Color blinkColor_;
+    cube::Color color_;
+    cube::CubeApp *ca_;
+    cube::Joystick joystick_;
+    int joystickId_;
     Ball *lastBall_;
 };
 
 class BreakoutGame::Ball {
 public:
-    Ball(CubeApplication *renderCube, Vector3f startPosition, Vector3f startVelocity, float speed);
+    Ball(cube::CubeApp *renderCube, cube::Vec3f startPosition, cube::Vec3f startVelocity, float speed);
 
     void render();
-
-    void reflect(Vector3f reflectionVector);
-
+    void reflect(cube::Vec3f reflectionVector);
     void step();
-
     void accelerate();
-
     void move();
-
     void revertStep();
-
     void die();
-
     bool isDead();
-
     void reset();
-
     void setSpeed(float speed);
-
     void resetSpeed();
-
     void setLastPlayer(Player *player);
-
     Player *lastPlayer();
 
-    Vector3f position();
+    cube::Vec3f position();
+    cube::Vec3f velocity();
+    cube::Vec3f acceleration();
+    cube::Vec3i iPosition();
 
-    Vector3f velocity();
+    void position(cube::Vec3f pos);
+    void velocity(cube::Vec3f vel);
+    void acceleration(cube::Vec3f accel);
 
-    Vector3f acceleration();
-
-    Vector3i iPosition();
-
-    void position(Vector3f pos);
-
-    void velocity(Vector3f vel);
-
-    void acceleration(Vector3f accel);
-
-    Color color();
-
-    void color(Color Col);
+    cube::Color color();
+    void color(cube::Color Col);
 
 private:
-    Vector3f position_;
-    Vector3f velocity_;
-    Vector3f acceleration_;
-    Vector3f defaultPosition_;
-    Vector3f defaultVelocity_;
-    Color color_;
+    cube::Vec3f position_;
+    cube::Vec3f velocity_;
+    cube::Vec3f acceleration_;
+    cube::Vec3f defaultPosition_;
+    cube::Vec3f defaultVelocity_;
+    cube::Color color_;
     bool isDead_;
     int respawnTimer_;
     float speed_;
     float defaultSpeed_;
-    EdgeNumber lastEdge_;
-    Vector3i lastIPosition_;
-    CubeApplication *ca_;
+    cube::EdgeNumber lastEdge_;
+    cube::Vec3i lastIPosition_;
+    cube::CubeApp *ca_;
     Player *lastPlayer_;
 };
 
 class BreakoutGame::Block {
 public:
-    Block(CubeApplication *renderCube, ScreenNumber screenNr, Vector2i topLeftCorner, int size, int score, Color color);
+    Block(cube::CubeApp *renderCube, cube::ScreenNumber screenNr, cube::Vec2i topLeftCorner, int size, int score, cube::Color color);
 
     void render();
-
-    bool collidesWith(Vector3f pos);
-
-    Vector3f centerPosition();
-
+    bool collidesWith(cube::Vec3f pos);
+    cube::Vec3f centerPosition();
     void die();
-
     bool isDead();
-
     int score();
-
     int size();
 
 private:
-    std::vector<Vector3i> blockPixels_;
-    Vector2i topLeftCorner_;
-    ScreenNumber screenNr_;
+    std::vector<cube::Vec3i> blockPixels_;
+    cube::Vec2i topLeftCorner_;
+    cube::ScreenNumber screenNr_;
     int size_;
     int score_;
-    Color color_;
-    CubeApplication *ca_;
+    cube::Color color_;
+    cube::CubeApp *ca_;
     bool isDead_;
 };
 

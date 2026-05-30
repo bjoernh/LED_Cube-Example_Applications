@@ -1,16 +1,14 @@
-project(PixelFlow2)
+cmake_minimum_required(VERSION 3.20)
+project(PixelFlow2 CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINSRC
-    main.cpp pixelflow2.cpp pixelflow2.h)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
+add_executable(pixelflow2 main.cpp pixelflow2.cpp)
+target_link_libraries(pixelflow2 PRIVATE PkgConfig::CUBE)
 
-add_executable(PixelFlow2 ${MAINSRC})
-target_link_libraries(PixelFlow2 ${MAINLIBS})
-
-install(TARGETS PixelFlow2 DESTINATION /home/pi/APPS)
+install(TARGETS pixelflow2 DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/pixelflow2)

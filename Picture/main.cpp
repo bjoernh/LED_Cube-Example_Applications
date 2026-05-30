@@ -1,9 +1,8 @@
 #include "picture.h"
 
-int main(int argc, char *argv[]) {
-    Picture App1(argc, argv);
-    App1.start();
+#include <cube/cube.h>
 
-    while(1) sleep(2);
-    return 0;
+int main(int argc, char *argv[]) {
+    Picture app(argc, argv);
+    return cube::run(app);
 }

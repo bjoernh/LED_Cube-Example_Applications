@@ -1,17 +1,15 @@
-project(Picture)
+cmake_minimum_required(VERSION 3.20)
+project(Picture CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINSRC
-    main.cpp picture.cpp picture.h Image.cpp Image.h)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
+pkg_check_modules(IMLIB2 REQUIRED IMPORTED_TARGET imlib2)
 
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
+add_executable(picture main.cpp picture.cpp Image.cpp)
+target_link_libraries(picture PRIVATE PkgConfig::CUBE PkgConfig::IMLIB2)
 
-add_executable(Picture ${MAINSRC})
-
-target_link_libraries(Picture ${MAINLIBS} Imlib2) #-l flag
-
-install(TARGETS Picture DESTINATION /home/pi/APPS)
+install(TARGETS picture DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/picture)

@@ -1,133 +1,138 @@
 #include "picture.h"
-#include <cmath>
 
-#include <iostream>
+#include <cube/cube.h>
 #include <algorithm>
 #include <cctype>
-#include <memory>
+#include <cmath>
 #include <filesystem>
+#include <iostream>
+#include <memory>
 
 namespace fs = std::filesystem;
-std::string filepath =  std::getenv("HOME") + std::string("/pictures/autoload.png");
+
+namespace {
+std::string filepath;
 fs::file_time_type lastModificationTime;
 int animationPrescale = 2;
+}  // namespace
 
-
-Picture::Picture(int argc, char *argv[]) : CubeApplication(40) {
-    joysticks.push_back(new Joystick(0));
-    joysticks.push_back(new Joystick(1));
-    joysticks.push_back(new Joystick(2));
-    joysticks.push_back(new Joystick(3));
-
-//    for(int i = 0; i < argc; i++){
-//        std::cout << i << ": " << argv[i] << std::endl;
-//    }
+Picture::Picture(int argc, char *argv[]) : cube::CubeApp("picture", 40) {
+    const char* home = std::getenv("HOME");
+    filepath = (home ? std::string(home) : std::string("/tmp")) + "/pictures/autoload.png";
 
     if (argc > 1) {
         filepath = std::string(argv[argc - 1]);
         if (argc == 4) {
-            if (std::string(argv[1]) == "-s") { //speed
+            if (std::string(argv[1]) == "-s") { // speed
                 int temp = std::stoi(argv[2]);
-                if (temp >= 0 && temp <= getFps()*4)
+                if (temp >= 0 && temp <= getFps() * 4) {
                     animationPrescale = temp;
+                }
             }
-            std::cout << argv[1] << std::endl;
         }
     }
 
-    std::cout << animationPrescale << std::endl;
-
-    if(!loadImage(filepath))
+    if (!loadImage(filepath)) {
         error = true;
+    }
 }
 
 bool Picture::loadImage(std::string path) {
-    if (autoload.loadImage(path.data())) {
+    if (!fs::exists(path)) {
+        std::string msg = "no image";
+        const cube::Vec2i centered{cube::Font::centered, cube::Font::centered};
+        drawText(cube::ScreenNumber::front, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::right, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::back, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::left, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::top, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::bottom, centered, cube::Color::white(), msg);
+        return false;
+    }
+
+    if (autoload.loadImage(path)) {
         lastModificationTime = fs::last_write_time(fs::path(path));
         if (autoload.getWidth() == 384 && autoload.getHeight() % 64 == 0) {
-            std::cout << "imageload " << path << " successful, size: " << autoload.getWidth() << "x" << autoload.getHeight() << std::endl;
             return true;
         } else {
-
-            std::cout << "image has not the right format, " << autoload.getWidth() << "x" << autoload.getHeight() << std::endl;
             error_msg = "wrong format";
         }
     } else {
-        std::cout << "image does not exist" << std::endl;
         std::string msg = "no image";
-        drawText(ScreenNumber::front, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
-        drawText(ScreenNumber::right, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
-        drawText(ScreenNumber::back, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
-        drawText(ScreenNumber::left, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
-        drawText(ScreenNumber::top, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
-        drawText(ScreenNumber::bottom, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), msg);
-        render();
+        const cube::Vec2i centered{cube::Font::centered, cube::Font::centered};
+        drawText(cube::ScreenNumber::front, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::right, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::back, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::left, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::top, centered, cube::Color::white(), msg);
+        drawText(cube::ScreenNumber::bottom, centered, cube::Color::white(), msg);
     }
     return false;
 }
 
-    bool Picture::loop() {
+bool Picture::loop() {
     static int loopcount = 0;
     static int verticalPos = 0;
 
-    /* If file has wrong format or does not exist, then only display a error msg on all screens */
-    if(error){
-        drawText(ScreenNumber::anyScreen, Vector2i(CharacterBitmaps::centered, CharacterBitmaps::centered), Color::white(), error_msg);
-        loopcount++;
-        render();
+    /* If file has wrong format or does not exist, then only display an error msg on all screens */
+    if (error) {
+        drawText(cube::ScreenNumber::front, {cube::Font::centered, cube::Font::centered}, cube::Color::white(), error_msg);
+        drawText(cube::ScreenNumber::right, {cube::Font::centered, cube::Font::centered}, cube::Color::white(), error_msg);
+        drawText(cube::ScreenNumber::back, {cube::Font::centered, cube::Font::centered}, cube::Color::white(), error_msg);
+        drawText(cube::ScreenNumber::left, {cube::Font::centered, cube::Font::centered}, cube::Color::white(), error_msg);
+        drawText(cube::ScreenNumber::top, {cube::Font::centered, cube::Font::centered}, cube::Color::white(), error_msg);
+        drawText(cube::ScreenNumber::bottom, {cube::Font::centered, cube::Font::centered}, cube::Color::white(), error_msg);
         return true;
     }
 
-    if (fs::last_write_time(fs::path(filepath)) > lastModificationTime) {
-        std::cout << "file change detected, reloading..." << std::endl;
+    if (fs::exists(filepath) && fs::last_write_time(fs::path(filepath)) > lastModificationTime) {
         loadImage(filepath);
         lastModificationTime = fs::last_write_time(fs::path(filepath));
     }
 
     clear();
 
-    for (auto joystick : joysticks) {
-        if (joystick->getButtonPress(0)) {
-            verticalPos += 64;
-            if (verticalPos > autoload.getHeight() - 64)
-                verticalPos = 0;
-            std::cout << "Verticalpos: " << verticalPos << std::endl;
-        }
-        joystick->clearAllButtonPresses();
-    }
-
-    if(animationPrescale > 0){
-        if((loopcount % animationPrescale) == 0){
-            verticalPos += 64;
-            if (verticalPos > autoload.getHeight() - 64)
-                verticalPos = 0;
+    if (joystick_.justPressed(cube::Btn::A)) {
+        verticalPos += 64;
+        if (verticalPos > autoload.getHeight() - 64) {
+            verticalPos = 0;
         }
     }
 
-    drawImage(top, Vector2i(0, 0), autoload, Vector2i(0, verticalPos));
-    drawImage(left, Vector2i(0, 0), autoload, Vector2i(64, verticalPos));
-    drawImage(front, Vector2i(0, 0), autoload, Vector2i(128, verticalPos));
-    drawImage(right, Vector2i(0, 0), autoload, Vector2i(192, verticalPos));
-    drawImage(back, Vector2i(0, 0), autoload, Vector2i(256, verticalPos));
-    drawImage(bottom, Vector2i(0, 0), autoload, Vector2i(320, verticalPos));
+    if (animationPrescale > 0) {
+        if ((loopcount % animationPrescale) == 0) {
+            verticalPos += 64;
+            if (verticalPos > autoload.getHeight() - 64) {
+                verticalPos = 0;
+            }
+        }
+    }
+
+    drawImage(cube::ScreenNumber::top, cube::Vec2i{0, 0}, autoload, cube::Vec2i{0, verticalPos});
+    drawImage(cube::ScreenNumber::left, cube::Vec2i{0, 0}, autoload, cube::Vec2i{64, verticalPos});
+    drawImage(cube::ScreenNumber::front, cube::Vec2i{0, 0}, autoload, cube::Vec2i{128, verticalPos});
+    drawImage(cube::ScreenNumber::right, cube::Vec2i{0, 0}, autoload, cube::Vec2i{192, verticalPos});
+    drawImage(cube::ScreenNumber::back, cube::Vec2i{0, 0}, autoload, cube::Vec2i{256, verticalPos});
+    drawImage(cube::ScreenNumber::bottom, cube::Vec2i{0, 0}, autoload, cube::Vec2i{320, verticalPos});
 
     loopcount++;
-    render();
     return true;
 }
 
-void Picture::drawImage(ScreenNumber screenNr, Vector2i topLeftPoint,
-                                Image &image, Vector2i imageStartPoint) {
-  for (int cols = 0; cols < image.getWidth(); cols++) {
-    if (cols > CUBEMAXINDEX || cols < 0)
-      break;
-    for (int rows = 0; rows < image.getHeight(); rows++) {
-      if (rows > CUBEMAXINDEX || rows < 0)
-        break;
-      setPixel3D(
-          getPointOnScreen(screenNr, Vector2i(cols + topLeftPoint[0],
-                                              rows + topLeftPoint[1])),
-          image.at(cols + imageStartPoint[0], rows + imageStartPoint[1]));
+void Picture::drawImage(cube::ScreenNumber screenNr, cube::Vec2i topLeftPoint,
+                        Image &image, cube::Vec2i imageStartPoint) {
+    for (int cols = 0; cols < 64; cols++) {
+        if (cols > cube::CUBE_MAX_INDEX || cols < 0) {
+            break;
+        }
+        for (int rows = 0; rows < 64; rows++) {
+            if (rows > cube::CUBE_MAX_INDEX || rows < 0) {
+                break;
+            }
+            setPixel3D(
+                getPointOnScreen(screenNr, cube::Vec2i{cols + topLeftPoint.x,
+                                                      rows + topLeftPoint.y}),
+                image.at(cols + imageStartPoint.x, rows + imageStartPoint.y));
+        }
     }
-  }
 }

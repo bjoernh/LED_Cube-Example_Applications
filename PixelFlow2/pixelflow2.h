@@ -1,73 +1,72 @@
 #ifndef SNAKE_PIXELFLOW_H
 #define SNAKE_PIXELFLOW_H
 
-#include "CubeApplication.h"
-#include "Joystick.h"
-#include <Mpu6050.h>
+#include <cube/cube.h>
+#include <memory>
+#include <vector>
 
-class PixelFlow2 : public CubeApplication{
+class PixelFlow2 : public cube::CubeApp {
 public:
     PixelFlow2();
-    bool loop();
+    bool loop() override;
 private:
-    Mpu6050 Imu;
+    cube::Imu imu_;
     class Particle;
     class SurfaceParticle;
     class Drop;
 };
 
-class PixelFlow2::Particle{
+class PixelFlow2::Particle {
 public:
-    Particle(Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    Particle(cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
     void accelerate();
     void move();
 
-    Vector3f position();
-    Vector3f velocity();
-    Vector3f acceleration();
+    cube::Vec3f position();
+    cube::Vec3f velocity();
+    cube::Vec3f acceleration();
 
-    Vector3i iPosition();
-    Vector3i iVelocity();
-    Vector3i iAcceleration();
+    cube::Vec3i iPosition();
+    cube::Vec3i iVelocity();
+    cube::Vec3i iAcceleration();
 
-    void position(Vector3f pos);
-    void velocity(Vector3f vel);
-    void acceleration(Vector3f accel);
+    void position(cube::Vec3f pos);
+    void velocity(cube::Vec3f vel);
+    void acceleration(cube::Vec3f accel);
 
-    Color color();
-    void color(Color Col);
+    cube::Color color();
+    void color(cube::Color Col);
 protected:
-    Vector3f position_;
-    Vector3f velocity_;
-    Vector3f acceleration_;
-    Color color_;
+    cube::Vec3f position_;
+    cube::Vec3f velocity_;
+    cube::Vec3f acceleration_;
+    cube::Color color_;
 };
 
-class PixelFlow2::SurfaceParticle  : public Particle {
+class PixelFlow2::SurfaceParticle : public Particle {
 public:
-    SurfaceParticle(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    SurfaceParticle(cube::Vec3i maxPos, cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
     void warp();
     void accelerateOnSurface();
 protected:
-    Vector3i maxPosition;
-    EdgeNumber lastEdge;
-    Vector3i lastIPosition;
+    cube::Vec3i maxPosition;
+    cube::EdgeNumber lastEdge{cube::EdgeNumber::anyEdge};
+    cube::Vec3i lastIPosition;
 };
 
 class PixelFlow2::Drop : public SurfaceParticle {
 public:
-    Drop(Vector3i maxPos, Vector3f pos, Vector3f vel, Vector3f accel, Color col);
+    Drop(cube::Vec3i maxPos, cube::Vec3f pos, cube::Vec3f vel, cube::Vec3f accel, cube::Color col);
     void step();
     bool getRdyDelete();
 private:
-    float vxOld_;
-    float vyOld_;
-    Vector3i maxPos_;
-    int stepCount;
-    bool rdyDelete_;
+    float vxOld_{0.0F};
+    float vyOld_{0.0F};
+    cube::Vec3i maxPos_;
+    int stepCount{0};
+    bool rdyDelete_{false};
 };
-
 
 #endif //SNAKE_PIXELFLOW_H

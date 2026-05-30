@@ -1,17 +1,14 @@
-project(PortalCube)
+cmake_minimum_required(VERSION 3.20)
+project(PortalCube CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
-set(MAINSRC
-  PortalCube.cpp
-  main.cpp
-)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(MAINLIBS
-        matrixapplication::matrixapplication
-)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
 
-add_executable(PortalCube ${MAINSRC})
-target_link_libraries(PortalCube ${MAINLIBS})
+add_executable(portalcube main.cpp PortalCube.cpp)
+target_link_libraries(portalcube PRIVATE PkgConfig::CUBE)
 
-install(TARGETS PortalCube DESTINATION /home/pi/APPS)
+install(TARGETS portalcube DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/portalcube)

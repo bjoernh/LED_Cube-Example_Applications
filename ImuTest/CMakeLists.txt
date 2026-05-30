@@ -1,7 +1,14 @@
-project(ImuTest)
+cmake_minimum_required(VERSION 3.20)
+project(ImuTest CXX)
 
-find_package(matrixapplication 0.4 REQUIRED)
-find_package(Boost 1.58.0 REQUIRED COMPONENTS thread log)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(imutestapp main.cpp ImuTest.cpp)
-target_link_libraries(imutestapp matrixapplication::matrixapplication)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CUBE REQUIRED IMPORTED_TARGET cube)
+
+add_executable(imutest main.cpp ImuTest.cpp)
+target_link_libraries(imutest PRIVATE PkgConfig::CUBE)
+
+install(TARGETS imutest DESTINATION bin)
+install(FILES schema.toml manifest.toml DESTINATION share/cube/apps/imutest)

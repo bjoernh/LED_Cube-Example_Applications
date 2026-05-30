@@ -1,12 +1,12 @@
 #ifndef MATRIXSERVER_CUBETEST_H
 #define MATRIXSERVER_CUBETEST_H
 
-#include <CubeApplication.h>
+#include <cube/cube.h>
 
-class CubeTest : public CubeApplication{
+class CubeTest : public cube::CubeApp {
 public:
-    CubeTest(std::string serverUri = DEFAULTSERVERURI);
-    bool loop();
+    CubeTest();
+    bool loop() override;
 };
 
 #endif //MATRIXSERVER_CUBETEST_H

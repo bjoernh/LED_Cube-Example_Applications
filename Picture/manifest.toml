@@ -1,0 +1,5 @@
+[app]
+name = "picture"
+display_name = "Image Displayer"
+version = "2.0.0"
+category = "visualizer"

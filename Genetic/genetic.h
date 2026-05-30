@@ -1,13 +1,14 @@
 #ifndef __GENETIC_H__
 #define __GENETIC_H__
 
-#include "MatrixApplication.h"
+#include <cube/cube.h>
+#include <string>
 
-class Genetic : public MatrixApplication{
+class Genetic : public cube::CubeApp {
 public:
-  Genetic(std::string serverUri = DEFAULTSERVERURI);
-  bool loop();
-  ~Genetic();
+  Genetic();
+  bool loop() override;
+  ~Genetic() override;
   static int rnd (int i) { return rand() % i; }
 
 private:

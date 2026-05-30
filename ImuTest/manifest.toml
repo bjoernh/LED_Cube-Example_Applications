@@ -1,0 +1,5 @@
+[app]
+name = "imutest"
+display_name = "IMU Test"
+version = "2.0.0"
+category = "utility"

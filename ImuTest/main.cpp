@@ -1,10 +1,8 @@
 #include "ImuTest.h"
 
+#include <cube/cube.h>
 
-int main(int argc, char *argv[]) {
-    ImuTest App1;
-    App1.start();
-
-    while(1) sleep(1);
-    return 0;
+int main() {
+    ImuTest app;
+    return cube::run(app);
 }
