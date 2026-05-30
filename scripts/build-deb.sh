@@ -39,7 +39,7 @@ fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIBCUBE_ROOT="$(cd "${REPO_ROOT}/../cube-system/libcube" && pwd)"
-IMAGE="cube-example-apps-deb-builder:${TAG}"
+IMAGE="cube-example-apps-deb-builder:latest"
 OUT="${REPO_ROOT}/dist/${TAG}"
 mkdir -p "${OUT}"
 
@@ -53,27 +53,51 @@ if [[ -z "${LIBCUBE_DEV_DEB}" || -z "${LIBCUBE_RUNTIME_DEB}" ]]; then
     exit 1
 fi
 
-echo "==> Building toolchain image (${PLATFORM})"
-docker build --platform="${PLATFORM}" -t "${IMAGE}" "${REPO_ROOT}/docker"
+echo "==> Building toolchain image (native host)"
+docker build -t "${IMAGE}" "${REPO_ROOT}/docker"
 
-echo "==> Building .debs in container (${PLATFORM})"
-docker run --rm --platform="${PLATFORM}" \
+# Ensure persistent ccache directory exists on the host
+mkdir -p "${REPO_ROOT}/.ccache"
+
+echo "==> Building .debs in container (native cross-compilation)"
+docker run --rm \
     -v "${REPO_ROOT}:/src:ro" \
+    -v "${REPO_ROOT}/.ccache:/ccache" \
     -v "${LIBCUBE_ROOT}:/libcube:ro" \
     -v "${OUT}:/out" \
     "${IMAGE}" bash -euo pipefail -c '
-        # Install the pre-requisite libcube packages first
-        apt-get update
-        apt-get install -y /libcube/dist/'"${TAG}"'/libcube2_*_'"${TAG}"'.deb /libcube/dist/'"${TAG}"'/libcube-dev_*_'"${TAG}"'.deb
+        # Configure ccache environment
+        export CCACHE_DIR=/ccache
+        export CCACHE_MAXSIZE=10G
 
         # Copy the source out of the read-only mount into a clean build tree
         rsync -a \
             --exclude=build/ --exclude=dist/ --exclude=.git/ \
             --exclude=.claude/ --exclude=.antigravitycli/ \
             --exclude=matrixserver/ \
+            --exclude=.ccache/ \
             /src/ /build/cube-example-apps/
-        cd /build/cube-example-apps
-        DEB_BUILD_OPTIONS="parallel=$(nproc)" dpkg-buildpackage -b -us -uc
+
+        # Install the pre-requisite packages first based on target architecture
+        apt-get update
+        if [[ "'"${TAG}"'" == "arm64" ]]; then
+            apt-get install -y --no-install-recommends \
+                libsdl2-dev:arm64 \
+                libimlib2-dev:arm64 \
+                /libcube/dist/arm64/libcube2_*_arm64.deb \
+                /libcube/dist/arm64/libcube-dev_*_arm64.deb
+            cd /build/cube-example-apps
+            DEB_BUILD_OPTIONS="parallel=$(nproc)" dpkg-buildpackage -aarm64 -b -us -uc
+        else
+            apt-get install -y --no-install-recommends \
+                libsdl2-dev \
+                libimlib2-dev \
+                /libcube/dist/amd64/libcube2_*_amd64.deb \
+                /libcube/dist/amd64/libcube-dev_*_amd64.deb
+            cd /build/cube-example-apps
+            DEB_BUILD_OPTIONS="parallel=$(nproc)" dpkg-buildpackage -b -us -uc
+        fi
+
         # dpkg-buildpackage writes artifacts to the parent directory
         cp /build/*.deb /out/ 2>/dev/null || true
         echo "--- produced ---"

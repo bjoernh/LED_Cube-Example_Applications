@@ -4,6 +4,10 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 include /usr/share/dpkg/architecture.mk
 
+# Enable compiler caching with ccache for CMake
+export CMAKE_C_COMPILER_LAUNCHER = ccache
+export CMAKE_CXX_COMPILER_LAUNCHER = ccache
+
 %:
 	dh $@ --buildsystem=cmake+ninja
 

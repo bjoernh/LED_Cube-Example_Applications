@@ -43,3 +43,8 @@ _CPack_Packages/
 # Temporary files
 *.tmp
 *.temp
+
+# Packaging & Caching
+.ccache/
+dist/
+
