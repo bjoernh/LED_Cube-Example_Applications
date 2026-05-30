@@ -15,3 +15,5 @@ add_subdirectory(ImuTest)
 add_subdirectory(PixelFlow)
 add_subdirectory(PixelFlow2)
 add_subdirectory(Rainbow)
+add_subdirectory(PortalCube)
+

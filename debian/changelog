@@ -1,0 +1,7 @@
+cube-example-apps (2.0.0) unstable; urgency=medium
+
+  * Initial Debian packaging for LED Cube example applications.
+  * Migrated all applications to libcube 2.0 with clean C++20 and standalone builds.
+  * Added manifest.toml and schema.toml configuration for every application.
+
+ -- Björn Hauffe <oss@64b.de>  Sat, 30 May 2026 13:30:00 +0200

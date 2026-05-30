@@ -1,0 +1,39 @@
+Source: cube-example-apps
+Section: games
+Priority: optional
+Maintainer: Björn Hauffe <oss@64b.de>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake (>= 3.20),
+ ninja-build,
+ pkg-config,
+ libcube-dev (>= 2.0.0),
+ libimlib2-dev,
+ libsdl2-dev,
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+
+Package: cube-example-apps
+Section: games
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Cube 2.0 example applications
+ This package provides the official set of example applications for the
+ Cube 2.0 LED-cube system, ported to the new C++20 libcube library.
+ .
+ Applications included:
+  - genetic: Genetic color population simulator
+  - cubetestapp: basic line/text drawing test utility
+  - breakout3d: multi-player 3D breakout game
+  - pixelflow3: joystick-driven particle flow simulation
+  - matrixrain: voice/audio-reactive matrix style rain
+  - snake: multi-player snake game with joystick/AI steering
+  - picture: dynamic PNG loader and scroller
+  - imutest: IMU acceleration vector intercept demo
+  - pixelflow: IMU gravity fluid flow simulation
+  - pixelflow2: high-speed variant of gravity flow simulation
+  - rainbow: IMU particle orientation demo
+  - portalcube: portal-themed companion/storage/reflection cube visualizer
+

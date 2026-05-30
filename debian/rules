@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+# Build cube-example-apps as a Debian package using debhelper's CMake + Ninja buildsystem.
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+include /usr/share/dpkg/architecture.mk
+
+%:
+	dh $@ --buildsystem=cmake+ninja
+
+override_dh_auto_test:
+	@echo "Skipping tests as none are defined for example apps"
+
