@@ -1,6 +1,7 @@
 #include "snake.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <filesystem>
@@ -34,21 +35,8 @@ constexpr int kMax = cube::VIRTUAL_CUBE_MAX_INDEX;  // 65
 }  // namespace
 
 Snake::Snake() : cube::CubeApp("snake", 40) {
-    const float startSpeed = 0.2F;
-    const auto spawn = [&](cube::Color c) {
-        return new Player(this, static_cast<int>(players.size()),
-                          toF(getRandomPointOnScreen(ScreenNumber::top)),
-                          Vec3f{0.0F, startSpeed, 0.0F}, c, 10);
-    };
-    players.push_back(spawn(Color::green()));
-    players.push_back(spawn(Color::green() + Color::red()));
-    players.push_back(spawn(Color::blue() + Color::red()));
-    players.push_back(spawn(Color::red()));
-    players.push_back(spawn(Color::blue() * 0.5F));
-    players.push_back(spawn(Color::blue() + Color::red() * 0.3F));
-    players.push_back(spawn(Color::green() * 0.4F + Color::blue() * 0.2F));
-    players.push_back(spawn(Color::white() * 0.6F));
-
+    // Players are spawned once the start menu confirms a count (see loop());
+    // only the food and high score are set up here.
     for (int i = 0; i < 20; i++) {
         food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::front), Color::randomBlue() * 2.0F));
         food.push_back(new Food(this, getRandomPointOnScreen(ScreenNumber::right), Color::randomBlue() * 2.0F));
@@ -60,7 +48,40 @@ Snake::Snake() : cube::CubeApp("snake", 40) {
     updateHighScoreFromToFile();
 }
 
+void Snake::spawnPlayers(int count) {
+    // The eight distinct snake colours; slot 0 is the human (shared controller).
+    static const std::array<Color, 8> kColors = {
+        Color::green(),
+        Color::green() + Color::red(),
+        Color::blue() + Color::red(),
+        Color::red(),
+        Color::blue() * 0.5F,
+        Color::blue() + Color::red() * 0.3F,
+        Color::green() * 0.4F + Color::blue() * 0.2F,
+        Color::white() * 0.6F,
+    };
+    const float startSpeed = 0.2F;
+    const int n = std::clamp(count, 1, static_cast<int>(kColors.size()));
+    for (int i = 0; i < n; i++) {
+        players.push_back(new Player(this, i, toF(getRandomPointOnScreen(ScreenNumber::top)),
+                                     Vec3f{0.0F, startSpeed, 0.0F}, kColors[static_cast<std::size_t>(i)], 10));
+    }
+}
+
 bool Snake::loop() {
+    // Startup menu runs first, as a loop() mode: tick it until the user picks a
+    // player count (then spawn the snakes) or backs out with B (then quit).
+    if (startMenu_.active()) {
+        startMenu_.tick(*this);
+        if (!startMenu_.active()) {
+            if (startMenu_.cancelled()) {
+                return false;
+            }
+            spawnPlayers(startMenu_.playerCount());
+        }
+        return true;
+    }
+
     static bool highScoreTime = false;
     static int highScoreTimer = 120;
     static Color highScoreColor = Color::white();

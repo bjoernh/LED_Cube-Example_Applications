@@ -21,6 +21,16 @@ private:
     class Player;
     class Food;
 
+    // Spawn `count` snakes (clamped to the 8 colour slots). Slot 0 reads the
+    // shared controller; the rest are AI — Snake fills the no-controller slots
+    // with AI, exactly as the legacy game did. When libcube grows multi-pad
+    // support, additional slots can bind to their own controllers.
+    void spawnPlayers(int count);
+
+    // Startup "HOW MANY PLAYERS?" menu, driven from loop() before gameplay.
+    // 2..8 total snakes; AI fills every slot without a controller.
+    cube::GameStartMenu startMenu_{2, 8, true};
+
     std::vector<Player*> players;
     std::vector<Food*> food;
     int currentHighScore{1000};
