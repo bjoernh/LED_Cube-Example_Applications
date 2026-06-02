@@ -87,6 +87,14 @@ bool PixelFlow::loop() {
 
     fade(0.85F);
 
+    // Snapshot the IMU once per frame. In libcube each Imu accessor performs a
+    // synchronous sysfs read, so calling them inside the spawn loop (60x) and
+    // the per-drop update loop (thousands of times) issued tens of thousands of
+    // blocking reads per frame — the cause of the post-port slowdown. The IMU
+    // value is constant within a frame, so one snapshot is behaviour-identical.
+    const cube::Vec3i imuPoint = imu_.cubeAccIntersect();
+    const cube::Vec3f imuAccel = imu_.acceleration();
+
     // Create new Raindrops
     for (int foo = 0; foo < 60; foo++) {
         float randAngle = static_cast<float>(std::rand() % 360);
@@ -94,7 +102,6 @@ bool PixelFlow::loop() {
         float vx = speed * std::cos(randAngle * kPi / 180.0F);
         float vy = speed * std::sin(randAngle * kPi / 180.0F);
         cube::Vec3f startSpeed(0.0F, 0.0F, 0.0F);
-        auto imuPoint = imu_.cubeAccIntersect();
 
         switch (cube::CubeApp::getScreenNumber(imuPoint)) {
             case cube::ScreenNumber::top:
@@ -160,7 +167,7 @@ bool PixelFlow::loop() {
 
     for (const auto& r : rdrops) {
         if (counter % 1 == 0) {
-            r->acceleration(imu_.acceleration() * (-0.1F + (static_cast<float>(std::rand() % 100) / 2000.0F)));
+            r->acceleration(imuAccel * (-0.1F + (static_cast<float>(std::rand() % 100) / 2000.0F)));
             r->step();
         }
         setPixel3D(r->iPosition(), r->color());
