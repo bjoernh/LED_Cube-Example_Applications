@@ -28,8 +28,8 @@ private:
     void spawnPlayers(int count);
 
     // Startup "HOW MANY PLAYERS?" menu, driven from loop() before gameplay.
-    // 2..8 total snakes; AI fills every slot without a controller.
-    cube::GameStartMenu startMenu_{2, 8, true};
+    // 1..8 total snakes; AI fills every slot without a controller.
+    cube::GameStartMenu startMenu_{1, 8, true};
 
     std::vector<Player*> players;
     std::vector<Food*> food;

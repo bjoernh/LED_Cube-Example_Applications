@@ -39,7 +39,7 @@ fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LIBCUBE_ROOT="$(cd "${REPO_ROOT}/../cube-system/libcube" && pwd)"
-IMAGE="cube-example-apps-deb-builder:latest"
+IMAGE="cube-build:latest"
 OUT="${REPO_ROOT}/dist/${TAG}"
 mkdir -p "${OUT}"
 
@@ -54,7 +54,7 @@ if [[ -z "${LIBCUBE_DEV_DEB}" || -z "${LIBCUBE_RUNTIME_DEB}" ]]; then
 fi
 
 echo "==> Building toolchain image (native host)"
-docker build -t "${IMAGE}" "${REPO_ROOT}/docker"
+docker build -t "${IMAGE}" "${REPO_ROOT}/../cube-system/docker"
 
 # Ensure persistent ccache directory exists on the host
 mkdir -p "${REPO_ROOT}/.ccache"
@@ -78,22 +78,15 @@ docker run --rm \
             --exclude=.ccache/ \
             /src/ /build/cube-example-apps/
 
-        # Install the pre-requisite packages first based on target architecture
-        apt-get update
+        # Install pre-built libcube packages (build artifacts, not in image)
         if [[ "'"${TAG}"'" == "arm64" ]]; then
-            apt-get install -y --no-install-recommends \
-                libsdl2-dev:arm64 \
-                libimlib2-dev:arm64 \
-                /libcube/dist/arm64/libcube2_*_arm64.deb \
-                /libcube/dist/arm64/libcube-dev_*_arm64.deb
+            dpkg -i /libcube/dist/arm64/libcube2_*_arm64.deb \
+                    /libcube/dist/arm64/libcube-dev_*_arm64.deb
             cd /build/cube-example-apps
             DEB_BUILD_OPTIONS="parallel=$(nproc)" dpkg-buildpackage -aarm64 -b -us -uc
         else
-            apt-get install -y --no-install-recommends \
-                libsdl2-dev \
-                libimlib2-dev \
-                /libcube/dist/amd64/libcube2_*_amd64.deb \
-                /libcube/dist/amd64/libcube-dev_*_amd64.deb
+            dpkg -i /libcube/dist/amd64/libcube2_*_amd64.deb \
+                    /libcube/dist/amd64/libcube-dev_*_amd64.deb
             cd /build/cube-example-apps
             DEB_BUILD_OPTIONS="parallel=$(nproc)" dpkg-buildpackage -b -us -uc
         fi

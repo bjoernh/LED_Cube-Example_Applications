@@ -1,3 +1,18 @@
+cube-example-apps (2.0.2) unstable; urgency=medium
+
+  * Snake: add player-count start menu using cube::GameStartMenu; AI fills
+    empty slots.
+  * Fix IMU per-frame snapshot in PixelFlow and PixelFlow2; resolves severe
+    frame-rate regression caused by reading sysfs on every inner loop iteration.
+  * Fix Genetic app loop pacing deadlock and optimise random generator.
+  * Fix Breakout3D CubeApp registration name (was mismatched, causing
+    launch failures via cubed).
+  * Persist Snake high score robustly (recursive directory creation).
+  * Persist Breakout3D high score to /var/lib/cube/apps/breakout3d/.
+  * Update install path for all apps to /usr/libexec/cube/apps/.
+
+ -- Björn Hauffe <oss@64b.de>  Tue, 02 Jun 2026 17:01:12 +0200
+
 cube-example-apps (2.0.0) unstable; urgency=medium
 
   * Initial Debian packaging for LED Cube example applications.

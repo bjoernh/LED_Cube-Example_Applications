@@ -2,6 +2,7 @@
 #define __BREAKOUTGAME_H__
 
 #include <cube/cube.h>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -26,7 +27,8 @@ public:
 
     bool isBlockAtPoint(cube::Vec3f point);
     void spawnBallForPlayer(int playerId);
-    void reset(int gameDuration = DEFAULTGAMEDURATION);
+    void reset(int numPlayers, int gameDuration = DEFAULTGAMEDURATION);
+    void beginMenu();
 
     Player *getLeadingPlayer();
 
@@ -36,6 +38,7 @@ private:
     std::vector<Player *> players_;
     std::vector<Ball *> balls_;
     std::vector<Block *> blocks_;
+    std::optional<cube::GameStartMenu> startMenu_;
     cube::Joystick joystick_;
     int remainingSeconds_;
     GameState gameState_;

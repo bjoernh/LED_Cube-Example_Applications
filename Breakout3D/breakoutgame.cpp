@@ -32,11 +32,11 @@ constexpr const T& constrain(const T& v, const T& lo, const T& hi) {
 }  // namespace
 
 BreakoutGame::BreakoutGame() : cube::CubeApp("breakout3d", 40) {
-    reset();
     updateHighScoreFromToFile(0);
+    beginMenu();
 }
 
-void BreakoutGame::reset(int gameDuration) {
+void BreakoutGame::reset(int numPlayers, int gameDuration) {
     gameState_ = pregame;
     remainingSeconds_ = gameDuration;
     for (auto p : players_) delete p;
@@ -46,10 +46,11 @@ void BreakoutGame::reset(int gameDuration) {
     balls_.clear();
     blocks_.clear();
 
-    players_.push_back(new Player(this, 0, 0));
-    players_.push_back(new Player(this, 1, 1));
-    spawnBallForPlayer(0);
-    spawnBallForPlayer(1);
+    const int n = std::clamp(numPlayers, 1, 2);
+    for (int i = 0; i < n; i++) {
+        players_.push_back(new Player(this, i, i));
+        spawnBallForPlayer(i);
+    }
     int blockSize = 4;
     int blockScore = 25;
     for (int i = 0; i < cube::CUBE_SIZE; i += blockSize) {
@@ -58,6 +59,16 @@ void BreakoutGame::reset(int gameDuration) {
                                         (cube::Color::randomGreen() + cube::Color::blue() * 0.5F + cube::Color::randomBlue()) * 0.7F));
         }
     }
+}
+
+void BreakoutGame::beginMenu() {
+    for (auto p : players_) delete p;
+    for (auto b : balls_) delete b;
+    for (auto blk : blocks_) delete blk;
+    players_.clear();
+    balls_.clear();
+    blocks_.clear();
+    startMenu_.emplace(1, 2, false);
 }
 
 void BreakoutGame::spawnBallForPlayer(int playerId) {
@@ -181,6 +192,16 @@ bool BreakoutGame::isBlockAtPoint(cube::Vec3f point) {
 bool BreakoutGame::loop() {
     static int loopcount = 0;
 
+    if (startMenu_.has_value()) {
+        startMenu_->tick(*this);
+        if (!startMenu_->active()) {
+            if (startMenu_->cancelled()) return false;
+            reset(startMenu_->playerCount());
+            startMenu_.reset();
+        }
+        return true;
+    }
+
     switch (gameState_) {
         case pregame: {
             clear();
@@ -235,7 +256,7 @@ bool BreakoutGame::loop() {
             }
 
             if (joystick_.justPressed(cube::Btn::StickLeft)) {
-                reset();
+                beginMenu();
             }
             break;
         }
@@ -256,7 +277,7 @@ bool BreakoutGame::loop() {
                 if (getLeadingPlayer() != nullptr) {
                     updateHighScoreFromToFile(getLeadingPlayer()->score());
                 }
-                reset();
+                beginMenu();
             }
             break;
         }
